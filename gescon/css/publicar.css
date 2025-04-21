@@ -1,0 +1,165 @@
+.menu_publicar {
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--font-color);
+    padding: calc(var(--default-px)*1.5);
+    gap: calc(var(--default-px)*1.5);
+    max-width: 1400px;
+    margin: auto;
+}
+
+.titulo_publicar {
+    grid-area: titulo;
+}
+.resumen_publicar {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    grid-area: resumen;
+}
+.autores_publicar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--default-px);
+    grid-area: autores;
+}
+.topicos_publicar {
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--default-px)*1);
+    height: fit-content;
+    grid-area: topicos;
+}
+.btn_publicar {
+    display: flex;
+    grid-area: btn;
+}
+
+.form_publicar {
+    overflow: visible;
+    display: grid;
+    grid-template-areas: 
+    "titulo titulo"
+    "resumen autores"
+    "topicos autores"
+    "btn btn"
+    ;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto 2fr auto auto;
+    width: 100%;
+    gap: calc(var(--default-px)*2);
+}
+
+.remover {
+    padding: 0;
+    width: 40px;
+    height: 40px;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+    overflow: visible;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    background-color: var(--bg-color);
+    border: 1px solid var(--font-color);
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1;
+}
+
+.dropdown-menu.show {
+    display: block;
+}
+
+.dropdown-item {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.dropdown-item:hover {
+    /* background-color: var(--font-color);
+    color: var(--bg-color); */
+    text-decoration: underline;
+}
+
+#topicos-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    overflow-x: hidden;
+    box-sizing: border-box;
+}
+
+.selected-topic {
+    background-color: var(--bg-color);
+    border: 1px solid var(--font-color);
+    color: var(--font-color);
+    width: fit-content;
+    padding: calc(var(--default-px)*0.5) calc(var(--default-px)*1);
+    white-space: nowrap;
+    user-select: none;
+    cursor: pointer;
+    border-radius: 100px;
+}
+
+.selected-topic:hover {
+    background-color: var(--font-color);
+    color: var(--bg-color);
+}
+
+#tabla-autores tr {
+    display: grid;
+    grid-template-columns: 1fr 1fr 40px 40px;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+#tabla-autores td {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+#agregar-autor-form button{
+    height: 100%;
+    grid-area: btn;
+}
+#agregar-autor-form #nuevo-email{
+    grid-area: input;
+}
+#agregar-autor-form .error{
+    grid-area: error;
+}
+
+#agregar-autor-form {
+    display: grid;
+    grid-template-areas: 
+    "input btn"
+    "error error"
+    ;
+    grid-template-columns: 1fr auto;
+    width: 100%;
+}
+
+@media (max-width: 900px) {
+    .form_publicar {
+        grid-template-areas: 
+            "titulo"
+            "resumen"
+            "autores"
+            "topicos"
+            "btn"
+        ;
+        grid-template-columns: 1fr;
+    }
+}
