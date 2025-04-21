@@ -88,7 +88,7 @@ main {
   gap: calc(var(--default-px)*0.5);
   padding: var(--default-px) calc(var(--default-px)*1.5);
   max-width: 1500px;
-  margin: auto;
+  margin: 0 auto;
 }
 
 input, .input {
@@ -169,4 +169,16 @@ input[type="radio"] {
 
 input[type="radio"]:checked {
   background-color: var(--font-color);
+}
+
+.etiqueta {
+  background-color: var(--bg-color);
+  border: 1px solid var(--font-color);
+  color: var(--font-color);
+  width: fit-content;
+  font-size: calc(var(--font-size)*0.9);
+  padding: calc(var(--default-px)*0.3) calc(var(--default-px)*0.7);
+  white-space: nowrap;
+  user-select: none;
+  border-radius: 100px;
 }

@@ -5,7 +5,7 @@ session_start();
 $user = getUsuarioData();
 
 $page = getPagina();
-if ($page != "index" && $page != "login") {
+if ($page != "index" && $page != "login" && $page != "buscar") {
     if ($user === null) {
         $_SESSION["notificacion"] = [
             "tipo" => "alerta",

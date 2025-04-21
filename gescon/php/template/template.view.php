@@ -11,7 +11,7 @@
     <link rel="stylesheet" href=<?php getStyle("publicar"); ?>>
     <link rel="stylesheet" href=<?php getStyle("barra"); ?>>
     <link rel="stylesheet" href=<?php getStyle("notificacion"); ?>>
-    
+    <link rel="stylesheet" href=<?php getStyle("buscar"); ?>>
 </head>
 <body>
     <header class="no-overflow">
