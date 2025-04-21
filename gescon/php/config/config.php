@@ -18,7 +18,7 @@ function config($key = "") {
         ],
         "template_path" => $_SERVER['DOCUMENT_ROOT'] . "/php/template",
         "content_path" => "./php/view.php",
-        "php_path" => "/php",
+        "php_path" => "./php",
         "styles_path" => "/css",
         "js_path" => "/js",
         "api_path" => $_SERVER['DOCUMENT_ROOT'] . "/php/api"
