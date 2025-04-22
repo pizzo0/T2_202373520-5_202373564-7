@@ -78,6 +78,8 @@ fetch(`php/api/data.usuario.email.php?email=${encodeURIComponent(email)}`)
         const newRow = table.insertRow(-1);
         const index = table.rows.length - 2;
         
+        newRow.classList.add("autor-info");
+
         newRow.innerHTML = `
             <td><input type="text" name="nombre[]" value="${data.nombre}" readonly></td>
             <td><input type="email" name="email[]" value="${data.email}" readonly></td>

@@ -7,7 +7,7 @@ $topicos = getTopicos();
         <h1>Crear Articulo</h1>
         <p>Aqui puedes publicar un articulo que te pertenezca o que seas parte de el.</p>
     </div>
-    <form method="post" class="form_publicar formulario">
+    <form method="post" id="form" class="form_publicar formulario">
         <div class="titulo_publicar">
             <h1>Titulo</h1>
             <input type="text" id="titulo" name="titulo" maxlength="255" required>
@@ -31,11 +31,11 @@ $topicos = getTopicos();
                     <th></th>
                     <th></th>
                 </tr>
-                <tr>
+                <tr class="autor-info">
                     <td><input type="text" name="nombre[]" value="<?= htmlspecialchars($user['nombre']) ?>" readonly></td>
                     <td><input type="email" name="email[]" value="<?= htmlspecialchars($user['email']) ?>" readonly></td>
                     <td><input type="radio" name="contacto" value="0" checked></td>
-                    <td></td>
+                    <td><button class="remover" type="button">X</button></td>
                 </tr>
             </table>
             <div id="agregar-autor-form">

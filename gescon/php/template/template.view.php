@@ -6,7 +6,7 @@
     <title><?php getTitulo(); ?> - <?php getNombre(); ?></title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Special+Gothic&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href=<?php getStyle("styles"); ?>>
     <link rel="stylesheet" href=<?php getStyle("publicar"); ?>>
     <link rel="stylesheet" href=<?php getStyle("barra"); ?>>
@@ -31,16 +31,7 @@
         </div>
         <?php unset($_SESSION["notificacion"]); ?>
     <?php endif; ?>
-    <script>
-        setTimeout(() => {
-            const notificacion = document.querySelector('.notificacion');
-            if (notificacion) {
-                notificacion.style.opacity = '0';
-                notificacion.style.pointerEvents = "none";
-                setTimeout(() => notificacion.remove(), 500);
-            }
-        }, 4000);
-    </script>
     <script src=<?php getJs("inputNoRellenado");?>></script>
+    <script src=<?php getJs("notificacion");?>></script>
 </body>
 </html>

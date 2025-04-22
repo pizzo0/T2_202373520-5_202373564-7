@@ -9,11 +9,17 @@
     padding-left: calc(var(--default-px));
     opacity: 1;
     transform: translateX(1000px);
-    animation: notificacionEntra 0.3s ease forwards;
+    transition: transform 0.5s ease;
+    pointer-events: none;
 
     display: flex;
     gap: var(--default-px);
     align-items: center;
+}
+
+.noti-active {
+    pointer-events: all;
+    transform: translateX(0px)
 }
 
 .noti-cerrar {
@@ -35,14 +41,4 @@
 .noti-error {
     background-color: #160000;
     border: 1px solid #ffb2b2;
-}
-
-@keyframes notificacionEntra {
-    from {
-        transform: translateX(1000px);
-        opacity: 0;
-    } to {
-        transform: translateX(0px);
-        opacity: 1;
-    }
 }

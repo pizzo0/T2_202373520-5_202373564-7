@@ -8,7 +8,7 @@
 }
 
 * {
-  font-family: "Special Gothic", sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;
@@ -21,7 +21,7 @@
   box-sizing: border-box;
   text-decoration: none;
   line-height: 1.35;
-  letter-spacing: 0.25px;
+  letter-spacing: -0.5px;
   background-color: unset;
   border-spacing: 0;
 }
@@ -37,9 +37,8 @@ a:hover {
 h1 {
   line-height: 0.95;
   letter-spacing: -0.5px;
-  font-size: calc(var(--font-size)*2);
+  font-size: calc(var(--font-size)*1.5);
   text-transform: uppercase;
-  font-weight: 500;
 }
 
 header {
@@ -86,9 +85,14 @@ main {
   display: flex;
   flex-direction: column;
   gap: calc(var(--default-px)*0.5);
-  padding: var(--default-px) calc(var(--default-px)*1.5);
+  padding: var(--default-px);
+  width: 100%;
   max-width: 1500px;
   margin: 0 auto;
+}
+
+main:has(.menu), main:has(.menu_publicar) {
+  margin: auto;
 }
 
 input, .input {
@@ -139,6 +143,7 @@ input:focus, .input:focus {
 }
 
 .btn, button {
+  height: fit-content;
   width: fit-content;
   padding: 5px 10px;
   border: 1px solid var(--font-color);
@@ -176,9 +181,14 @@ input[type="radio"]:checked {
   border: 1px solid var(--font-color);
   color: var(--font-color);
   width: fit-content;
+  height: fit-content;
   font-size: calc(var(--font-size)*0.9);
-  padding: calc(var(--default-px)*0.3) calc(var(--default-px)*0.7);
+  padding: calc(var(--default-px)*0.1) calc(var(--default-px)*0.5);
   white-space: nowrap;
   user-select: none;
   border-radius: 100px;
+}
+
+.etiqueta:before {
+  content: "#";
 }

@@ -4,6 +4,7 @@
 ?>
 <div class="filtro-container">
     <form method="post" id="filtro-form">
+        <span id="filtro-num-resultados"><!-- resultados --></span>
         <div>
             <label for="titulo">Titulo:</label>
             <input type="text" name="titulo" id="titulo">
@@ -32,6 +33,7 @@
         <button type="submit" onclick="toggleFC()">Filtrar</button>
     </form>
 </div>
+<div id="filtro-overlay"></div>
 <div class="buscar-container">
     <button id="btn-filtrar" onclick="toggleFC()">Filtrar resultados</button>
     <div id="resultados-busqueda">

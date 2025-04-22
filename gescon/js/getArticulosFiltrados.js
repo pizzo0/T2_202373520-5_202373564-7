@@ -1,10 +1,28 @@
+const container = document.getElementsByClassName('filtro-container')[0];
+const overlay = document.getElementById('filtro-overlay');
 
-function toggleFC() {
-    const container = document.getElementsByClassName('filtro-container')[0];
-    container.classList.toggle('filtro-container-activo');
-}
+const clickFuera = (e) => {
+    if (!container.contains(e.target)) {
+        container.classList.remove('filtro-container-activo');
+        overlay.classList.remove('filtro-overlay-activo')
+        document.removeEventListener('click', clickFuera);
+    }
+};
 
-function cargarArticulos(filtros = null) {
+const toggleFC = () => {
+    const estaActivo = container.classList.toggle('filtro-container-activo');
+    overlay.classList.toggle('filtro-overlay-activo', estaActivo);
+
+    if (estaActivo) {
+        setTimeout(() => {
+            document.addEventListener('click', clickFuera);
+        }, 0);
+    } else {
+        document.removeEventListener('click', clickFuera);
+    }
+};
+
+cargarArticulos = (filtros = null) => {
     const container = document.getElementById('resultados-busqueda');
     const queryString = filtros ? `?${filtros.toString()}` : '';
 
@@ -14,25 +32,27 @@ function cargarArticulos(filtros = null) {
         .then(response => response.json())
         .then(data => {
             if (data.total > 0) {
-                let res = `<div>`;
+                let res = ``;
                 data.data.forEach(articulo => {
                     res += `
-                    <div>
-                        <h2>${articulo.titulo}</h2>
-                        <p>${articulo.resumen}</p>
-                        <p>${articulo.fecha_envio}</p>
-                        ${articulo.topicos.split(',').map(topico => `<span class="etiqueta">${topico}</span>`).join('')}
+                    <div class="articulo-preview">
+                        <h2 class="articulo-preview-titulo">${articulo.titulo}</h2>
+                        <p class="articulo-preview-resumen">${articulo.resumen}</p>
+                        <p class="articulo-preview-fecha">Fecha de publicación: ${articulo.fecha_envio}</p>
+                        <div class="articulo-preview-etiquetas">
+                            ${articulo.topicos.split(',').map(topico => `<span class="etiqueta">${topico}</span>`).join('')}
+                        </div>
                     </div>
                     `;
                 });
-                res += `</div>`;
                 container.innerHTML = res;
             } else {
-                container.innerHTML = `No se encontraron resultados.`;
+                container.innerHTML = `<p>No se encontraron resultados.</p>`;
             }
+            document.getElementById("filtro-num-resultados").innerHTML = `${data.total} resultados`;
         })
         .catch(error => {
-            container.innerHTML = `Error al obtener datos, prueba de nuevo.`;
+            container.innerHTML = `<p>Error al obtener datos, prueba de nuevo.</p>`;
         });
 }
 
