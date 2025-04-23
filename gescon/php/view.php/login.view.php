@@ -17,7 +17,7 @@ global $error;
             <input type="password" id="pass" name="pass" placeholder="********" required>
         </div>
         <div>
-            ¿No tienes una cuenta? <a href="/?page=signup">Regístrate aquí.</a>
+            ¿No tienes una cuenta? <a href="/signup">Regístrate aquí.</a>
         </div>
 
         <div>

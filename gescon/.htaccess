@@ -1,0 +1,10 @@
+RewriteEngine On
+
+RewriteCond %{THE_REQUEST} \s\?page=([^\s&]+) [NC]
+RewriteRule ^ index.php?page=%1 [R=301,L]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([^/]+)$ index.php?page=$1 [L,QSA]
+
+DirectoryIndex index.php

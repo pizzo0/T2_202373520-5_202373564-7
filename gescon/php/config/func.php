@@ -129,7 +129,7 @@ function getNav($sep = " | ") {
         } elseif ($uri === "profile") {
             if ($user) {
                 $nombre = explode(" ",$user['nombre'])[0];
-                $navAuth .= "<a href='/profile'>" . htmlspecialchars($nombre) . "</a>" . $sep;
+                $navAuth .= "<a href='/" . (config("pretty_uri") || $uri == "" ? "" : "?page=") . $uri ."'>" . htmlspecialchars($nombre) . "</a>" . $sep;
             }
             continue;
         }

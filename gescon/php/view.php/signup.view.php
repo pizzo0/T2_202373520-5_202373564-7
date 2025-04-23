@@ -27,7 +27,7 @@
             <input type="password" id="pass_confirm" name="pass_confirm" placeholder="********" required>
         </div>
         <div>
-            ¿Ya tienes una cuenta? <a href="/?page=login">Inicia sesión aquí.</a>
+            ¿Ya tienes una cuenta? <a href="/login">Inicia sesión aquí.</a>
         </div>
 
         <button type="submit">Registrarme</button>

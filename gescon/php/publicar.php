@@ -1,6 +1,5 @@
 <?php
 
-
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $database = getDatabase();
     $stmt = $database->stmt_init();

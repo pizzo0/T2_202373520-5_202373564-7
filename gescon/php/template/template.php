@@ -11,7 +11,7 @@ if ($page != "index" && $page != "login" && $page != "buscar" && $page != 'signu
             "tipo" => "alerta",
             "mensaje" => "Necesitas iniciar sesion para continuar"
         ];
-        header("Location: /?page=login");
+        header("Location: /login");
         exit();
     }
 }
