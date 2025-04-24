@@ -12,6 +12,7 @@
     <link rel="stylesheet" href=<?php getStyle("barra"); ?>>
     <link rel="stylesheet" href=<?php getStyle("notificacion"); ?>>
     <link rel="stylesheet" href=<?php getStyle("buscar"); ?>>
+    <link rel="stylesheet" href=<?php getStyle("profile"); ?>>
 </head>
 <body>
     <header class="no-overflow">
@@ -25,9 +26,9 @@
         <?php getContenido(); ?>
     </main>
     <?php if (isset($_SESSION["notificacion"])): ?>
-        <div class="notificacion noti-<?= $_SESSION["notificacion"]["tipo"] ?>" onclick="this.remove()">
+        <div class="notificacion noti-<?= $_SESSION["notificacion"]["tipo"] ?>">
             <span><?= htmlspecialchars($_SESSION["notificacion"]["mensaje"]) ?></span>
-            <button class="noti-cerrar" onclick="this.parentElement.remove()">X</button>
+            <button class="noti-cerrar">X</button>
         </div>
         <?php unset($_SESSION["notificacion"]); ?>
     <?php endif; ?>

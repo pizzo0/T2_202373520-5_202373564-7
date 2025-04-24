@@ -49,6 +49,8 @@ header {
   border-bottom: 1px solid var(--font-color);
   white-space: nowrap;
   text-overflow: ellipsis;
+
+  z-index: 50;
 }
 
 nav {

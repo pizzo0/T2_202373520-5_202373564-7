@@ -4,7 +4,7 @@ const overlay = document.getElementById('filtro-overlay');
 const clickFuera = (e) => {
     if (!container.contains(e.target)) {
         container.classList.remove('filtro-container-activo');
-        overlay.classList.remove('filtro-overlay-activo')
+        overlay.classList.remove('filtro-overlay-activo');
         document.removeEventListener('click', clickFuera);
     }
 };

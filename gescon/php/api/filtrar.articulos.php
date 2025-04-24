@@ -46,4 +46,5 @@ while ($fila = $res->fetch_assoc()) {
 echo json_encode([
     'total' => count($data),
     'data' => $data
-], JSON_UNESCAPED_UNICODE);
+    ], JSON_UNESCAPED_UNICODE
+);

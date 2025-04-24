@@ -110,6 +110,10 @@
     border-radius: 100px;
 }
 
+.selected-topic::before {
+    content: "#";
+}
+
 .selected-topic:hover {
     background-color: var(--font-color);
     color: var(--bg-color);
