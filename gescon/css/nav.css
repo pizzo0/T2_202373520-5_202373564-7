@@ -68,7 +68,10 @@ nav {
         align-items: flex-end;
         justify-content: center;
 
-        transition: right 0.3s ease;
+        transition:
+            right 0.3s ease,
+            transform 0.05s ease
+        ;
 
         padding: 3rem;
 
@@ -98,6 +101,7 @@ nav {
     .sub-nav a, .sub-nav span {
         font-size: calc(var(--font-size)*1.25);
         transition: font-size 0.3s ease;
+        user-select: none;
     }
 
     .sub-nav a:hover, .sub-nav span:hover {

@@ -108,6 +108,10 @@
     border-radius: 100px;
 }
 
+.articulo-preview:hover a {
+    text-decoration: underline;
+}
+
 @media (min-width: 900px) {
     .profile-container {
         display: grid;

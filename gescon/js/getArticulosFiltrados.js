@@ -43,7 +43,7 @@ cargarArticulos = (filtros = null) => {
                             res += `
                             <div class="articulo-preview">
                                 <div class="articulo-preview-tr">
-                                    <h2><span>${svg_articulo}</span> ${articulo.titulo}</h2>
+                                    <a href="/articulo/${articulo.articulo_id}"><span>${svg_articulo}</span> ${articulo.titulo}</a>
                                     <p>${articulo.resumen}</p>
                                 </div>
                                 <div class="articulo-preview-etiquetas">
@@ -56,6 +56,14 @@ cargarArticulos = (filtros = null) => {
                             `;
                         });
                         container.innerHTML = res;
+                        document.querySelectorAll('.articulo-preview').forEach((preview) => {
+                            preview.addEventListener('click', () => {
+                                const a = preview.querySelector('a');
+                                if (a) {
+                                    a.click();
+                                }
+                            });
+                        });
                     });
             } else {
                 container.innerHTML = `<p>No se encontraron resultados.</p>`;

@@ -28,10 +28,18 @@ document.addEventListener('DOMContentLoaded', () => {
                             `;
                         });
                         container.innerHTML += res;
+                        document.querySelectorAll('.articulo-preview').forEach((preview) => {
+                            preview.addEventListener('click', () => {
+                                const a = preview.querySelector('a');
+                                if (a) {
+                                    a.click();
+                                }
+                            });
+                        });
                     });
             } else {
                 container.innerHTML += `<p>Aun no publicas articulos</p>`;
             }
             numeroArticulos.innerHTML = `Tienes ${data.total} articulos publicados`;
-        })
-})
+        });
+});
