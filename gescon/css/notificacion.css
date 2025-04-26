@@ -15,8 +15,15 @@
     gap: var(--default-px);
     align-items: center;
     z-index: 999;
+
+    justify-content: center;
     
     transition: transform 0.5s ease;
+}
+
+.notificacion span svg {
+    width: calc(var(--font-size)*1.2);
+    height: calc(var(--font-size)*1.2);
 }
 
 .notificacion::before {
@@ -30,6 +37,14 @@
     height: 100%;
     animation: expandirBarra 5s forwards;
     pointer-events: none;
+}
+
+.profile-ident {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: flex-start;
 }
 
 @keyframes expandirBarra {

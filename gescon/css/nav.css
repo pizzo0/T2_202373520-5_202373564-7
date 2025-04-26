@@ -1,0 +1,140 @@
+header {
+    position: sticky;
+    top: 0;
+    background-color: var(--bg-color);
+    padding: var(--default-px);
+    border-bottom: 1px solid var(--font-color);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  
+    z-index: 50;
+    height: 63px;
+}
+
+header .gescon {
+    display: none;
+}
+    
+nav .gescon {
+    display: block;
+}
+  
+nav {
+    display: flex;
+    margin: auto;
+    gap: var(--font-size);
+    max-width: 1400px;
+    justify-content: space-between;
+    align-items: center;
+}
+  
+.sub-nav {
+    display: flex;
+    flex-direction: row;
+    gap: var(--default-px);
+    overflow: hidden;
+}
+  
+.sub-nav a, .sub-nav span {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.curr-page {
+    color: red;
+}
+
+#mostrar-nav {
+    display: none;
+}
+
+@media screen and (max-width: 900px) {
+    header {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    nav {
+        position: fixed;
+        flex-direction: column;
+        top: 0;
+        right: -100%;
+        height: 100vh;
+        width: 100%;
+        max-width: none;
+        background-color: var(--bg-color);
+
+        align-items: flex-end;
+        justify-content: center;
+
+        transition: right 0.3s ease;
+
+        padding: 3rem;
+
+        gap: 3rem;
+
+        z-index: 99;
+    }
+
+    .nav-activo {
+        right: 0;
+    }
+    
+    nav .gescon {
+        display: none !important;
+    }
+
+    header .gescon {
+        display: block;
+    }
+
+    .sub-nav {
+        width: 100%;
+        flex-direction: column;
+        align-items: flex-end;
+    }
+
+    .sub-nav a, .sub-nav span {
+        font-size: calc(var(--font-size)*1.25);
+        transition: font-size 0.3s ease;
+    }
+
+    .sub-nav a:hover, .sub-nav span:hover {
+        font-size: calc(var(--font-size)*1.6);
+    }
+
+    #mostrar-nav {
+        display: block;
+    }
+
+    nav #mostrar-nav {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0;
+
+        border: none;
+
+        height: 40px;
+        width: 40px;
+    }
+
+    nav #mostrar-nav svg {
+        height: 24px;
+        width: 24px;
+    }
+
+    .open-nav {
+        display: flex !important;
+        width: fit-content;
+        height: fit-content;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .open-nav svg {
+        height: 24px;
+        width: 24px;
+    }
+}

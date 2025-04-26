@@ -2,7 +2,14 @@ CREATE TABLE Usuarios (
     rut VARCHAR(12) PRIMARY KEY,
     nombre VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(100) NOT NULL
+    password VARCHAR(100) NOT NULL,
+    id_rol INT NOT NULL DEFAULT 1,
+    FOREIGN KEY (id_rol) REFERENCES Roles(id)
+);
+
+CREATE TABLE Roles (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(20) UNIQUE NOT NULL
 );
 
 CREATE TABLE Topicos (

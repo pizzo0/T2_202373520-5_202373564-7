@@ -4,6 +4,9 @@ if (notificacion) {
     let hideTimeout, removeTimeout;
 
     const cerrarNotificacion = () => {
+        setTimeout(() => {
+            
+        })
         if (!notificacion.classList.contains('noti-active')) return;
 
         clearTimeout(hideTimeout);
@@ -15,7 +18,9 @@ if (notificacion) {
         }, 600);
     };
 
-    notificacion.classList.add('noti-active');
+    setTimeout(() => {
+        notificacion.classList.add('noti-active');
+    }, 100)
 
     hideTimeout = setTimeout(() => {
         cerrarNotificacion();

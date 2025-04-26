@@ -1,19 +1,21 @@
 <?php
 $user = getUsuarioData();
 $topicos = getTopicos();
+
+$svg_articulo = getAsset("/svg/svg_articulo.svg");
 ?>
-<div class="menu_publicar">
+<div class="menu_publicar big-border-radius">
     <div>
-        <h1>Crear Articulo</h1>
+        <h1><span><?= $svg_articulo ?></span> Crear Articulo</h1>
         <p>Aqui puedes publicar un articulo que te pertenezca o que seas parte de el.</p>
     </div>
     <form method="post" id="form" class="form_publicar formulario">
         <div class="titulo_publicar">
-            <h1>Titulo</h1>
+            <label for="titulo">Titulo</label>
             <input type="text" id="titulo" name="titulo" maxlength="255" required>
         </div>
         <div class="resumen_publicar">
-            <h1>Resumen</h1>
+            <label for="resumen">Resumen</label>
             <textarea id="resumen" name="resumen" class="input" maxlength="150" required></textarea>
         </div>
         <div class="autores_publicar">

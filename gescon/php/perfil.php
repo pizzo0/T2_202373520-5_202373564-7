@@ -25,21 +25,26 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                 "mensaje" => "Tu nombre no puede estar vacío."
             ];
             return;
+        } elseif ($user['nombre'] === $_POST['nombre']) {
+            // nadaxd
+        } else {
+            $stmt = $database->prepare("
+            UPDATE Usuarios
+            SET nombre = ?
+            WHERE rut = ?
+            ");
+            $stmt->bind_param("ss", $nombre, $rut);
+            $stmt->execute();
+    
+            $_SESSION["notificacion"] = [
+                "tipo" => "ok",
+                "mensaje" => "Nombre guardado con éxito."
+            ];
+
         }
-
-        $stmt = $database->prepare("
-        UPDATE Usuarios
-        SET nombre = ?
-        WHERE rut = ?
-        ");
-        $stmt->bind_param("ss", $nombre, $rut);
-        $stmt->execute();
-
-        $_SESSION["notificacion"] = [
-            "tipo" => "ok",
-            "mensaje" => "Nombre modificado con éxito."
-        ];
-    } elseif (isset($_POST['correo'])) {
+    }
+    
+    if (isset($_POST['correo'])) {
         $correo = trim($_POST['correo']);
 
         if (empty($correo)) {
@@ -48,21 +53,32 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                 "mensaje" => "Tu correo no puede estar vacío."
             ];
             return;
+        } elseif ($user['email'] === $_POST['correo']) {
+            // nadaxd
+        } else {
+            $stmt = $database->prepare("
+            UPDATE Usuarios
+            SET email = ?
+            WHERE rut = ?
+            ");
+            $stmt->bind_param("ss", $correo, $rut);
+            $stmt->execute();
+    
+            if ($user['nombre'] != $_POST['nombre']) {
+                $_SESSION["notificacion"] = [
+                    "tipo" => "ok",
+                    "mensaje" => "Cambios guardados con éxito."
+                ];
+            } else {
+                $_SESSION["notificacion"] = [
+                    "tipo" => "ok",
+                    "mensaje" => "Correo guardado con éxito."
+                ];
+            }
         }
-
-        $stmt = $database->prepare("
-        UPDATE Usuarios
-        SET email = ?
-        WHERE rut = ?
-        ");
-        $stmt->bind_param("ss", $correo, $rut);
-        $stmt->execute();
-
-        $_SESSION["notificacion"] = [
-            "tipo" => "ok",
-            "mensaje" => "Correo modificado con éxito."
-        ];
-    } elseif (isset($_POST['pass'])) {
+    }
+    
+    if (isset($_POST['pass'])) {
         $sql = sprintf("
             SELECT * FROM Usuarios
             WHERE rut = '%s'
@@ -115,7 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
             $_SESSION["notificacion"] = [
                 "tipo" => "ok",
-                "mensaje" => "Contraseña modificada con éxito."
+                "mensaje" => "Contraseña guardada con éxito."
             ];
         } catch (\Throwable $th) {
             $_SESSION["notificacion"] = [

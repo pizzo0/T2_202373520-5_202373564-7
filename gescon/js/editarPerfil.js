@@ -2,8 +2,7 @@ const menuPerfil = document.getElementsByClassName("menu-perfil")[0];
 const overlay = document.getElementsByClassName('menu-overlay')[0];
 const btns = document.querySelectorAll("#editar-perfil-btn");
 
-const formNombre = document.getElementsByClassName('nombre-form')[0];
-const formEmail = document.getElementsByClassName('email-form')[0];
+const formNombreEmail = document.getElementsByClassName('nombre-email-form')[0];
 const formPass = document.getElementsByClassName('pass-form')[0];
 
 const toggleFormBtn = document.getElementById('toggle-editar-perfil');
@@ -41,8 +40,7 @@ btns.forEach(btn => {
 
 const cambiarPass = () => {
     const cambiandoPass = formPass.classList.toggle('form-activo');
-    formNombre.classList.toggle('form-activo');
-    formEmail.classList.toggle('form-activo');
+    formNombreEmail.classList.toggle('form-activo');
     
     if (cambiandoPass) {
         toggleFormBtn.innerHTML = 'Volver atras';

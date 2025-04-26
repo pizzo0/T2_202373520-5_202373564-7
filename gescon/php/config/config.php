@@ -14,14 +14,15 @@ function config($key = "") {
             "gestion" => "Gestion",
             "asignar" => "Asignación",
             "signup" => "Registrar",
-            "profile" => "Perfil",
+            "perfil" => "Perfil",
         ],
         "template_path" => "./php/template",
         "content_path" => "./php/view.php",
         "php_path" => "./php",
         "styles_path" => "/css",
         "js_path" => "/js",
-        "api_path" => "./php/api"
+        "api_path" => "./php/api",
+        "assets_path" => "./assets"
     ];
 
     return isset($res[$key]) ? $res[$key] : null;

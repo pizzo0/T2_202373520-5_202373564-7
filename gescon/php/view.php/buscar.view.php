@@ -1,24 +1,22 @@
 <?php
 // $user = getUsuarioData();
 // filtro por autor, fecha de envio, topicos y revisor -> resultado da nombre del articulo, resumen y topicos
+
+$svg_filtro = getAsset("/svg/filtro.svg");
+$svg_ordenar = getAsset("/svg/ordenar.svg");
 ?>
 <div class="filtro-container">
     <form method="post" id="filtro-form">
         <span id="filtro-num-resultados"><!-- resultados --></span>
         <div>
+            <span>Información del articulo:</span>
+            <br>
             <label for="titulo">Titulo:</label>
             <input type="text" name="titulo" id="titulo">
         </div>
         <div>
             <label for="autor">Autor:</label>
             <input type="text" name="autor" id="autor">
-        </div>
-        <div>
-            <label>Fecha:</label>
-            <label for="fecha_desde">Desde:</label>
-            <input type="date" name="fecha_desde" id="fecha_desde">
-            <label for="fecha_hasta">Hasta:</label>
-            <input type="date" name="fecha_hasta" id="fecha_hasta">
         </div>
         <div>
             <label for="topicos">Topico:</label>
@@ -30,12 +28,24 @@
             <label for="revisor">Revisor:</label>
             <input type="text" name="revisor" id="revisor">
         </div>
+        <div>
+            <span>Fecha de publicación:</span>
+            <br>
+            <label for="fecha_desde">Desde:</label>
+            <input type="date" name="fecha_desde" id="fecha_desde">
+            <label for="fecha_hasta">Hasta:</label>
+            <input type="date" name="fecha_hasta" id="fecha_hasta">
+        </div>
+        <br>
         <button type="submit" onclick="toggleFC()">Filtrar</button>
     </form>
 </div>
 <div id="filtro-overlay"></div>
 <div class="buscar-container">
-    <button id="btn-filtrar" onclick="toggleFC()">Filtrar resultados</button>
+    <div class="buscar-filtros-container">
+        <button id="btn-filtrar" onclick="toggleFC()"><span><?= $svg_filtro ?></span> Filtrar resultados</button>
+        <button id="btn-filtrar" onclick="toggleFC()"><span><?= $svg_ordenar ?></span> Ordenar por</button>
+    </div>
     <div id="resultados-busqueda">
         <!-- cargan los resultados -->
     </div>

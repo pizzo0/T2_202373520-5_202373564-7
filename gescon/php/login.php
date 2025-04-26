@@ -15,6 +15,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     if ($user && password_verify($_POST['pass'], $user["password"])) {
         $_SESSION["userid"] = $user["rut"];
+
+        $_SESSION["notificacion"] = [
+            "tipo" => "ok",
+            "mensaje" => "Iniciaste sesion exitosamente."
+        ];
+        
         header("Location: /");
         exit;
     }

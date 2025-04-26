@@ -31,12 +31,25 @@ function generarPassword() {
     return 1;
 }
 
+function getRolNombre($id_rol) {
+    $database = getDatabase();
+    $stmt = $database->prepare("
+        SELECT nombre FROM Roles
+        WHERE id = ?
+    ");
+    $stmt->bind_param("s", $id_rol);
+    $stmt->execute();
+    $rol = $stmt->get_result()->fetch_assoc()['nombre'];
+
+    return ucfirst($rol);
+}
+
 // obtiene la informacion del usuario actual de la base de datos. si no esta logeado no retorna la informacion
 function getUsuarioData() {
     if (isset($_SESSION["userid"])) {
         $database = getDatabase();
         $stmt = $database->prepare("
-            SELECT rut,nombre,email FROM Usuarios
+            SELECT rut,nombre,email,id_rol FROM Usuarios
             WHERE rut = ?
         ");
         $stmt->bind_param("s", $_SESSION["userid"]);
@@ -126,7 +139,7 @@ function getNav($sep = " | ") {
                 $navAuth .= getRedireccion($uri, $nombre) . $sep;
             }
             continue;
-        } elseif ($uri === "profile") {
+        } elseif ($uri === "perfil") {
             if ($user) {
                 $nombre = explode(" ",$user['nombre'])[0];
                 $navAuth .= "<a href='/" . (config("pretty_uri") || $uri == "" ? "" : "?page=") . $uri ."'>" . htmlspecialchars($nombre) . "</a>" . $sep;
@@ -172,6 +185,10 @@ function getPhp() {
     }
 
     require ($path);
+}
+
+function getAsset($path) {
+    return file_get_contents(config("assets_path") . $path);
 }
 
 function init() {
