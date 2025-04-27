@@ -21,6 +21,7 @@ $svg_cerrar = getAsset("/svg/cerrar.svg");
     <link rel="stylesheet" href=<?php getStyle("buscar"); ?>>
     <link rel="stylesheet" href=<?php getStyle("profile"); ?>>
     <link rel="stylesheet" href=<?php getStyle(css_file: "nav"); ?>>
+    <link rel="stylesheet" href=<?php getStyle(css_file: "articulo"); ?>>
 </head>
 <body>
     <header class="no-overflow">

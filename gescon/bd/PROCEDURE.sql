@@ -1,4 +1,5 @@
-DELIMITER
+DELIMITER //
+
 CREATE PROCEDURE obtenerArticulosPorAutor(IN rutAutor VARCHAR(12))
 BEGIN
     SELECT 
@@ -15,6 +16,24 @@ BEGIN
     LEFT JOIN Articulos_Revisores ON Articulos.id = Articulos_Revisores.id_articulo
     LEFT JOIN Usuarios AS Revisores ON Articulos_Revisores.rut_revisor = Revisores.rut
     WHERE Articulos_Autores.rut_autor = rutAutor
-    GROUP BY Articulos.id, Articulos.titulo, Articulos.resumen, Articulos.fecha_envio;
-END
+    GROUP BY Articulos.id, Articulos.titulo, Articulos.resumen, Articulos.fecha_envio
+    ORDER BY Articulos.fecha_envio DESC;
+END //
+
+DELIMITER ;
+
+--------------------------------------
+
+DELIMITER $$
+
+CREATE PROCEDURE revisores_por_especialidad(especialidad_id INT)
+BEGIN
+    SELECT Usuarios.rut, Usuarios.nombre, Usuarios.email
+    FROM Usuarios
+    JOIN Usuarios_Especialidad ON Usuarios.rut = Usuarios_Especialidad.rut_usuario
+    JOIN Roles ON Usuarios.id_rol = Roles.id
+    WHERE Roles.id = 2
+    AND Usuarios_Especialidad.id_topico = especialidad_id;
+END $$
+
 DELIMITER ;

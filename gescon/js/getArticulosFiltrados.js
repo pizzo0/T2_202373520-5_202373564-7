@@ -30,7 +30,7 @@ cargarArticulos = (filtros = null) => {
 
 
 
-    fetch(`php/api/filtrar.articulos.php${queryString}`)
+    fetch(`/php/api/filtrar.articulos.php${queryString}`)
         .then(response => response.json())
         .then(data => {
             if (data.total > 0) {
@@ -77,13 +77,33 @@ cargarArticulos = (filtros = null) => {
 
 window.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('filtro-form');
-    const filtros = form ? new URLSearchParams(new FormData(form)) : null;
-    cargarArticulos(filtros);
+    const formData = new FormData(form);
+
+    if (formData) {
+        const ordenarPor = document.getElementById('ordenar_por');
+        if (ordenarPor) {
+            formData.append('ordenar_por', ordenarPor.value);
+        }
+        const filtros = form ? new URLSearchParams(formData) : null;
+        cargarArticulos(filtros);
+    } else {
+        cargarArticulos();
+    }
+    
+
 });
 
 document.getElementById('filtro-form').addEventListener('submit', (e) => {
     e.preventDefault();
-    const filtros = new URLSearchParams(new FormData(e.target));
+
+    const formData = new FormData(e.target);
+
+    const ordenarPor = document.getElementById('ordenar_por');
+    if (ordenarPor) {
+        formData.append('ordenar_por', ordenarPor.value);
+    }
+
+    const filtros = new URLSearchParams(formData);
     cargarArticulos(filtros);
 });
 
@@ -103,3 +123,8 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     })
 })
+
+document.getElementById('ordenar_por').addEventListener('change', () => {
+    const form = document.getElementById('filtro-form');
+    form.dispatchEvent(new Event('submit'));
+});

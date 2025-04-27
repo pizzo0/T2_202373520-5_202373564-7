@@ -1,4 +1,6 @@
 <?php
+
+
 global $error;
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {

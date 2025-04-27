@@ -1,0 +1,39 @@
+.vista-articulo {
+    display: flex;
+    flex-direction: column;
+    margin: 0.5rem;
+    margin-top: 2rem;
+}
+
+.vista-articulo-titulo {
+    font-size: calc(var(--font-size)*2.9);
+    letter-spacing: -1px;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+}
+.vista-articulo-resumen {
+    margin-bottom: 0.25rem;
+    text-transform: uppercase;
+}
+.vista-articulo-topicos {
+    display: flex;
+    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.1rem;
+    
+    margin-bottom: 2rem;
+}
+
+.vista-articulo-subtexto {
+    font-size: 14px;
+    text-transform: uppercase;
+}
+.vista-articulo-fecha {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+.vista-articulo-fecha p {
+    font-size: 14px;
+    text-transform: uppercase;
+}

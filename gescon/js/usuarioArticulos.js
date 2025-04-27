@@ -2,7 +2,7 @@ const container = document.getElementsByClassName('profile-articulos-container')
 const numeroArticulos = document.getElementById('num-articulos');
 
 document.addEventListener('DOMContentLoaded', () => {
-    fetch('php/api/actual.usuario.articulos.php')
+    fetch('/php/api/actual.usuario.articulos.php')
         .then((response) => response.json())
         .then((data) => {
             if (data.total > 0) {
@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             res += `
                             <div class="articulo-preview">
                                 <div class="articulo-preview-tr">
-                                    <a href="/articulo/${articulo.articulo_id}"><span>${svg_articulo}</span> ${articulo.titulo}</a>
+                                    <a href="/editar/${articulo.articulo_id}"><span>${svg_articulo}</span> ${articulo.titulo}</a>
                                     <p>${articulo.resumen}</p>
                                 </div>
                                 <div class="articulo-preview-etiquetas">

@@ -41,8 +41,11 @@ $svg_añadir = getAsset("/svg/añadir.svg");
                 <button type="submit">Guardar</button>
             </div>
         </form>
-        <button id="toggle-editar-perfil">Cambiar contraseña</button>
-        <button id="editar-perfil-btn">Dejar de modificar perfil</button>
+        <div class="btns-container">
+            <button id="toggle-editar-perfil">Cambiar contraseña</button>
+            <button class="btn-rojo" onclick="window.location.href='/logout'" >Cerrar sesion</button>
+        </div>
+        <button id="editar-perfil-btn">Salir de opciones</button>
     </div>
 </div>
 <div class="menu-overlay"></div>
@@ -50,16 +53,18 @@ $svg_añadir = getAsset("/svg/añadir.svg");
     <div class="profile-usuario-container">
         <div class="profile-ident">
             <h2><?php echo $nombre; ?></h2>
-            <span class="etiqueta2 rol"><?php echo getRolNombre($user['id_rol']); ?></span>
+            <span class="etiqueta2 rol-<?= $user['id_rol'] ?>"><?php echo getRolNombre($user['id_rol']); ?></span>
         </div>
         <p>Para editar un articulo, presiona sobre el.</p>
         <p id="num-articulos"></p>
-        <button id="editar-perfil-btn">Modificar perfil</button>
-        <button onclick="window.location.href='/logout'" >Cerrar sesion</button>
+        <button id="editar-perfil-btn">Opciones de perfil</button>
     </div>
     <div class="profile-articulos-container">
         <button onclick="window.location.href='/publicar'" style="width:100%;"><span><?= $svg_añadir ?></span> Crear un nuevo articulo</button>
         <!-- articulos del usuario -->
+    </div>
+    <div class="profile-revisiones-container">
+        <!-- articulos que puede revisar -->
     </div>
 </div>
 

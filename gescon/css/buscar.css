@@ -65,6 +65,15 @@
     height: fit-content;
 
     cursor: pointer;
+    overflow-x: hidden;
+}
+
+.articulo-preview:hover a {
+    text-decoration: underline;
+}
+
+.articulo-preview-tr {
+    overflow-x: hidden;
 }
 
 .articulo-preview > div {
@@ -106,6 +115,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
+    align-items: flex-end;
 }
 
 @media (min-width: 900px) {

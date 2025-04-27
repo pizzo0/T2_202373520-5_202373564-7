@@ -1,7 +1,7 @@
 let usuarioActual = null;
 
 document.addEventListener("DOMContentLoaded", () => {
-fetch("php/api/actual.data.usuario.php")
+fetch("/php/api/actual.data.usuario.php")
     .then((response) => response.json())
     .then((data) => {
     if (!data.error) {
@@ -67,7 +67,7 @@ if (usuarioActual && usuarioActual.email.toLowerCase() === email) {
 errorDiv.textContent = "";
 errorDiv.style.display = "none";
 
-fetch(`php/api/data.usuario.email.php?email=${encodeURIComponent(email)}`)
+fetch(`/php/api/data.usuario.email.php?email=${encodeURIComponent(email)}`)
     .then((response) => response.json())
     .then((data) => {
     if (data.error) {

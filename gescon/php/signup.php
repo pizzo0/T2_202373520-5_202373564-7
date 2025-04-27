@@ -1,5 +1,6 @@
 <?php
 
+
 global $error;
 $error = null;
 

@@ -1,8 +1,16 @@
 RewriteEngine On
 
+# Redirige cualquier solicitud con ?page= a la URL amigable
 RewriteCond %{THE_REQUEST} \s\?page=([^\s&]+) [NC]
 RewriteRule ^ index.php?page=%1 [R=301,L]
 
+# Si la URL es /articulo/1, redirige a /?page=articulo&id_articulo=1
+RewriteRule ^articulo/([0-9]+)$ index.php?page=articulo&id_articulo=$1 [L,QSA]
+
+# Si la URL es /articulo/1, redirige a /?page=articulo&id_articulo=1
+RewriteRule ^editar/([0-9]+)$ index.php?page=editar&id_articulo=$1 [L,QSA]
+
+# Redirige cualquier otra URL amigable a ?page
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^([^/]+)$ index.php?page=$1 [L,QSA]

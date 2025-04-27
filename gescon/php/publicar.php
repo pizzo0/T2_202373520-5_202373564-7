@@ -7,8 +7,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $database->begin_transaction();
     try {
         $sql = "
-        INSERT INTO Articulos (password,titulo,fecha_envio,resumen,rut_contacto)
-        VALUES (?,?,?,?,?)
+        INSERT INTO Articulos (password,titulo,resumen,rut_contacto)
+        VALUES (?,?,?,?)
         ";
         $stmt->prepare($sql);
 
@@ -21,11 +21,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         
         $pass_hash = password_hash($pass, PASSWORD_DEFAULT);
         $titulo = $_POST["titulo"];
-        $fecha_envio = date("Y-m-d");
         $resumen = $_POST["resumen"];
         $rut_contacto = getUsuarioDataEmail($email_contacto)["rut"];
 
-        $stmt->bind_param("sssss",$pass_hash,$titulo,$fecha_envio,$resumen,$rut_contacto);
+        $stmt->bind_param("ssss",$pass_hash,$titulo,$resumen,$rut_contacto);
 
         $stmt->execute();
 
@@ -56,6 +55,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $stmt->execute();
         }
 
+        // $rut_revisores = [];
+        // while (count($rut_revisores) < 3) {
+            
+        // }
+
         $database->commit();
 
         $_SESSION["notificacion"] = [
@@ -63,7 +67,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             "mensaje" => "Articulo publicado con exito :)"
         ];
 
-        header("location: /");
+        header("location: /articulo/$id_articulo");
         exit;
 
     } catch (\Throwable $th) {

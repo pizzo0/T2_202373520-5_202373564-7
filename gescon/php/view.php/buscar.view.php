@@ -20,7 +20,7 @@ $svg_ordenar = getAsset("/svg/ordenar.svg");
         </div>
         <div>
             <label for="topicos">Topico:</label>
-            <select name="topicos" id="topicos">
+            <select class="select-input select-input-bigger" name="topicos" id="topicos">
                 <option value="">Seleccionar topico</option>
             </select>
         </div>
@@ -44,7 +44,17 @@ $svg_ordenar = getAsset("/svg/ordenar.svg");
 <div class="buscar-container">
     <div class="buscar-filtros-container">
         <button id="btn-filtrar" onclick="toggleFC()"><span><?= $svg_filtro ?></span> Filtrar resultados</button>
-        <button id="btn-filtrar" onclick="toggleFC()"><span><?= $svg_ordenar ?></span> Ordenar por</button>
+        <div class="ordenar-container" id="select">
+            <label for="ordenar_por">Ordenar por:</label>
+            <select class="select-input" style="width:200px;" name="ordenar_por" id="ordenar_por">
+                <option value="fecha_envio_desc">Fecha de publicación (reciente primero)</option>
+                <option value="fecha_envio_asc">Fecha de publicación (antiguo primero)</option>
+                <option value="autor_asc">Autor (A-Z)</option>
+                <option value="autor_desc">Autor (Z-A)</option>
+                <option value="titulo_asc">Título (A-Z)</option>
+                <option value="titulo_desc">Título (Z-A)</option>
+            </select>
+        </div>
     </div>
     <div id="resultados-busqueda">
         <!-- cargan los resultados -->

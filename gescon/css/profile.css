@@ -59,7 +59,7 @@
 
 .profile-articulos-container {
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
     overflow-y: auto;
     max-height: 100%;
     gap: 1rem;
@@ -108,8 +108,15 @@
     border-radius: 100px;
 }
 
-.articulo-preview:hover a {
-    text-decoration: underline;
+.btns-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.btn-rojo {
+    background-color: #160000;
+    border: 1px solid #ffb2b2;
 }
 
 @media (min-width: 900px) {

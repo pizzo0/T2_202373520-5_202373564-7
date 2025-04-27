@@ -25,6 +25,7 @@
   letter-spacing: -0.5px;
   background-color: unset;
   border-spacing: 0;
+  word-wrap: break-word;
 }
 
 .no-overflow {
@@ -131,6 +132,7 @@ input:focus, .input:focus {
 .btn:hover, button:hover {
   background-color: var(--font-color);
   color: var(--bg-color);
+  text-decoration: none;
 }
 
 .btn:hover span svg, button:hover span svg, .btn:hover svg, button:hover svg {
@@ -170,9 +172,17 @@ input[type="radio"]:checked {
   border-radius: 100px;
 }
 
-.rol {
+.rol-1 {
   background-color: #180b34 !important;
   border: 1px solid #b598ff !important;
+}
+.rol-2 {
+  background-color: #340b0b !important;
+  border: 1px solid #ff9898 !important;
+}
+.rol-3 {
+  background-color: #083120 !important;
+  border: 1px solid #98ffd1 !important;
 }
 
 .btn, button, input, .input {
@@ -202,4 +212,33 @@ label {
   padding: 0 3px;
   background-color: var(--bg-color);
   width: fit-content;
+}
+
+.select-input {
+    display: flex;
+    height: fit-content;
+    width: fit-content;
+    padding: 5px 10px;
+    border: 1px solid var(--font-color);
+    cursor: pointer;
+    white-space: nowrap;
+    justify-content: center;
+    align-items: center;
+    border-radius: var(--default-border-radius);
+  
+    transition: all 0.2s ease;
+
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.select-input-bigger {
+    width: 100%;
+    padding:calc(var(--default-px)/2) var(--default-px) calc(var(--default-px)/2)  var(--default-px);
+}
+
+option {
+  background-color: var(--bg-color);
+  color: var(--font-color);
 }

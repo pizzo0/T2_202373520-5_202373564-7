@@ -14,19 +14,33 @@ $revisor = isset($_GET['revisor']) ? $_GET['revisor'] :'';
 $fecha_desde = empty($fecha_desde) ? '1900-01-01' : $fecha_desde;
 $fecha_hasta = empty($fecha_hasta) ? '2100-12-31' : $fecha_hasta;
 
+$ordenar_por = isset($_GET['ordenar_por']) ? $_GET['ordenar_por'] : 'fecha_envio_desc'; // Valor por defecto
+$opciones_orden = [
+    'fecha_envio_asc' => 'fecha_envio ASC',
+    'fecha_envio_desc' => 'fecha_envio DESC',
+    'autor_asc' => 'autores ASC',
+    'autor_desc' => 'autores DESC',
+    'titulo_asc' => 'titulo ASC',
+    'titulo_desc' => 'titulo DESC',
+];
+$ordenar_por_query = isset($opciones_orden[$ordenar_por]) ? $opciones_orden[$ordenar_por] : 'fecha_envio DESC';
+
 $database = getDatabase();
+
 
 $stmt = $database->prepare("
     SELECT * FROM obtenerArticulos
     WHERE
-        autores LIKE ?
+        (autores LIKE ? OR autores LIKE ?)
         AND revisores LIKE ?
         AND topicos LIKE ?
         AND titulo LIKE ?
-        AND fecha_envio BETWEEN ? AND ?;
+        AND fecha_envio BETWEEN ? AND ?
+    ORDER BY $ordenar_por_query
 ");
 
 $stmt->execute([
+    "%$autor%",
     "%$autor%",
     "%$revisor%",
     "%$topico%",
