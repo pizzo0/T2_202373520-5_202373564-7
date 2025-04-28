@@ -7,7 +7,7 @@ if ($user === null) {
         "tipo" => "alerta",
         "mensaje" => "Necesitas iniciar sesion para continuar"
     ];
-    header("Location: /?page=login");
+    header("Location: /login");
     exit();
 }
 
@@ -140,5 +140,17 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
             ];
         }
 
+    }
+
+    if ($_POST['eliminar'] == 1) {
+        eliminarUsuario($rut);
+
+        $_SESSION["notificacion"] = [
+            "tipo" => "ok",
+            "mensaje" => "Tu cuenta fue eliminada con exito."
+        ];
+
+        header("Location: /");
+        exit();
     }
 }

@@ -28,6 +28,7 @@ function getDatabase() {
 }
 
 function generarPassword() {
+    // para no complicarse la vida solo retorna 1 como contraseña para la prueba de la pagina
     return 1;
 }
 
@@ -67,7 +68,7 @@ function getUsuarioDataEmail($email) {
     $database = getDatabase();
     
     $stmt = $database->prepare("
-    SELECT rut, nombre, email FROM Usuarios
+    SELECT rut, nombre, email, id_rol FROM Usuarios
     WHERE email = ?
     ");
     $stmt->bind_param("s",$email);
@@ -91,6 +92,19 @@ function getTopicos() {
         $topicos = [];
     }
     return $topicos;
+}
+
+function getTopicoNombre($id_topico) {
+    $database = getDatabase();
+    $res = $database->query("
+    SELECT * FROM Topicos
+    WHERE id = $id_topico
+    ");
+
+    if ($res) {
+        $res = $res->fetch_assoc();
+        return $res;
+    }
 }
 
 function getStyle($css_file) {
@@ -189,6 +203,70 @@ function getPhp() {
 
 function getAsset($path) {
     return file_get_contents(config("assets_path") . $path);
+}
+
+function registrarUsuario($postData) {
+    global $error;
+    
+    // Validación de los campos
+    if (empty($postData["rut"])) {
+        $error = "Rut vacío.";
+        return false;
+    } elseif (empty($postData["nombre"])) {
+        $error = "Nombre vacío.";
+        return false;
+    } elseif (!filter_var($postData["correo"], FILTER_VALIDATE_EMAIL)) {
+        $error = "Correo no válido.";
+        return false;
+    } elseif ($postData["pass"] !== $postData["pass_confirm"]) {
+        $error = "Las contraseñas deben coincidir.";
+        return false;
+    }
+    
+    // Hashear la contraseña
+    $pass_hash = password_hash($postData["pass"], PASSWORD_DEFAULT);
+    $database = getDatabase();
+    
+    $sql = "
+    INSERT INTO Usuarios (rut, nombre, email, password)
+    VALUES (?, ?, ?, ?)
+    ";
+    
+    $stmt = $database->stmt_init();
+    
+    if ($stmt->prepare($sql)) {
+        $stmt->bind_param("ssss", $postData["rut"], $postData["nombre"], $postData["correo"], $pass_hash);
+        
+        try {
+            // Intentamos ejecutar la consulta
+            $stmt->execute();
+            return true;
+        } catch (mysqli_sql_exception $e) {
+            // Si ocurre un error, lo manejamos según el tipo
+            if (str_contains($e->getMessage(), 'PRIMARY')) {
+                $error = "El Rut ingresado ya está registrado.";
+            } elseif (str_contains($e->getMessage(), 'email')) {
+                $error = "El correo ingresado ya está registrado.";
+            } else {
+                $error = "Error al registrar: " . $e->getMessage();
+            }
+            return false;
+        }
+    } else {
+        $error = "Error en la preparación de la consulta.";
+        return false;
+    }
+}
+
+function eliminarUsuario($rut) {
+    $user = getUsuarioData();
+    if ($user['rut'] === $rut || $user['id_rol'] === 3) {
+        $database = getDatabase();
+        $database->query("
+        DELETE FROM Usuarios
+        WHERE rut = '$rut'
+        ");
+    }
 }
 
 function init() {

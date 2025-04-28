@@ -4,6 +4,7 @@ $nombre = explode(" ",$user['nombre'])[0];
 
 
 $svg_añadir = getAsset("/svg/añadir.svg");
+
 ?>
 <div class="menu-perfil big-border-radius">
     <div class="menu-perfil-forms">
@@ -43,6 +44,10 @@ $svg_añadir = getAsset("/svg/añadir.svg");
         </form>
         <div class="btns-container">
             <button id="toggle-editar-perfil">Cambiar contraseña</button>
+            <form method="POST">
+                <input type="hidden" name="eliminar" value="1">
+                <button clasS="btn-rojo" type="submit">Eliminar cuenta</button>
+            </form>
             <button class="btn-rojo" onclick="window.location.href='/logout'" >Cerrar sesion</button>
         </div>
         <button id="editar-perfil-btn">Salir de opciones</button>
@@ -58,6 +63,12 @@ $svg_añadir = getAsset("/svg/añadir.svg");
         <p>Para editar un articulo, presiona sobre el.</p>
         <p id="num-articulos"></p>
         <button id="editar-perfil-btn">Opciones de perfil</button>
+        <?php if ($user['id_rol'] === 3) : ?>
+            <div class="jc-acciones">
+                <a class="btn" href="/gestion">Gestión</a>
+                <a class="btn" href="/asignar">Asignación</a>
+            </div>
+        <?php endif ?>
     </div>
     <div class="profile-articulos-container">
         <button onclick="window.location.href='/publicar'" style="width:100%;"><span><?= $svg_añadir ?></span> Crear un nuevo articulo</button>

@@ -11,8 +11,6 @@ function config($key = "") {
             "login" => "Iniciar sesion",
             "buscar" => "Buscar",
             "publicar" => "Publicar",
-            "gestion" => "Gestion",
-            "asignar" => "Asignación",
             "signup" => "Registrar",
             "perfil" => "Perfil",
         ],

@@ -37,3 +37,9 @@
     font-size: 14px;
     text-transform: uppercase;
 }
+
+@media (max-width: 900px) {
+    .vista-articulo-titulo {
+        font-size: calc(var(--font-size)*2.4);
+    }
+}

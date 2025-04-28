@@ -110,8 +110,21 @@
 
 .btns-container {
     display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
     flex-direction: row;
     justify-content: space-between;
+}
+
+.jc-acciones {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 1rem;
+    width: 100%;
+}
+
+.jc-acciones .btn{
+    width: 100%;
 }
 
 .btn-rojo {

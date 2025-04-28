@@ -32,7 +32,7 @@ if (isset($_GET['id_articulo'])) {
                 if (isset($articulo['topicos']) && !empty($articulo['topicos'])) {
                     $topicos = explode(', ', $articulo['topicos']);
                     foreach ($topicos as $topico) {
-                        echo "<span class='etiqueta2'>$topico</span><br>";
+                        echo "<span class='etiqueta'>$topico</span><br>";
                     }
                 } else {
                     echo 'No hay tópicos disponibles.';
