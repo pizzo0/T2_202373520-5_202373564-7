@@ -1,4 +1,4 @@
-header {
+.header {
     position: sticky;
     top: 0;
     background-color: var(--bg-color);
@@ -11,15 +11,15 @@ header {
     height: 63px;
 }
 
-header .gescon {
+.header .gescon {
     display: none;
 }
     
-nav .gescon {
+.nav .gescon {
     display: block;
 }
   
-nav {
+.nav {
     display: flex;
     margin: auto;
     gap: var(--font-size);
@@ -50,12 +50,12 @@ nav {
 }
 
 @media screen and (max-width: 900px) {
-    header {
+    .header {
         display: flex;
         justify-content: space-between;
     }
 
-    nav {
+    .nav {
         position: fixed;
         flex-direction: column;
         top: 0;
@@ -84,11 +84,11 @@ nav {
         right: 0;
     }
     
-    nav .gescon {
+    .nav .gescon {
         display: none !important;
     }
 
-    header .gescon {
+    .header .gescon {
         display: block;
     }
 
@@ -112,7 +112,7 @@ nav {
         display: block;
     }
 
-    nav #mostrar-nav {
+    .nav #mostrar-nav {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -124,7 +124,7 @@ nav {
         width: 40px;
     }
 
-    nav #mostrar-nav svg {
+    .nav #mostrar-nav svg {
         height: 24px;
         width: 24px;
     }

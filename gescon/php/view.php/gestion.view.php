@@ -2,10 +2,88 @@
 
 
 $user = getUsuarioData();
+
+$svg_filtro = getAsset("/svg/filtro.svg");
+$svg_ordenar = getAsset("/svg/ordenar.svg");
 ?>
 <?php if ($user['id_rol'] < 3) : ?>
     <?php include '404.view.php'; ?>
 <?php else : ?>
+    <div class="nav-tabs" id="navTabs">
+        <button class="tab-btn" id="tabBtn" data-target="tabRevisores">Revisores</button>
+        <button class="tab-btn" id="tabBtn" data-target="tabTopicos">Topicos</button>
+        <button class="tab-btn" id="tabBtn" data-target="tabAsig">Asignacion</button>
+    </div>
+    <div class="tabs-container" id="tabContent">
+        <div class="tab" id="tabRevisores">
+            <button id="toggle_crear_revisor">+ Crear revisor</button>
+            <div class="revisores-container"> <!-- revisores --> </div>
+        </div>
+        <div class="tab" id="tabTopicos">
+            <button>+ Crear topico/especialidad</button>
+            <div class="topicos-container"> <!-- topicos --> </div>
+        </div>
+        <div class="tab" id="tabAsig">
+            <div class="buscar-container">
+                <div class="buscar-filtros-container">
+                    <button id="btn-filtrar" onclick="toggleFC()"><span><?= $svg_filtro ?></span> Filtrar resultados</button>
+                    <div class="ordenar-container" id="select">
+                        <label for="ordenar_por">Ordenar por:</label>
+                        <select class="select-input" style="width:200px;" name="ordenar_por" id="ordenar_por">
+                            <option value="fecha_envio_desc">Fecha de publicación (reciente primero)</option>
+                            <option value="fecha_envio_asc">Fecha de publicación (antiguo primero)</option>
+                            <option value="autor_asc">Autor (A-Z)</option>
+                            <option value="autor_desc">Autor (Z-A)</option>
+                            <option value="titulo_asc">Título (A-Z)</option>
+                            <option value="titulo_desc">Título (Z-A)</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="resultados-busqueda">
+                    <!-- cargan los resultados -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="filtro-container">
+        <form method="post" id="filtro-form">
+            <span id="filtro-num-resultados"><!-- resultados --></span>
+            <div>
+                <span>Información del articulo:</span>
+                <br>
+                <label for="titulo">Titulo:</label>
+                <input type="text" name="titulo" id="titulo">
+            </div>
+            <div>
+                <label for="autor">Autor:</label>
+                <input type="text" name="autor" id="autor">
+            </div>
+            <div>
+                <label for="topicos">Topico:</label>
+                <select class="select-input select-input-bigger" name="topicos" id="topicos">
+                    <option value="">Seleccionar topico</option>
+                </select>
+            </div>
+            <div>
+                <label for="revisor">Revisor:</label>
+                <input type="text" name="revisor" id="revisor">
+            </div>
+            <div>
+                <span>Fecha de publicación:</span>
+                <br>
+                <label for="fecha_desde">Desde:</label>
+                <input type="date" name="fecha_desde" id="fecha_desde">
+                <label for="fecha_hasta">Hasta:</label>
+                <input type="date" name="fecha_hasta" id="fecha_hasta">
+            </div>
+            <br>
+            <button type="submit" onclick="toggleFC()">Filtrar</button>
+        </form>
+    </div>
+    <div id="filtro-overlay"></div>
+
+    <div class="menu-overlay"></div>
     <div id="crear-revisor-container">
         <h1>Registrar un revisor</h1>
         <form method="post" id="crear-revisor-form" class="formulario">
@@ -37,10 +115,8 @@ $user = getUsuarioData();
             </div>
         </form>
     </div>
-    <div class="menu-overlay"></div>
-    <button id="toggle_crear_revisor">+ Crear revisor</button>
-    <div class="revisores-container">
-        <!-- revisores -->
-    </div>
-    <script src=<?php getJs("cargarRevisores");?>></script>
+
+    <script src=<?php getJs("getRevisores");?>></script>
+    <script src=<?php getJs("tabs");?>></script>
+    <script src=<?php getJs(js_file: "getArticulosFiltrados");?>></script>
 <?php endif ?>

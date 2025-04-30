@@ -107,8 +107,19 @@ function getTopicoNombre($id_topico) {
     }
 }
 
-function getStyle($css_file) {
-    echo "'" . config("styles_path") . "/" . $css_file . ".css'";
+// obtiene todos los estilos dentro de la carpeta donde estan los css
+function getStyles() {
+    $styles_dir = config("styles_path");
+    $aux_path = rtrim($styles_dir, '/');
+    $path = $_SERVER['DOCUMENT_ROOT'] . $aux_path;
+
+    if(is_dir($path)) {
+        foreach(scandir($path) as $file) {
+            if(pathinfo($file, PATHINFO_EXTENSION) === 'css') {
+                echo '<link rel="stylesheet" href="' . $aux_path . '/' . $file . '">' . PHP_EOL;
+            }
+        }
+    }
 }
 
 function getJs($js_file) {

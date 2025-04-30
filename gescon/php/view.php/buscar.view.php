@@ -15,6 +15,10 @@ $svg_ordenar = getAsset("/svg/ordenar.svg");
             <input type="text" name="titulo" id="titulo">
         </div>
         <div>
+            <label for="contacto">Contacto:</label>
+            <input type="text" name="contacto" id="contacto">
+        </div>
+        <div>
             <label for="autor">Autor:</label>
             <input type="text" name="autor" id="autor">
         </div>
@@ -49,8 +53,8 @@ $svg_ordenar = getAsset("/svg/ordenar.svg");
             <select class="select-input" style="width:200px;" name="ordenar_por" id="ordenar_por">
                 <option value="fecha_envio_desc">Fecha de publicación (reciente primero)</option>
                 <option value="fecha_envio_asc">Fecha de publicación (antiguo primero)</option>
-                <option value="autor_asc">Autor (A-Z)</option>
-                <option value="autor_desc">Autor (Z-A)</option>
+                <option value="autor_asc">Contacto [Autor] (A-Z)</option>
+                <option value="autor_desc">Contacto [Autor] (Z-A)</option>
                 <option value="titulo_asc">Título (A-Z)</option>
                 <option value="titulo_desc">Título (Z-A)</option>
             </select>

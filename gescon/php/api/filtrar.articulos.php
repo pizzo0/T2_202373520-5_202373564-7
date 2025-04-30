@@ -5,6 +5,7 @@ require "../config/config.php";
 require "../config/func.php";
 
 $titulo = isset($_GET['titulo']) ? $_GET['titulo'] :'';
+$contacto = isset($_GET['contacto']) ? $_GET['contacto'] :'';
 $autor = isset($_GET['autor']) ? $_GET['autor'] :'';
 $fecha_desde = isset($_GET['fecha_desde']) ? $_GET['fecha_desde'] :'1900-01-01';
 $fecha_hasta = isset($_GET['fecha_hasta']) ? $_GET['fecha_hasta'] :'2100-12-31';
@@ -18,8 +19,8 @@ $ordenar_por = isset($_GET['ordenar_por']) ? $_GET['ordenar_por'] : 'fecha_envio
 $opciones_orden = [
     'fecha_envio_asc' => 'fecha_envio ASC',
     'fecha_envio_desc' => 'fecha_envio DESC',
-    'autor_asc' => 'autores ASC',
-    'autor_desc' => 'autores DESC',
+    'autor_asc' => 'contacto_nombre ASC',
+    'autor_desc' => 'contacto_nombre DESC',
     'titulo_asc' => 'titulo ASC',
     'titulo_desc' => 'titulo DESC',
 ];
@@ -31,7 +32,8 @@ $database = getDatabase();
 $stmt = $database->prepare("
     SELECT * FROM obtenerArticulos
     WHERE
-        (autores LIKE ? OR autores LIKE ?)
+        (contacto_nombre LIKE ? OR contacto_nombre LIKE ?)
+        AND (autores LIKE ? OR autores LIKE ?)
         AND revisores LIKE ?
         AND topicos LIKE ?
         AND titulo LIKE ?
@@ -40,6 +42,8 @@ $stmt = $database->prepare("
 ");
 
 $stmt->execute([
+    "%$contacto%",
+    "%$contacto%",
     "%$autor%",
     "%$autor%",
     "%$revisor%",

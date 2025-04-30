@@ -1,0 +1,39 @@
+.tab-btn {
+    border-radius: var(--default-border-radius) var(--default-border-radius) 0 0;
+    margin-bottom: -1px;
+    width: 100%;
+    height: 40px;
+    transition: none !important;
+}
+
+.tab-btn:hover {
+    background-color: none !important;
+    color: none !important;
+}
+
+.tab-btn-activo {
+    border-bottom: 1px solid var(--bg-color);
+}
+
+.tab {
+    display: none;
+}
+
+.tab-activo {
+    display: block;
+}
+
+.nav-tabs {
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid var(--font-color);
+}
+
+
+
+@media screen and (min-width: 900px) {
+    .tab-btn {
+        width: fit-content;
+        min-width: 200px;
+    }
+}

@@ -14,20 +14,12 @@ $svg_cerrar = getAsset("/svg/cerrar.svg");
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href=<?php getStyle("styles"); ?>>
-    <link rel="stylesheet" href=<?php getStyle("publicar"); ?>>
-    <link rel="stylesheet" href=<?php getStyle("barra"); ?>>
-    <link rel="stylesheet" href=<?php getStyle("notificacion"); ?>>
-    <link rel="stylesheet" href=<?php getStyle("buscar"); ?>>
-    <link rel="stylesheet" href=<?php getStyle("profile"); ?>>
-    <link rel="stylesheet" href=<?php getStyle(css_file: "nav"); ?>>
-    <link rel="stylesheet" href=<?php getStyle(css_file: "articulo"); ?>>
-    <link rel="stylesheet" href=<?php getStyle(css_file: "gestion"); ?>>
+    <?php getStyles(); ?>
 </head>
 <body>
-    <header class="no-overflow">
+    <header class="no-overflow header">
         <a href="/" class="gescon"><?php getNombre(); ?></a>
-        <nav id="nav" class="no-overflow">
+        <nav id="nav" class="no-overflow nav">
             <a href="/" class="gescon"><?php getNombre(); ?></a>
             <?php getNav(""); ?>
             <button id="mostrar-nav"><?= $svg_cerrar ?></button>

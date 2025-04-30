@@ -61,7 +61,6 @@ $svg_añadir = getAsset("/svg/añadir.svg");
             <span class="etiqueta2 rol-<?= $user['id_rol'] ?>"><?php echo getRolNombre($user['id_rol']); ?></span>
         </div>
         <p>Para editar un articulo, presiona sobre el.</p>
-        <p id="num-articulos"></p>
         <button id="editar-perfil-btn">Opciones de perfil</button>
         <?php if ($user['id_rol'] === 3) : ?>
             <div class="jc-acciones">
@@ -70,14 +69,33 @@ $svg_añadir = getAsset("/svg/añadir.svg");
             </div>
         <?php endif ?>
     </div>
-    <div class="profile-articulos-container">
-        <button onclick="window.location.href='/publicar'" style="width:100%;"><span><?= $svg_añadir ?></span> Crear un nuevo articulo</button>
-        <!-- articulos del usuario -->
-    </div>
-    <div class="profile-revisiones-container">
-        <!-- articulos que puede revisar -->
+    
+    <div class="profile-content-container">
+        <div class="nav-tabs" id="navTabs">
+            <button class="tab-btn" id="tabBtn" data-target="tabArticulos">Articulos</button>
+            <?php if ($user['id_rol'] >= 2) : ?>
+                <button class="tab-btn" id="tabBtn" data-target="tabRevisiones">Revisar</button>
+            <?php endif ?>
+        </div>
+        <div class="tabs-container" id="tabContent">
+            <div class="tab" id="tabArticulos">
+                <div class="profile-articulos-container">
+                    <button onclick="window.location.href='/publicar'" style="width:100%;"><span><?= $svg_añadir ?></span> Crear un nuevo articulo</button>
+                    <p id="num-articulos"></p>
+                    <!-- articulos del usuario -->
+                </div>
+                <div class="profile-revisiones-container">
+                    <!-- articulos que puede revisar -->
+                </div>
+            </div>
+            <?php if ($user['id_rol'] >= 2) : ?>
+                <div class="tab" id="tabRevisiones">
+                </div>
+            <?php endif ?>
+        </div>
     </div>
 </div>
 
 <script src=<?php getJs("editarPerfil");?>></script>
 <script src=<?php getJs("usuarioArticulos");?>></script>
+<script src=<?php getJs("tabs");?>></script>

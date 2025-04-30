@@ -30,10 +30,6 @@ function cargarRevisores() {
                     form.className = 'revisor-preview';
                     form.method = 'POST';
 
-                    const formEliminar = document.createElement('form');
-                    formEliminar.className = 'revisor-eliminar'
-                    formEliminar.method = 'POST';
-
                     const divRut = document.createElement('div');
                     divRut.className = 'revisor-preview-rut';
                     const spanRut = document.createElement('span');
@@ -56,13 +52,12 @@ function cargarRevisores() {
                     divEspecialidades.className = 'revisor-preview-especialidades';
                     divEspecialidades.id = 'esp-revisor';
                     
-                    // 🔥 Cambiamos esta parte:
                     if (Array.isArray(revisor.id_topicos) && Array.isArray(revisor.nombres_topicos)) {
-                        revisor.id_topicos.forEach((id, index) => {
+                        revisor.id_topicos.forEach((id, i) => {
                             const span = document.createElement('span');
                             span.className = 'etiqueta';
                             span.setAttribute('data-id', id);
-                            span.textContent = revisor.nombres_topicos[index]['nombre'];
+                            span.textContent = revisor.nombres_topicos[i]['nombre'];
                             divEspecialidades.appendChild(span);
                         });
                     }
@@ -71,31 +66,11 @@ function cargarRevisores() {
                     divAcciones.className = 'revisor-preview-acciones';
 
                     const btnAñadir = document.createElement('button');
-                    btnAñadir.id = 'esp_revisor_añadir';
+                    btnAñadir.id = 'opcionesRevisor';
                     btnAñadir.type = 'button';
-                    btnAñadir.textContent = 'Añadir especialidad';
+                    btnAñadir.textContent = 'Opciones';
 
-                    divAcciones.appendChild(btnAñadir);
-
-                    const btnEliminar = document.createElement('button');
-                    btnEliminar.id = 'eliminar_revisor';
-                    btnEliminar.className = 'btn-rojo';
-                    btnEliminar.type = 'submit';
-                    btnEliminar.textContent = 'Eliminar';
-
-                    const inputRut = document.createElement('input');
-                    inputRut.type = "hidden";
-                    inputRut.name= "rut_revisor";
-                    inputRut.value= `${revisor.rut}`;
-
-                    const inputEliminar = document.createElement('input');
-                    inputEliminar.type = "hidden";
-                    inputEliminar.name= "tipo";
-                    inputEliminar.value= "eliminar";                    
-                    
-                    formEliminar.appendChild(inputRut);
-                    formEliminar.appendChild(inputEliminar);
-                    formEliminar.appendChild(btnEliminar);
+                    divAcciones.appendChild(btnAñadir);             
 
                     form.appendChild(divRut);
                     form.appendChild(divData);
@@ -103,7 +78,6 @@ function cargarRevisores() {
                     form.appendChild(divAcciones);
 
                     div.appendChild(form);
-                    div.appendChild(formEliminar);
 
                     container.appendChild(div);
                 });

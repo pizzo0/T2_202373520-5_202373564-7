@@ -76,6 +76,7 @@ cargarArticulos = (filtros = null) => {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
+
     const form = document.getElementById('filtro-form');
     const formData = new FormData(form);
 
@@ -90,7 +91,7 @@ window.addEventListener('DOMContentLoaded', () => {
         cargarArticulos();
     }
     
-
+    form.dispatchEvent(new Event('submit'));
 });
 
 document.getElementById('filtro-form').addEventListener('submit', (e) => {
