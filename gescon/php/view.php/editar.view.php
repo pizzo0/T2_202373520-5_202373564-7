@@ -191,9 +191,13 @@ if (!empty($articulo)) {
 
             <div class="btn_publicar">
                 <button type="submit">Guardar cambios</button>
+                <button class="btn-rojo">Eliminar</button>
+                <!-- implementar eliminar articulo -->
             </div>
         </form>
-        <button class="btn-rojo" style="width:100%;" onClick="window.location.href='/articulo/<?= $id_articulo ?>'">Dejar de editar</button>
+        <div>
+            <button style="width:100%;" onClick="window.location.href='/articulo/<?= $id_articulo ?>'">Dejar de editar</button>
+        </div>
     </div>
 
     <script src=<?php getJs("inputTopicos"); ?>></script>

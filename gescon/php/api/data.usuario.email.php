@@ -29,3 +29,6 @@ if ($data) {
     http_response_code(404);
     echo json_encode(["error" => "Usuario no existe"]);
 }
+
+$stmt->close();
+$database->close();

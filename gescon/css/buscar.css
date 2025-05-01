@@ -113,9 +113,28 @@
 
 .buscar-filtros-container {
     display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 0.5rem;
+    align-items: flex-end;
+    justify-content: space-between;
+}
+
+.main-buscar-filtros-container {
+    display: flex;
+    flex-direction: row;
     flex-wrap: wrap;
     gap: 0.5rem;
     align-items: flex-end;
+}
+
+.paginas-nav {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    align-items: center;
 }
 
 @media (min-width: 900px) {

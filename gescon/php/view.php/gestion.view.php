@@ -10,7 +10,7 @@ $svg_ordenar = getAsset("/svg/ordenar.svg");
     <?php include '404.view.php'; ?>
 <?php else : ?>
     <div class="nav-tabs" id="navTabs">
-        <button class="tab-btn" id="tabBtn" data-target="tabRevisores">Revisores</button>
+        <button class="tab-btn tab-btn-activo" id="tabBtn" data-target="tabRevisores">Revisores</button>
         <button class="tab-btn" id="tabBtn" data-target="tabTopicos">Topicos</button>
         <button class="tab-btn" id="tabBtn" data-target="tabAsig">Asignacion</button>
     </div>
@@ -20,23 +20,30 @@ $svg_ordenar = getAsset("/svg/ordenar.svg");
             <div class="revisores-container"> <!-- revisores --> </div>
         </div>
         <div class="tab" id="tabTopicos">
-            <button>+ Crear topico/especialidad</button>
+            <button id="modalBtn" data-target="crear-topico-container">+ Crear topico/especialidad</button>
             <div class="topicos-container"> <!-- topicos --> </div>
         </div>
         <div class="tab" id="tabAsig">
             <div class="buscar-container">
                 <div class="buscar-filtros-container">
-                    <button id="btn-filtrar" onclick="toggleFC()"><span><?= $svg_filtro ?></span> Filtrar resultados</button>
-                    <div class="ordenar-container" id="select">
-                        <label for="ordenar_por">Ordenar por:</label>
-                        <select class="select-input" style="width:200px;" name="ordenar_por" id="ordenar_por">
-                            <option value="fecha_envio_desc">Fecha de publicación (reciente primero)</option>
-                            <option value="fecha_envio_asc">Fecha de publicación (antiguo primero)</option>
-                            <option value="autor_asc">Autor (A-Z)</option>
-                            <option value="autor_desc">Autor (Z-A)</option>
-                            <option value="titulo_asc">Título (A-Z)</option>
-                            <option value="titulo_desc">Título (Z-A)</option>
-                        </select>
+                    <div class="main-buscar-filtros-container">
+                        <button id="btn-filtrar" onclick="toggleFC()"><span><?= $svg_filtro ?></span> Filtrar resultados</button>
+                        <div class="ordenar-container" id="select">
+                            <label for="ordenar_por">Ordenar por:</label>
+                            <select class="select-input" style="width:200px;" name="ordenar_por" id="ordenar_por">
+                                <option value="fecha_envio_desc">Fecha de publicación (reciente primero)</option>
+                                <option value="fecha_envio_asc">Fecha de publicación (antiguo primero)</option>
+                                <option value="autor_asc">Contacto [Autor] (A-Z)</option>
+                                <option value="autor_desc">Contacto [Autor] (Z-A)</option>
+                                <option value="titulo_asc">Título (A-Z)</option>
+                                <option value="titulo_desc">Título (Z-A)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="paginas-nav">
+                        <span id="pagina-info"></span>
+                        <button id="btnAnterior"><</button>
+                        <button id="btnSiguiente">></button>
                     </div>
                 </div>
                 <div id="resultados-busqueda">
@@ -46,6 +53,23 @@ $svg_ordenar = getAsset("/svg/ordenar.svg");
         </div>
     </div>
     
+    <div class="modal" id="crear-topico-container">
+        <div class="modal-content">
+            <form class="crear-topico-form formulario" method="POST">
+                <p>Crea un topico nuevo</p>
+                <div>
+                    <label for="topico">Topico</label>
+                    <input type="text" id="topico" name="topico" required>
+                </div>
+                <button type="submit">Crear</button>
+            </form>
+        </div>
+    </div>
+    <div class="modal-overlay" data-overlay-target="crear-topico-container"> </div>
+
+    <div class="modal" id="modificar-revisor-container"></div>
+    <div class="modal-overlay" data-overlay-target="modificar-revisor-container"></div>
+
     <div class="filtro-container">
         <form method="post" id="filtro-form">
             <span id="filtro-num-resultados"><!-- resultados --></span>
@@ -84,7 +108,7 @@ $svg_ordenar = getAsset("/svg/ordenar.svg");
     <div id="filtro-overlay"></div>
 
     <div class="menu-overlay"></div>
-    <div id="crear-revisor-container">
+    <div id="crear-revisor-container" class="big-border-radius">
         <h1>Registrar un revisor</h1>
         <form method="post" id="crear-revisor-form" class="formulario">
             <div class="inputs-container">
@@ -116,7 +140,9 @@ $svg_ordenar = getAsset("/svg/ordenar.svg");
         </form>
     </div>
 
-    <script src=<?php getJs("getRevisores");?>></script>
+    <script src=<?php getJs("getTopicos");?>></script>
+    <script src=<?php getJs("modificarRevisores");?>></script>
     <script src=<?php getJs("tabs");?>></script>
-    <script src=<?php getJs(js_file: "getArticulosFiltrados");?>></script>
+    <script src=<?php getJs("modal");?>></script>
+    <script src=<?php getJs("asignarRevisores");?>></script>
 <?php endif ?>

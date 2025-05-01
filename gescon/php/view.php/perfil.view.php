@@ -63,34 +63,35 @@ $svg_añadir = getAsset("/svg/añadir.svg");
         <p>Para editar un articulo, presiona sobre el.</p>
         <button id="editar-perfil-btn">Opciones de perfil</button>
         <?php if ($user['id_rol'] === 3) : ?>
-            <div class="jc-acciones">
-                <a class="btn" href="/gestion">Gestión</a>
-                <a class="btn" href="/asignar">Asignación</a>
-            </div>
+            <a class="btn" style="width: 100%;" href="/gestion">Gestión</a>
         <?php endif ?>
     </div>
     
     <div class="profile-content-container">
         <div class="nav-tabs" id="navTabs">
-            <button class="tab-btn" id="tabBtn" data-target="tabArticulos">Articulos</button>
+            <button class="tab-btn tab-btn-activo" id="tabBtn" data-target="tabArticulos">Articulos</button>
             <?php if ($user['id_rol'] >= 2) : ?>
                 <button class="tab-btn" id="tabBtn" data-target="tabRevisiones">Revisar</button>
             <?php endif ?>
         </div>
-        <div class="tabs-container" id="tabContent">
-            <div class="tab" id="tabArticulos">
-                <div class="profile-articulos-container">
+        <div class="tabs-container overflow-fix" id="tabContent">
+            <div class="tab overflow-fix" id="tabArticulos">
+                <div class="profile-articulos-container overflow-fix">
                     <button onclick="window.location.href='/publicar'" style="width:100%;"><span><?= $svg_añadir ?></span> Crear un nuevo articulo</button>
                     <p id="num-articulos"></p>
-                    <!-- articulos del usuario -->
-                </div>
-                <div class="profile-revisiones-container">
-                    <!-- articulos que puede revisar -->
+                    <div class="profile-articulos-results">
+                        <!-- articulos del usuario -->
+                    </div>
                 </div>
             </div>
             <?php if ($user['id_rol'] >= 2) : ?>
-                <div class="tab" id="tabRevisiones">
+            <div class="tab overflow-fix" id="tabRevisiones">
+                <div class="profile-revisiones-container">
+                    <!-- articulos que puede revisar -->
+                     <p>hola</p>
                 </div>
+            </div>
+            <!-- ARREGLAR ESTO -->
             <?php endif ?>
         </div>
     </div>

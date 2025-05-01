@@ -2,6 +2,7 @@
   --bg-color : #000;
   --bg-color2 : #ffffff09;
   --font-color : #fff;
+  --font-color-transparent : #ffffff93;
   --color2 : #ffffff20;
   --font-size : 16px;
   --default-px : 20px;
@@ -194,7 +195,7 @@ input[type="radio"]:checked {
 }
 
 .big-border-radius {
-  border-radius: calc(var(--default-border-radius)*2);
+  border-radius: calc(var(--default-border-radius)*2) !important;
 }
 
 svg {

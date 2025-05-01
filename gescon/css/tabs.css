@@ -1,32 +1,49 @@
 .tab-btn {
+    background-color: var(--bg-color);
+    color: var(--font-color-transparent);
     border-radius: var(--default-border-radius) var(--default-border-radius) 0 0;
     margin-bottom: -1px;
     width: 100%;
-    height: 40px;
-    transition: none !important;
+    height: 35px;
+
+    transition: height 0.1s ease !important;
 }
 
 .tab-btn:hover {
-    background-color: none !important;
-    color: none !important;
+    background-color: var(--bg-color);
+    color: var(--font-color-transparent);
+    height: 40px;
 }
 
 .tab-btn-activo {
+    color: var(--font-color);
+    border-bottom: 1px solid var(--bg-color);
+    height: 40px;
+}
+
+.tab-btn-activo:hover {
+    background-color: var(--bg-color);
+    color: var(--font-color);
     border-bottom: 1px solid var(--bg-color);
 }
 
 .tab {
     display: none;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
 .tab-activo {
-    display: block;
+    display: flex;
 }
 
 .nav-tabs {
     display: flex;
     flex-direction: row;
     border-bottom: 1px solid var(--font-color);
+    align-items: flex-end;
+    padding: 0 0.25rem;
+    gap: 0.25rem;
 }
 
 

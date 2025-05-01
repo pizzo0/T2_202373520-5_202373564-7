@@ -1,4 +1,4 @@
-const container = document.getElementsByClassName('profile-articulos-container')[0];
+const container = document.getElementsByClassName('profile-articulos-results')[0];
 const numeroArticulos = document.getElementById('num-articulos');
 
 document.addEventListener('DOMContentLoaded', () => {

@@ -26,6 +26,10 @@ $opciones_orden = [
 ];
 $ordenar_por_query = isset($opciones_orden[$ordenar_por]) ? $opciones_orden[$ordenar_por] : 'fecha_envio DESC';
 
+$offset = isset($_GET['offset']) ? (int) $_GET['offset'] : 0;
+$limit = isset($_GET['limit']) ? (int) $_GET['limit'] : 20;
+
+
 $database = getDatabase();
 
 
@@ -39,19 +43,29 @@ $stmt = $database->prepare("
         AND titulo LIKE ?
         AND fecha_envio BETWEEN ? AND ?
     ORDER BY $ordenar_por_query
+    LIMIT ? OFFSET ?
 ");
 
-$stmt->execute([
-    "%$contacto%",
-    "%$contacto%",
-    "%$autor%",
-    "%$autor%",
-    "%$revisor%",
-    "%$topico%",
-    "%$titulo%",
+$stmt->bind_param(
+    'sssssssssii',
+    $contactoLike, $contactoLike,
+    $autorLike, $autorLike,
+    $revisorLike,
+    $topicoLike,
+    $tituloLike,
     $fecha_desde,
-    $fecha_hasta
-]);
+    $fecha_hasta,
+    $limit,
+    $offset
+);
+
+$contactoLike = "%$contacto%";
+$autorLike = "%$autor%";
+$revisorLike = "%$revisor%";
+$topicoLike = "%$topico%";
+$tituloLike = "%$titulo%";
+
+$stmt->execute();
 
 $res = $stmt->get_result();
 
@@ -61,8 +75,37 @@ while ($fila = $res->fetch_assoc()) {
     $data[] = $fila;
 }
 
-echo json_encode([
-    'total' => count($data),
-    'data' => $data
-    ], JSON_UNESCAPED_UNICODE
+$stmt = $database->prepare("
+    SELECT COUNT(*) as total FROM obtenerArticulos
+    WHERE
+        (contacto_nombre LIKE ? OR contacto_nombre LIKE ?)
+        AND (autores LIKE ? OR autores LIKE ?)
+        AND revisores LIKE ?
+        AND topicos LIKE ?
+        AND titulo LIKE ?
+        AND fecha_envio BETWEEN ? AND ?
+");
+
+$stmt->bind_param(
+    'sssssssss',
+    $contactoLike, $contactoLike,
+    $autorLike, $autorLike,
+    $revisorLike,
+    $topicoLike,
+    $tituloLike,
+    $fecha_desde,
+    $fecha_hasta
 );
+
+$stmt->execute();
+$res_total = $stmt->get_result();
+$total = $res_total->fetch_assoc()['total'];
+
+$stmt->close();
+
+echo json_encode([
+    'total' => $total,
+    'data' => $data
+], JSON_UNESCAPED_UNICODE);
+
+$database->close();

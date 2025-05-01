@@ -14,3 +14,4 @@ tabBtns.forEach((btn) => {
 });
 
 tabBtns[0]?.click();
+tabBtns[2]?.click();

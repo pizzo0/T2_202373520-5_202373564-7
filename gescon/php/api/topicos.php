@@ -19,3 +19,5 @@ if ($res->num_rows > 0) {
 }
 
 echo json_encode( $topicos);
+
+$database->close();

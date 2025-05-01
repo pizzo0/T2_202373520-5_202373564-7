@@ -13,17 +13,6 @@ function getDatabase() {
         die("Error: ". $database->connect_error);
     }
     
-    // $result = $database->query("SELECT * FROM Usuarios");
-    // if ($result->num_rows > 0) {
-    //     while($fila = $result->fetch_assoc()) {
-    //         echo "RUT: " . $fila["rut"] . " - Nombre: " . $fila["nombre"] . "<br>";
-    //     }
-    // } else {
-    //     echo "No hay resultados.";
-    // }
-    
-    // $database->close();
-    
     return $database;
 }
 
@@ -184,8 +173,9 @@ function getNav($sep = " | ") {
 // obtener el titulo de la pagina
 function getTitulo() {
     
-    $pagina = getPagina();
-    echo ucwords(str_replace("_"," ",$pagina));
+    $pagina = str_replace("_"," ",getPagina());
+    $pagina = $pagina === 'index' ? 'inicio' : $pagina;
+    echo ucwords($pagina);
 }
 
 // carga el contenido de la pagina en un .view.php. Si no existe contenido, muestra 404.view.php.

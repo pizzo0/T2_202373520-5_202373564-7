@@ -45,19 +45,27 @@ $svg_ordenar = getAsset("/svg/ordenar.svg");
     </form>
 </div>
 <div id="filtro-overlay"></div>
+
 <div class="buscar-container">
     <div class="buscar-filtros-container">
-        <button id="btn-filtrar" onclick="toggleFC()"><span><?= $svg_filtro ?></span> Filtrar resultados</button>
-        <div class="ordenar-container" id="select">
-            <label for="ordenar_por">Ordenar por:</label>
-            <select class="select-input" style="width:200px;" name="ordenar_por" id="ordenar_por">
-                <option value="fecha_envio_desc">Fecha de publicación (reciente primero)</option>
-                <option value="fecha_envio_asc">Fecha de publicación (antiguo primero)</option>
-                <option value="autor_asc">Contacto [Autor] (A-Z)</option>
-                <option value="autor_desc">Contacto [Autor] (Z-A)</option>
-                <option value="titulo_asc">Título (A-Z)</option>
-                <option value="titulo_desc">Título (Z-A)</option>
-            </select>
+        <div class="main-buscar-filtros-container">
+            <button id="btn-filtrar" onclick="toggleFC()"><span><?= $svg_filtro ?></span> Filtrar resultados</button>
+            <div class="ordenar-container" id="select">
+                <label for="ordenar_por">Ordenar por:</label>
+                <select class="select-input" style="width:200px;" name="ordenar_por" id="ordenar_por">
+                    <option value="fecha_envio_desc">Fecha de publicación (reciente primero)</option>
+                    <option value="fecha_envio_asc">Fecha de publicación (antiguo primero)</option>
+                    <option value="autor_asc">Contacto [Autor] (A-Z)</option>
+                    <option value="autor_desc">Contacto [Autor] (Z-A)</option>
+                    <option value="titulo_asc">Título (A-Z)</option>
+                    <option value="titulo_desc">Título (Z-A)</option>
+                </select>
+            </div>
+        </div>
+        <div class="paginas-nav">
+            <span id="pagina-info"></span>
+            <button id="btnAnterior"><</button>
+            <button id="btnSiguiente">></button>
         </div>
     </div>
     <div id="resultados-busqueda">

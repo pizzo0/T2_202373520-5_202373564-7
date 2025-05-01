@@ -41,3 +41,6 @@ if ($res && $row = $res->fetch_assoc()) {
 } else {
     echo json_encode(['error' => 'No se pudo obtener los datos.']);
 }
+
+$stmt->close();
+$database->close();
