@@ -23,17 +23,3 @@ END //
 DELIMITER ;
 
 --------------------------------------
-
-DELIMITER $$
-
-CREATE PROCEDURE revisores_por_especialidad(especialidad_id INT)
-BEGIN
-    SELECT Usuarios.rut, Usuarios.nombre, Usuarios.email
-    FROM Usuarios
-    JOIN Usuarios_Especialidad ON Usuarios.rut = Usuarios_Especialidad.rut_usuario
-    JOIN Roles ON Usuarios.id_rol = Roles.id
-    WHERE Roles.id = 2
-    AND Usuarios_Especialidad.id_topico = especialidad_id;
-END $$
-
-DELIMITER ;
