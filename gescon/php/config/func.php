@@ -208,56 +208,47 @@ function getAsset($path) {
 
 function registrarUsuario($postData) {
     global $error;
-    
-    // Validación de los campos
-    if (empty($postData["rut"])) {
-        $error = "Rut vacío.";
-        return false;
-    } elseif (empty($postData["nombre"])) {
-        $error = "Nombre vacío.";
-        return false;
-    } elseif (!filter_var($postData["correo"], FILTER_VALIDATE_EMAIL)) {
-        $error = "Correo no válido.";
-        return false;
-    } elseif ($postData["pass"] !== $postData["pass_confirm"]) {
+
+    // Validar que la confirmación de contraseña coincida
+    if ($postData["pass"] !== $postData["pass_confirm"]) {
         $error = "Las contraseñas deben coincidir.";
         return false;
     }
-    
-    // Hashear la contraseña
-    $pass_hash = password_hash($postData["pass"], PASSWORD_DEFAULT);
+
+    // no haremos hash para la tarea xd
+    // $pass_hash = password_hash($postData["pass"], PASSWORD_DEFAULT);
+    $pass_hash = $postData["pass"];
     $database = getDatabase();
-    
+
     $sql = "
     INSERT INTO Usuarios (rut, nombre, email, password)
     VALUES (?, ?, ?, ?)
     ";
-    
+
     $stmt = $database->stmt_init();
-    
+
     if ($stmt->prepare($sql)) {
         $stmt->bind_param("ssss", $postData["rut"], $postData["nombre"], $postData["correo"], $pass_hash);
-        
+
         try {
-            // Intentamos ejecutar la consulta
             $stmt->execute();
             return true;
         } catch (mysqli_sql_exception $e) {
-            // Si ocurre un error, lo manejamos según el tipo
             if (str_contains($e->getMessage(), 'PRIMARY')) {
-                $error = "El Rut ingresado ya está registrado.";
+                $error = "El RUT ingresado ya está registrado.";
             } elseif (str_contains($e->getMessage(), 'email')) {
                 $error = "El correo ingresado ya está registrado.";
             } else {
-                $error = "Error al registrar: " . $e->getMessage();
+                $error = $e->getMessage();
             }
             return false;
         }
     } else {
-        $error = "Error en la preparación de la consulta.";
+        $error = $stmt->error;
         return false;
     }
 }
+
 
 function eliminarUsuario($rut) {
     $user = getUsuarioData();

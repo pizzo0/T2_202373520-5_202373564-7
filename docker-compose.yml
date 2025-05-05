@@ -17,6 +17,7 @@ services:
       MYSQL_USER: user0
       MYSQL_PASSWORD: 123456
       MYSQL_ROOT_PASSWORD: admin
+      TZ: America/Santiago
     volumes:
       - ./gescon/bd:/docker-entrypoint-initdb.d
       - ./mysql-data:/var/lib/mysql

@@ -7,75 +7,55 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     
     $database->begin_transaction();
     try {
-        $sql = "
-        INSERT INTO Articulos (password,titulo,resumen,rut_contacto)
-        VALUES (?,?,?,?)
-        ";
-        $stmt->prepare($sql);
+        $titulo = $_POST['titulo'];
+        $resumen = $_POST['resumen'];
+        $autores_email = $_POST['email'];
+        $topicos = $_POST['topicos'];
+        $password = generarPassword();
 
-        if (!isset($_POST["contacto"])) {
-            throw new Exception("Falta el campo 'contacto' en el formulario.");
+        $i_contacto = $_POST['contacto'];
+        $rut_contacto = '';
+        $rut_autores = '';
+        foreach ($autores_email as $i => $email) {
+            if ($i == $i_contacto) {
+                $rut_contacto = getUsuarioDataEmail($email)['rut'];
+            }
+            $rut_autores .= getUsuarioDataEmail($email)['rut'] . ',';
         }
+        $rut_autores = substr($rut_autores,0,-1);
 
-        $pass = generarPassword();
-        $email_contacto = $_POST["email"][$_POST["contacto"]];
-        
-        $pass_hash = password_hash($pass, PASSWORD_DEFAULT);
-        $titulo = $_POST["titulo"];
-        $resumen = $_POST["resumen"];
-        $rut_contacto = getUsuarioDataEmail($email_contacto)["rut"];
+        $stmt->prepare("
+            CALL insertar_articulo(?,?,?,?,?,?)
+        ");
+        $stmt->bind_param("ssssss",$password ,$titulo, $resumen, $rut_contacto, $rut_autores, $topicos);
 
-        $stmt->bind_param("ssss",$pass_hash,$titulo,$resumen,$rut_contacto);
-
-        $stmt->execute();
-
-        $id_articulo = $stmt->insert_id;
-
-        $topicos = explode(",", $_POST["topicos"]);
-        $sql = "
-        INSERT INTO Articulos_Topicos (id_articulo,id_topico)
-        VALUES (?,?)
-        ";
-        $stmt->prepare($sql);
-        
-        foreach ($topicos as $id_topico) {
-            $stmt->bind_param("ss", $id_articulo, $id_topico);
-            $stmt->execute();
-        }
-
-        $sql = "
-        INSERT INTO Articulos_Autores (id_articulo,rut_autor)
-        VALUES (?,?)
-        ";
-        $stmt->prepare($sql);
-
-        $email_autores = $_POST["email"];
-        foreach ($email_autores as $email) {
-            $rut_autor = getUsuarioDataEmail($email)["rut"];
-            $stmt->bind_param("ss", $id_articulo, $rut_autor);
-            $stmt->execute();
-        }
-
-        // $rut_revisores = [];
-        // while (count($rut_revisores) < 3) {
+        if ($stmt->execute()) {
+            $res = $stmt->get_result()->fetch_assoc();
+            $id_articulo = $res['id_articulo'];
             
-        // }
+            $_SESSION["notificacion"] = [
+                "tipo" => "ok",
+                "mensaje" => "Articulo publicado con exito :)"
+            ];
+    
+            header("location: /articulo/$id_articulo");
+            exit;
+        } else {
+            $_SESSION["notificacion"] = [
+                "tipo" => "error",
+                "mensaje" => $stmt->error
+            ];
+        }
 
         $database->commit();
-
-        $_SESSION["notificacion"] = [
-            "tipo" => "ok",
-            "mensaje" => "Articulo publicado con exito :)"
-        ];
-
-        header("location: /articulo/$id_articulo");
-        exit;
 
     } catch (\Throwable $th) {
         $database->rollback();
         $_SESSION["notificacion"] = [
             "tipo" => "error",
-            "mensaje" => "Ocurrio un error al publicar el articulo :("
+            "mensaje" => $stmt->error
         ];
     }
+    $stmt->close();
+    $database->close();
 }

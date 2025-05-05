@@ -1,6 +1,8 @@
 <?php
 
 
+// ARREGLAR ESTO CON LA NUEVA ESTRUCTURA DEL SQL
+
 $tiempo_expiracion = 1 * 60;
 
 $user = getUsuarioData();
@@ -14,7 +16,7 @@ $database->begin_transaction();
 $id_articulo = $_GET['id_articulo'];
 
 $stmt = $database->prepare('
-SELECT * FROM obtenerArticulosEmail
+SELECT * FROM articulos_data
 WHERE articulo_id = ?
 ');
 $stmt->bind_param('s', $id_articulo);

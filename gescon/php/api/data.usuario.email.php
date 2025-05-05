@@ -4,6 +4,8 @@
 require "../config/config.php";
 require "../config/func.php";
 
+header("Content-Type: application/json");
+
 if (!isset($_GET["email"]) || !filter_var($_GET["email"], FILTER_VALIDATE_EMAIL)) {
     http_response_code(404);
     echo json_encode(["error" => "Email invalido"]);

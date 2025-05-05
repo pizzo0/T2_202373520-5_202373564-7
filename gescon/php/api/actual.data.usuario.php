@@ -3,6 +3,7 @@
 require "../config/config.php";
 require "../config/func.php";
 
+header("Content-Type: application/json");
 
 session_start();
 $user = getUsuarioData();

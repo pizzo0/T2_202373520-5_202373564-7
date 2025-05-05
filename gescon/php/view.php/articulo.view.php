@@ -9,7 +9,7 @@ if (isset($_GET['id_articulo'])) {
 
     $database = getDatabase();
     $stmt = $database->prepare('
-        SELECT * FROM obtenerArticulosEmail
+        SELECT * FROM articulos_data
         WHERE articulo_id = ?
     ');
     $stmt->bind_param('s', $id_articulo);
@@ -17,7 +17,28 @@ if (isset($_GET['id_articulo'])) {
 
     $articulo = $stmt->get_result()->fetch_assoc();
     if (!empty($articulo) && !empty($user)) {
-        $esAutor = strpos($articulo['autores'], $user['email']) !== false;
+        foreach (json_decode($articulo['autores'],true) as $autor_data) {
+            $autor_rut = $autor_data['rut'];
+            if (!$esAutor) {
+                $esAutor = $autor_rut === $user['rut'];
+            }
+        }
+    }
+    
+    $aux = [];
+    foreach (json_decode($articulo['autores'],true) as $autor_data) {
+        $aux[] = $autor_data['email'];
+    }
+    $revisores = $articulo['revisores'];
+    if (is_null($revisores)) {
+        $revisores = 'No hay revisores aun.';
+    } else {
+        $revisores = json_decode($revisores,true);
+        $aux2 = [];
+        foreach ($revisores as $revisor) {
+            $aux2[] = $revisor['rut'];
+        }
+        $revisores = implode(', ', $aux2);
     }
 }
 ?>
@@ -30,26 +51,18 @@ if (isset($_GET['id_articulo'])) {
         <div class="vista-articulo-topicos">
             <?php
                 if (isset($articulo['topicos']) && !empty($articulo['topicos'])) {
-                    $topicos = explode(', ', $articulo['topicos']);
-                    foreach ($topicos as $topico) {
+                    foreach (json_decode($articulo['topicos'],true) as $topico) {
+                        $topico = $topico['nombre'];
                         echo "<span class='etiqueta'>$topico</span><br>";
                     }
                 } else {
-                    echo 'No hay tópicos disponibles.';
+                    echo 'No hay topicos disponibles.';
                 }
             ?>
         </div>
-        <p class="vista-articulo-subtexto">Contacto: <?= $articulo['contacto'] ?></p>
-        <p class="vista-articulo-subtexto">Autor(es): <?= $articulo['autores'] ?></p>
-        <p class="vista-articulo-subtexto">Revisor(es):
-            <?php
-                if (empty($articulo['revisores'])) {
-                    echo 'No hay revisores aun.';
-                } else {
-                    echo $articulo['revisoers'];
-                }
-            ?>
-        </p>
+        <p class="vista-articulo-subtexto">Contacto: <?= json_decode($articulo['contacto'],true)['email'] ?></p>
+        <p class="vista-articulo-subtexto">Autor(es): <?= implode(', ',$aux); ?></p>
+        <p class="vista-articulo-subtexto">Revisor(es): <?= $revisores ?></p>
         <div class="vista-articulo-fecha">
             <p>Publicado: <?= $articulo['fecha_envio'] ?></p>
             <?php if (!empty($articulo['fecha_editado'])) :?>

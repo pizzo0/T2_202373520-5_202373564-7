@@ -200,6 +200,8 @@ BEGIN
 	CALL asignar_revisor_random (v_id_articulo);
 	CALL asignar_revisor_random (v_id_articulo);
 
+    SELECT LAST_INSERT_ID() AS id_articulo;
+    
     COMMIT;
 END;//
 DELIMITER ;
@@ -373,11 +375,58 @@ END;//
 DELIMITER ;
 
 DELIMITER //
-CREATE PROCEDURE articulos_por_autor (
-    IN rut_autor VARCHAR(12)
+CREATE PROCEDURE filtrar_articulos_data(
+    IN p_contacto VARCHAR(255),
+    IN p_autor VARCHAR(255),
+    IN p_revisor VARCHAR(255),
+    IN p_id_topico INT,
+    IN p_titulo VARCHAR(150),
+    IN fecha_inicio DATE,
+    IN fecha_fin DATE,
+    IN p_orden VARCHAR(50),
+    IN limite INT,
+    IN offset_val INT
 )
 BEGIN
-    SELECT * FROM Articulos_Data
-    WHERE JSON_SEARCH(autores, 'one', rut_autor) IS NOT NULL;
-END; //
+    DECLARE orden_sql TEXT;
+
+    SET orden_sql = CASE p_orden
+        WHEN 'fecha_envio_asc' THEN 'fecha_envio ASC'
+        WHEN 'fecha_envio_desc' THEN 'fecha_envio DESC'
+        WHEN 'titulo_asc' THEN 'titulo ASC'
+        WHEN 'titulo_desc' THEN 'titulo DESC'
+        WHEN 'contacto_asc' THEN 'JSON_UNQUOTE(JSON_EXTRACT(contacto, "$.nombre")) ASC'
+        WHEN 'contacto_desc' THEN 'JSON_UNQUOTE(JSON_EXTRACT(contacto, "$.nombre")) DESC'
+        ELSE 'fecha_envio DESC'
+    END;
+
+    SET @sql = CONCAT(
+        'SELECT * FROM Articulos_Data WHERE 1=1 ',
+
+        IF(p_contacto IS NULL OR p_contacto = '', '', 
+            CONCAT(' AND JSON_UNQUOTE(JSON_EXTRACT(contacto, "$.nombre")) LIKE ''%', p_contacto, '%''')),
+
+        IF(p_autor IS NULL OR p_autor = '', '', 
+            CONCAT(' AND EXISTS (SELECT 1 FROM JSON_TABLE(autores, "$[*]" COLUMNS (nombre VARCHAR(255) PATH "$.nombre")) AS autor WHERE autor.nombre LIKE ''%', p_autor, '%'' )')),
+
+        IF(p_revisor IS NULL OR p_revisor = '', '', 
+            CONCAT(' AND EXISTS (SELECT 1 FROM JSON_TABLE(revisores, "$[*]" COLUMNS (nombre VARCHAR(255) PATH "$.nombre")) AS revisor WHERE revisor.nombre LIKE ''%', p_revisor, '%'' )')),
+
+        IF(p_id_topico IS NULL OR p_id_topico = 0, '', 
+            CONCAT(' AND EXISTS (SELECT 1 FROM JSON_TABLE(topicos, "$[*]" COLUMNS (id INT PATH "$.id")) AS topico WHERE topico.id = ', p_id_topico, ')')),
+
+        IF(p_titulo IS NULL OR p_titulo = '', '', 
+            CONCAT(' AND titulo LIKE ''%', p_titulo, '%''')),
+
+        ' AND fecha_envio BETWEEN ''', fecha_inicio, ''' AND ''', fecha_fin, ''' ',
+
+        ' ORDER BY ', orden_sql,
+        ' LIMIT ', limite,
+        ' OFFSET ', offset_val
+    );
+
+    PREPARE stmt FROM @sql;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END;//
 DELIMITER ;

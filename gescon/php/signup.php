@@ -14,6 +14,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         header("Location: /login");
         exit;
     } else {
-        $error = "Error en la preparación de la consulta.";
+        $_SESSION["notificacion"] = [
+            "tipo" => "error",
+            "mensaje" => $error
+        ];
     }
 }

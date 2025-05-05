@@ -68,13 +68,13 @@ const toggleFC = () => {
 
 cargarArticulos = (filtros = null) => {
     const container = document.getElementById('resultados-busqueda');
+    container.innerHTML = `<p>Cargando artículos...</p>`;
     let queryString = filtros ? `${filtros.toString()}&` : '';
     queryString += `offset=${paginaActual * resultadosPorPagina}&limit=${resultadosPorPagina}`;
 
     fetch(`/php/api/filtrar.articulos.php?${queryString}`)
         .then(response => response.json())
         .then(data => {
-            totalResultados = data.total; // Guardamos el total
             if (data.total > 0 && data.data.length > 0) {
                 fetch(`/assets/svg/svg_articulo.svg`)
                     .then(response => response.text())
@@ -89,7 +89,7 @@ cargarArticulos = (filtros = null) => {
                                     <p>${articulo.resumen}</p>
                                 </div>
                                 <div class="articulo-preview-etiquetas">
-                                    ${articulo.topicos.split(',').map(topico => `<span class="etiqueta">${topico}</span>`).join('')}
+                                    ${Array.isArray(articulo.topicos) ? articulo.topicos.map(topico => `<span class="etiqueta">${topico.nombre}</span>`).join('') : ''}
                                 </div>
                                 <div class="articulo-preview-fecha">
                                     <p>Fecha de publicación - ${articulo.fecha_envio}</p>
@@ -116,6 +116,7 @@ cargarArticulos = (filtros = null) => {
         })
         .catch(error => {
             container.innerHTML = `<p>Error al obtener datos, prueba de nuevo.</p>`;
+            container.innerHTML += `<p>${error}</p>`
         });
 }
 

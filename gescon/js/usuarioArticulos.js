@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <p>${articulo.resumen}</p>
                                 </div>
                                 <div class="articulo-preview-etiquetas">
-                                    ${articulo.topicos.split(',').map(topico => `<span class="etiqueta">${topico}</span>`).join('')}
+                                    ${articulo.topicos.map(topico => `<span class="etiqueta">${topico.nombre}</span>`).join('')}
                                 </div>
                                 <div class="articulo-preview-fecha">
                                     <p>Fecha de publicación - ${articulo.fecha_envio}</p>

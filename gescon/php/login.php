@@ -15,7 +15,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $res = $database->query($sql);
     $user = $res->fetch_assoc();
 
-    if ($user && password_verify($_POST['pass'], $user["password"])) {
+    // no usaremos hash xd
+    // if ($user && password_verify($_POST['pass'], $user["password"])) {
+    if ($user && $user['password'] == $_POST['pass']) {
         $_SESSION["userid"] = $user["rut"];
 
         $_SESSION["notificacion"] = [

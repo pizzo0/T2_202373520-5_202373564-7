@@ -6,7 +6,8 @@ $database = getDatabase();
 
 if ($user['id_rol'] === 3 && $_SERVER["REQUEST_METHOD"] === "POST") {
 
-    if (registrarUsuario($_POST)) {
+    if (isset($_POST['pass'])) {
+        registrarUsuario($_POST);
         $rut_revisor = $_POST['rut'];
 
         $res = $database->query("

@@ -55,8 +55,8 @@ $svg_ordenar = getAsset("/svg/ordenar.svg");
                 <select class="select-input" style="width:200px;" name="ordenar_por" id="ordenar_por">
                     <option value="fecha_envio_desc">Fecha de publicación (reciente primero)</option>
                     <option value="fecha_envio_asc">Fecha de publicación (antiguo primero)</option>
-                    <option value="autor_asc">Contacto [Autor] (A-Z)</option>
-                    <option value="autor_desc">Contacto [Autor] (Z-A)</option>
+                    <option value="contacto_asc">Contacto [Autor] (A-Z)</option>
+                    <option value="contacto_desc">Contacto [Autor] (Z-A)</option>
                     <option value="titulo_asc">Título (A-Z)</option>
                     <option value="titulo_desc">Título (Z-A)</option>
                 </select>

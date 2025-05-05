@@ -12,11 +12,11 @@ $svg_articulo = getAsset("/svg/svg_articulo.svg");
     <form method="post" id="form" class="form_publicar formulario">
         <div class="titulo_publicar">
             <label for="titulo">Titulo</label>
-            <input type="text" id="titulo" name="titulo" maxlength="255" required>
+            <input type="text" id="titulo" name="titulo" maxlength="150" value="<?= htmlspecialchars($_POST["titulo"] ?? "") ?>" required>
         </div>
         <div class="resumen_publicar">
             <label for="resumen">Resumen</label>
-            <textarea id="resumen" name="resumen" class="input" maxlength="150" required></textarea>
+            <textarea id="resumen" name="resumen" class="input" maxlength="150" required><?= htmlspecialchars($_POST["resumen"] ?? "") ?></textarea>
         </div>
         <div class="autores_publicar">
             <div>

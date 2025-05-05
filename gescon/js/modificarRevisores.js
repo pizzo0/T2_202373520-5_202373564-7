@@ -80,11 +80,11 @@ function cargarRevisores() {
                     divEspecialidades.className = 'revisor-preview-especialidades';
                     divEspecialidades.id = 'esp-revisor';
 
-                    revisor.id_topicos.forEach((id, i) => {
+                    revisor.topicos.forEach((topico) => {
                         const span = document.createElement('span');
                         span.className = 'etiqueta';
-                        span.setAttribute('data-id', id);
-                        span.textContent = revisor.nombres_topicos[i]?.nombre || 'Desconocido';
+                        span.setAttribute('data-id', topico.id_topico);
+                        span.textContent = topico.nombre || 'Desconocido';
                         divEspecialidades.appendChild(span);
                     });
 
@@ -173,14 +173,14 @@ function cargarRevisores() {
 
                         const topicosSeleccionados = [];
 
-                        revisor.nombres_topicos.forEach(topico => {
+                        revisor.topicos.forEach(topico => {
                             const topicDivAux = document.createElement("div");
                             topicDivAux.classList.add("selected-topic");
                             topicDivAux.textContent = topico.nombre;
-                            topicDivAux.setAttribute("data-id", topico.id);
+                            topicDivAux.setAttribute("data-id", topico.id_topico);
                             especialidadesContainer.appendChild(topicDivAux);
 
-                            topicosSeleccionados.push(topico.id)
+                            topicosSeleccionados.push(topico.id_topico);
                         });
 
                         const hiddenInput = document.createElement('input');
