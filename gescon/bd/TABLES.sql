@@ -1,3 +1,22 @@
+-- DROP DATABASE IF EXISTS gescon;
+-- CREATE DATABASE gescon;
+-- USE gescon;
+
+CREATE TABLE Roles (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(20) UNIQUE NOT NULL
+);
+
+-- Roles por defecto
+-- 1 := Autor
+-- 2 := Revisor
+-- 3 := Jefe de Comité
+INSERT INTO Roles (nombre)
+VALUES
+('autor'),
+('revisor'),
+('jefe de comite');
+
 CREATE TABLE Usuarios (
     rut VARCHAR(12) PRIMARY KEY,
     nombre VARCHAR(255) NOT NULL,
@@ -5,11 +24,6 @@ CREATE TABLE Usuarios (
     password VARCHAR(255) NOT NULL,
     id_rol INT NOT NULL DEFAULT 1,
     FOREIGN KEY (id_rol) REFERENCES Roles(id)
-);
-
-CREATE TABLE Roles (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(20) UNIQUE NOT NULL
 );
 
 CREATE TABLE Topicos (
@@ -71,5 +85,8 @@ CREATE TABLE Formulario (
     argumentos_valoracion TEXT NOT NULL,
     comentarios TEXT,
     FOREIGN KEY (id_articulo) REFERENCES Articulos(id) ON DELETE CASCADE,
-    FOREIGN KEY (rut_revisor) REFERENCES Usuarios(rut) ON DELETE CASCADE
+    FOREIGN KEY (rut_revisor) REFERENCES Usuarios(rut) ON DELETE CASCADE,
+    CONSTRAINT verificar_calidad CHECK (calidad BETWEEN 1 AND 7),
+    CONSTRAINT verificar_originalidad CHECK (originalidad BETWEEN 1 AND 7),
+    CONSTRAINT verificar_valoracion CHECK (valoracion BETWEEN 1 AND 7)
 );
