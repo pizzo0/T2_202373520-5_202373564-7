@@ -261,8 +261,25 @@ function eliminarUsuario($rut) {
     }
 }
 
-function init() {
+function obtenerTiempo($fecha) {
+    $fechaActual = new DateTime();
+    $fecha = new DateTime($fecha);
+    $dif = $fechaActual->getTimestamp() - $fecha->getTimestamp();
 
+    if ($dif < 60) {
+        return $dif . "s";
+    } elseif ($dif < 3600) {
+        return floor($dif/60) . "m";
+    } elseif ($dif < 86400) {
+        return floor($dif/3600) . "h";
+    } else {
+        return $fecha->format('d-m-Y H:i');
+    }
+}
+
+function init() {
+    
+    date_default_timezone_set('America/Santiago');
     require config("template_path") . "/template.php";
     require config("template_path") . "/template.view.php";
 }

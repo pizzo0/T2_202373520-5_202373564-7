@@ -60,10 +60,16 @@ function cargarRevisores() {
 
                     const divRut = document.createElement('div');
                     divRut.className = 'revisor-preview-rut';
+
                     const aRut = document.createElement('a');
                     aRut.className = 'rut-revisor';
                     aRut.textContent = `Rut: ${revisor.rut}`;
-                    divRut.appendChild(aRut);
+
+                    const spanRol = document.createElement('span');
+                    spanRol.className = `etiqueta rol-${revisor.id_rol}`;
+                    spanRol.textContent = revisor.id_rol === 2 ? 'Revisor' : revisor.id_rol === 3 ? 'Jefe de Comité' : 'Indefinido';
+
+                    divRut.append(aRut,spanRol);
 
                     const divData = document.createElement('div');
                     divData.className = 'revisor-preview-data';
@@ -80,13 +86,15 @@ function cargarRevisores() {
                     divEspecialidades.className = 'revisor-preview-especialidades';
                     divEspecialidades.id = 'esp-revisor';
 
-                    revisor.topicos.forEach((topico) => {
-                        const span = document.createElement('span');
-                        span.className = 'etiqueta';
-                        span.setAttribute('data-id', topico.id_topico);
-                        span.textContent = topico.nombre || 'Desconocido';
-                        divEspecialidades.appendChild(span);
-                    });
+                    if (revisor.topicos) {
+                        revisor.topicos.forEach((topico) => {
+                            const span = document.createElement('span');
+                            span.className = 'etiqueta';
+                            span.setAttribute('data-id', topico.id_topico);
+                            span.textContent = topico.nombre || 'Desconocido';
+                            divEspecialidades.appendChild(span);
+                        });
+                    }
 
                     preview.appendChild(divRut);
                     preview.appendChild(divData);
@@ -173,15 +181,17 @@ function cargarRevisores() {
 
                         const topicosSeleccionados = [];
 
-                        revisor.topicos.forEach(topico => {
-                            const topicDivAux = document.createElement("div");
-                            topicDivAux.classList.add("selected-topic");
-                            topicDivAux.textContent = topico.nombre;
-                            topicDivAux.setAttribute("data-id", topico.id_topico);
-                            especialidadesContainer.appendChild(topicDivAux);
-
-                            topicosSeleccionados.push(topico.id_topico);
-                        });
+                        if (revisor.topicos) {
+                            revisor.topicos.forEach(topico => {
+                                const topicDivAux = document.createElement("div");
+                                topicDivAux.classList.add("selected-topic");
+                                topicDivAux.textContent = topico.nombre;
+                                topicDivAux.setAttribute("data-id", topico.id_topico);
+                                especialidadesContainer.appendChild(topicDivAux);
+    
+                                topicosSeleccionados.push(topico.id_topico);
+                            });
+                        }
 
                         const hiddenInput = document.createElement('input');
                         hiddenInput.type = 'hidden';

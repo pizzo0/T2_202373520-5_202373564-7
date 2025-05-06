@@ -15,14 +15,14 @@ document.addEventListener('DOMContentLoaded', () => {
                             res += `
                             <div class="articulo-preview">
                                 <div class="articulo-preview-tr">
-                                    <a href="/editar/${articulo.articulo_id}"><span>${svg_articulo}</span> ${articulo.titulo}</a>
+                                    <a href="/editar/${articulo.id_articulo}"><span>${svg_articulo}</span> ${articulo.titulo}</a>
                                     <p>${articulo.resumen}</p>
                                 </div>
                                 <div class="articulo-preview-etiquetas">
                                     ${articulo.topicos.map(topico => `<span class="etiqueta">${topico.nombre}</span>`).join('')}
                                 </div>
                                 <div class="articulo-preview-fecha">
-                                    <p>Fecha de publicación - ${articulo.fecha_envio}</p>
+                                    <p>Publicación - ${obtenerTiempo(articulo.fecha_envio)}</p>
                                 </div>
                             </div>
                             `;

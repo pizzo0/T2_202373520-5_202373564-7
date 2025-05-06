@@ -5,23 +5,30 @@ $user = getUsuarioData();
 $database = getDatabase();
 
 if ($user['id_rol'] === 3 && $_SERVER["REQUEST_METHOD"] === "POST") {
-
+    global $error;
     if (isset($_POST['pass'])) {
-        registrarUsuario($_POST);
-        $rut_revisor = $_POST['rut'];
+        $res = registrarUsuario($_POST);
+        if ($res) {
+            $rut_revisor = $_POST['rut'];
 
-        $res = $database->query("
-        UPDATE Usuarios
-        SET id_rol = 2
-        WHERE rut = '$rut_revisor'
-        ");
+            $res = $database->query("
+            UPDATE Usuarios
+            SET id_rol = 2
+            WHERE rut = '$rut_revisor'
+            ");
 
-        $nombre = $_POST['nombre'];
-        
-        $_SESSION["notificacion"] = [
-            "tipo" => "ok",
-            "mensaje" => "Revisor ($nombre) creado con exito."
-        ];
+            $nombre = $_POST['nombre'];
+            
+            $_SESSION["notificacion"] = [
+                "tipo" => "ok",
+                "mensaje" => "Revisor ($nombre) creado con exito."
+            ];
+        } else {
+            $_SESSION["notificacion"] = [
+                "tipo" => "error",
+                "mensaje" => $error
+            ];
+        }
 
     } elseif (isset($_POST['topico'])) {
             $topico = $_POST['topico'];
@@ -84,7 +91,6 @@ if ($user['id_rol'] === 3 && $_SERVER["REQUEST_METHOD"] === "POST") {
             $stmt->bind_param("s",$rut_modificar);
             $stmt->execute();
     
-    
             $topicos = explode(",", $_POST["topicos"]);
             $stmt = $database->prepare("
             INSERT INTO Usuarios_Especialidad (rut_usuario,id_topico)
@@ -95,7 +101,6 @@ if ($user['id_rol'] === 3 && $_SERVER["REQUEST_METHOD"] === "POST") {
                 $stmt->bind_param("si",$rut_modificar,$especialidad);
                 $stmt->execute();
             }
-
             $database->commit();
 
             $_SESSION["notificacion"] = [
@@ -107,6 +112,42 @@ if ($user['id_rol'] === 3 && $_SERVER["REQUEST_METHOD"] === "POST") {
             $_SESSION["notificacion"] = [
                 "tipo" => "error",
                 "mensaje" => "Ocurrio un error al modificar al revisor... $th"
+            ];
+        }
+    } elseif (isset($_POST["revisores"])) {
+        try {
+            $id_articulo = $_POST['id_articulo'];
+            $revisores = $_POST['revisores'];
+
+            $stmt = $database->prepare("
+            DELETE FROM Articulos_Revisores
+            WHERE id_articulo = ?
+            ");
+            $stmt->bind_param("i",$id_articulo);
+            $stmt->execute();
+
+            $stmt = $database->prepare("
+            CALL asignar_revisor (?,?);
+            ");
+
+            if (!empty($revisores)) {
+                $revisores = explode(",",$revisores);
+                foreach ($revisores as $revisor) {
+                    $stmt->bind_param("is",$id_articulo,$revisor);
+                    $stmt->execute();
+                }
+            }
+            $database->commit();
+            
+            $_SESSION["notificacion"] = [
+                "tipo" => "ok",
+                "mensaje" => "Revisor(es) asignado(s)."
+            ];
+        } catch (\Throwable $th) {
+            $database->rollback();
+            $_SESSION["notificacion"] = [
+                "tipo" => "error",
+                "mensaje" => "Error al asignar."
             ];
         }
     }

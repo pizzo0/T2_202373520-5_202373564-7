@@ -10,7 +10,15 @@ tabBtns.forEach((btn) => {
 
         btn.classList.add('tab-btn-activo');
         document.getElementById(target).classList.add('tab-activo');
+
+        sessionStorage.setItem('tab-guardado', target);
     });
 });
 
-tabBtns[0]?.click();
+const ultimoTab = sessionStorage.getItem('tab-guardado');
+const ultimoBtn = document.querySelector(`.tab-btn[data-target="${ultimoTab}"]`);
+if (ultimoBtn) {
+    ultimoBtn.click();
+} else {
+    tabBtns[0]?.click();
+}

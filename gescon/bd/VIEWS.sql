@@ -1,6 +1,6 @@
 CREATE OR REPLACE VIEW Articulos_Data AS 
 SELECT 
-    Articulos.id AS articulo_id,
+    Articulos.id AS id_articulo,
     Articulos.titulo,
     Articulos.resumen,
     Articulos.fecha_envio,

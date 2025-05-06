@@ -10,7 +10,7 @@ if (isset($_GET['id_articulo'])) {
     $database = getDatabase();
     $stmt = $database->prepare('
         SELECT * FROM articulos_data
-        WHERE articulo_id = ?
+        WHERE id_articulo = ?
     ');
     $stmt->bind_param('s', $id_articulo);
     $stmt->execute();
@@ -26,9 +26,11 @@ if (isset($_GET['id_articulo'])) {
     }
     
     $aux = [];
-    foreach (json_decode($articulo['autores'],true) as $autor_data) {
-        $aux[] = $autor_data['email'];
+    foreach (json_decode($articulo['autores'],true) as $autor) {
+        $aux[] = $autor['nombre'] . ' (' . $autor['email'] . ')';
     }
+    $autores = implode(',<br>',$aux);
+
     $revisores = $articulo['revisores'];
     if (is_null($revisores)) {
         $revisores = 'No hay revisores aun.';
@@ -36,10 +38,11 @@ if (isset($_GET['id_articulo'])) {
         $revisores = json_decode($revisores,true);
         $aux2 = [];
         foreach ($revisores as $revisor) {
-            $aux2[] = $revisor['rut'];
+            $aux2[] = $revisor['nombre'] . ' (' . $revisor['email'] . ')';
         }
-        $revisores = implode(', ', $aux2);
+        $revisores = implode(',<br>', $aux2);
     }
+    $contacto = json_decode($articulo['contacto'],true);
 }
 ?>
 <?php if (empty($articulo)) : ?>
@@ -60,13 +63,16 @@ if (isset($_GET['id_articulo'])) {
                 }
             ?>
         </div>
-        <p class="vista-articulo-subtexto">Contacto: <?= json_decode($articulo['contacto'],true)['email'] ?></p>
-        <p class="vista-articulo-subtexto">Autor(es): <?= implode(', ',$aux); ?></p>
-        <p class="vista-articulo-subtexto">Revisor(es): <?= $revisores ?></p>
+        <p class="vista-articulo-subtexto">Contacto:</p>
+        <p><?= $contacto['nombre'] . ' (' . $contacto['email'] . ')' ?></p>
+        <p class="vista-articulo-subtexto">Autor(es):</p>
+        <p><?= $autores ?></p>
+        <p class="vista-articulo-subtexto">Revisor(es):</p>
+        <p><?= $revisores ?></p>
         <div class="vista-articulo-fecha">
-            <p>Publicado: <?= $articulo['fecha_envio'] ?></p>
+            <p>Publicado: <?= obtenerTiempo($articulo['fecha_envio']) ?></p>
             <?php if (!empty($articulo['fecha_editado'])) :?>
-                <p>Editado: <?= $articulo['fecha_editado'] ?></p>
+                <p>Editado: <?= obtenerTiempo($articulo['fecha_editado']) ?></p>
             <?php endif ?>
         </div>
         <?php if ($esAutor) : ?>

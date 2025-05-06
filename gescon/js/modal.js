@@ -9,7 +9,8 @@ setTimeout(() => {
     
             if (!overlay.dataset.listenerAdded) {
                 overlay.addEventListener('click', () => {
-                    b.click();
+                    modal.classList.toggle('modal-activo');
+                    overlay.classList.toggle('menu-overlay-activo');
                 });
                 overlay.dataset.listenerAdded = 'true';
             }

@@ -52,6 +52,9 @@ $svg_ordenar = getAsset("/svg/ordenar.svg");
             </div>
         </div>
     </div>
+
+    <div class="modal-overlay" data-overlay-target="asignar-articulo"> </div>
+    <div class="modal" id="asignar-articulo"></div>
     
     <div class="modal" id="crear-topico-container">
         <div class="modal-content">
@@ -61,7 +64,10 @@ $svg_ordenar = getAsset("/svg/ordenar.svg");
                     <label for="topico">Topico</label>
                     <input type="text" id="topico" name="topico" required>
                 </div>
-                <button type="submit">Crear</button>
+                <div class="btns-container">
+                    <button type="submit">Crear</button>
+                    <button class="btn-rojo" type="button" id="modalBtn" data-target="crear-topico-container">Cancelar</button>
+                </div>
             </form>
         </div>
     </div>
@@ -73,11 +79,14 @@ $svg_ordenar = getAsset("/svg/ordenar.svg");
     <div class="filtro-container">
         <form method="post" id="filtro-form">
             <span id="filtro-num-resultados"><!-- resultados --></span>
+            <span>Información del articulo:</span>
             <div>
-                <span>Información del articulo:</span>
-                <br>
                 <label for="titulo">Titulo:</label>
                 <input type="text" name="titulo" id="titulo">
+            </div>
+            <div>
+                <label for="contacto">Contacto:</label>
+                <input type="text" name="contacto" id="contacto">
             </div>
             <div>
                 <label for="autor">Autor:</label>
@@ -101,6 +110,14 @@ $svg_ordenar = getAsset("/svg/ordenar.svg");
                 <label for="fecha_hasta">Hasta:</label>
                 <input type="date" name="fecha_hasta" id="fecha_hasta">
             </div>
+            <span>Extra:</span>
+            <div class="checkbox-div">
+                <label class="checkbox-label" for="necesita-revisores">
+                    <input type="checkbox" class="checkbox" id="necesita-revisores" name="necesita-revisores">
+                    <span class="checkbox-slider"></span>
+                </label>
+                <label class="reset-label" for="necesita-revisores">Necesita revisores</label>
+            </div>
             <br>
             <button type="submit" onclick="toggleFC()">Filtrar</button>
         </form>
@@ -114,15 +131,21 @@ $svg_ordenar = getAsset("/svg/ordenar.svg");
             <div class="inputs-container">
                 <div class="input-container">
                     <label for="rut">Rut</label>
-                    <input type="text" id="rut" name="rut" required>
+                    <input type="text" id="rut" name="rut" <?php
+                        if (isset($_POST['pass'])) echo "value=" . $_POST['rut'];
+                    ?> required>
                 </div>
                 <div class="input-container">
                     <label for="nombre">Nombre</label>
-                    <input type="text" id="nombre" name="nombre" required>
+                    <input type="text" id="nombre" name="nombre" <?php
+                        if (isset($_POST['pass'])) echo "value=" . $_POST['nombre'];
+                    ?> required>
                 </div>
                 <div class="input-container">
                     <label for="correo">Correo</label>
-                    <input type="email" id="correo" name="correo" placeholder="revisor@gescon.com" required>
+                    <input type="email" id="correo" name="correo" placeholder="revisor@gescon.com" <?php
+                        if (isset($_POST['pass'])) echo "value=" . $_POST['correo'];
+                    ?> required>
                 </div>
                 <div class="input-container">
                     <label for="pass">Contraseña</label>
@@ -143,6 +166,7 @@ $svg_ordenar = getAsset("/svg/ordenar.svg");
     <script src=<?php getJs("getTopicos");?>></script>
     <script src=<?php getJs("modificarRevisores");?>></script>
     <script src=<?php getJs("tabs");?>></script>
-    <script src=<?php getJs("modal");?>></script>
+    <script src=<?php getJs("getArticulosFiltrados");?>></script>
     <script src=<?php getJs("asignarRevisores");?>></script>
+    <script src=<?php getJs("modal");?>></script>
 <?php endif ?>

@@ -82,6 +82,9 @@
 .dropdown-item {
     padding: 10px;
     cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .dropdown-item:hover {
@@ -103,7 +106,7 @@
     border: 1px solid var(--font-color);
     color: var(--font-color);
     width: fit-content;
-    padding: calc(var(--default-px)*0.5) calc(var(--default-px)*1);
+    padding: calc(var(--default-px)*0.4) calc(var(--default-px)*0.75) calc(var(--default-px)*0.4) calc(var(--default-px)*0.75);
     white-space: nowrap;
     user-select: none;
     cursor: pointer;
@@ -113,6 +116,11 @@
 .selected-topic:hover {
     background-color: var(--font-color);
     color: var(--bg-color);
+}
+
+.selected-topic::after {
+    margin-left: calc(var(--default-px)*0.75);
+    content: 'x';
 }
 
 #tabla-autores tr {

@@ -7,7 +7,8 @@ BEGIN
 	-- verificamos que sea revisor
 	IF NOT EXISTS (
 	SELECT 1 FROM Usuarios
-    WHERE rut = p_rut_revisor AND id_rol = 2
+    WHERE rut = p_rut_revisor
+    AND id_rol >= 2
     ) THEN
 		SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Usuario no es Revisor.';
@@ -50,7 +51,7 @@ BEGIN
     JOIN Articulos_Topicos topico ON especialidad.id_topico = topico.id_topico
     AND topico.id_articulo = p_id_articulo
     JOIN Roles ON Usuarios.id_rol = Roles.id
-    WHERE Roles.nombre = 'revisor'
+    WHERE Roles.id >= 2
     AND Usuarios.rut NOT IN (
 		SELECT rut_autor FROM Articulos_Autores
         WHERE id_articulo = p_id_articulo
@@ -375,7 +376,7 @@ END;//
 DELIMITER ;
 
 DELIMITER //
-CREATE PROCEDURE filtrar_articulos_data(
+CREATE OR REPLACE PROCEDURE filtrar_articulos_data(
     IN p_contacto VARCHAR(255),
     IN p_autor VARCHAR(255),
     IN p_revisor VARCHAR(255),

@@ -44,6 +44,8 @@ $svg_cerrar = getAsset("/svg/cerrar.svg");
         </div>
         <?php unset($_SESSION["notificacion"]); ?>
     <?php endif; ?>
+    
+    <script src=<?php getJs("obtenerTiempo");?>></script>
     <script src=<?php getJs("inputNoRellenado");?>></script>
     <script src=<?php getJs("notificacion");?>></script>
     <script src=<?php getJs("mostrarNav");?>></script>

@@ -7,7 +7,7 @@
     width: 90%;
     max-width: 800px;
     height: fit-content;
-    position: absolute;
+    position: fixed;
     background-color: var(--bg-color);
     border: 1px solid var(--font-color);
     border-radius: var(--default-border-radius);
@@ -76,11 +76,15 @@
 }
 
 .revisor-preview-rut {
+    flex-direction: row;
     padding: calc(var(--font-size)*0.5) var(--font-size);
+    justify-content: space-between;
+    align-items: center;
 }
 
 .revisor-preview-especialidades {
     flex-direction: row;
+    gap: 0.1rem;
 }
 
 .topicos-container {
@@ -112,4 +116,52 @@
     flex-direction: column;
     flex-wrap: wrap;
     gap: 1rem;
+}
+
+.input-revisores {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.dropdown-2 {
+    position: relative;
+    display: inline-block;
+    overflow: visible;
+}
+
+.dropdown-button-2 {
+    width: 100%;
+}
+
+.articulo-preview-revisores {
+    display: flex;
+    padding: var(--font-size);
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.1rem;
+}
+
+#articulo-revisores-container {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.articulo-necesita-revisores {
+    border: 1px solid #febebe ;
+}
+
+.articulo-necesita-revisores > div {
+    border-bottom: 1px solid #febebe ;
+}
+.articulo-necesita-revisores > div:first-child {
+    background-color: #160000;
+}
+.articulo-necesita-revisores > div:last-child {
+    background-color: #160000;
+    border-bottom: none;
 }

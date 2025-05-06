@@ -1,179 +1,258 @@
-const container = document.getElementsByClassName('filtro-container')[0];
-const overlay = document.getElementById('filtro-overlay');
+cargarPosiblesRevisores = async (dropdownMenu,topicos = null,id_articulo = null) => {
+    let query = `/php/api/data.revisores.php`;
 
-let paginaActual = 0;
-const resultadosPorPagina = 20;
-let totalResultados = 0;
-
-const btnAnterior = document.getElementById('btnAnterior');
-const btnSiguiente = document.getElementById('btnSiguiente');
-const paginaInfo = document.getElementById('pagina-info');
-
-btnAnterior.addEventListener('click', () => {
-    if (paginaActual > 0) {
-        paginaActual--;
-        enviarFormularioConPagina();
-    }
-});
-
-btnSiguiente.addEventListener('click', () => {
-    if ((paginaActual + 1) * resultadosPorPagina < totalResultados) {
-        paginaActual++;
-        enviarFormularioConPagina();
-    }
-});
-
-function actualizarPaginacion() {
-    btnAnterior.disabled = paginaActual === 0;
-    btnSiguiente.disabled = (paginaActual + 1) * resultadosPorPagina >= totalResultados;
-
-    let totalPaginas = Math.ceil(totalResultados / resultadosPorPagina);
-    totalPaginas = Math.max(1, totalPaginas);
-    paginaInfo.textContent = `Página ${paginaActual + 1} de ${totalPaginas}`;
-}
-
-function enviarFormularioConPagina() {
-    const form = document.getElementById('filtro-form');
-    const formData = new FormData(form);
-
-    const ordenarPor = document.getElementById('ordenar_por');
-    if (ordenarPor) {
-        formData.append('ordenar_por', ordenarPor.value);
-    }
-
-    const filtros = new URLSearchParams(formData);
-    cargarArticulos(filtros);
-}
-
-const clickFuera = (e) => {
-    if (!container.contains(e.target)) {
-        container.classList.remove('filtro-container-activo');
-        overlay.classList.remove('filtro-overlay-activo');
-        document.removeEventListener('click', clickFuera);
-    }
-};
-
-const toggleFC = () => {
-    const estaActivo = container.classList.toggle('filtro-container-activo');
-    overlay.classList.toggle('filtro-overlay-activo', estaActivo);
-
-    if (estaActivo) {
-        setTimeout(() => {
-            document.addEventListener('click', clickFuera);
-        }, 0);
-    } else {
-        document.removeEventListener('click', clickFuera);
-    }
-};
-
-cargarArticulos = (filtros = null) => {
-    const container = document.getElementById('resultados-busqueda');
-    let queryString = filtros ? `${filtros.toString()}&` : '';
-    queryString += `offset=${paginaActual * resultadosPorPagina}&limit=${resultadosPorPagina}`;
-
-    fetch(`/php/api/filtrar.articulos.php?${queryString}`)
-        .then(response => response.json())
-        .then(data => {
-            totalResultados = data.total; // Guardamos el total
-            if (data.total > 0 && data.data.length > 0) {
-                fetch(`/assets/svg/svg_articulo.svg`)
-                    .then(response => response.text())
-                    .then(svg => {
-                        svg_articulo = svg;
-                        let res = ``;
-                        data.data.forEach(articulo => {
-                            res += `
-                            <div class="articulo-preview">
-                                <div class="articulo-preview-tr">
-                                    <a href="/articulo/${articulo.articulo_id}"><span>${svg_articulo}</span> ${articulo.titulo}</a>
-                                    <p>${articulo.resumen}</p>
-                                </div>
-                                <div class="articulo-preview-etiquetas">
-                                    ${articulo.topicos.map(topico => `<span class="etiqueta">${topico.nombre}</span>`).join('')}
-                                </div>
-                                <div class="articulo-preview-fecha">
-                                    <p>Fecha de publicación - ${articulo.fecha_envio}</p>
-                                </div>
-                            </div>
-                            `;
-                        });
-                        container.innerHTML = res;
-                        document.querySelectorAll('.articulo-preview').forEach((preview) => {
-                            preview.addEventListener('click', () => {
-                                const a = preview.querySelector('a');
-                                if (a) {
-                                    a.click();
-                                }
-                            });
-                        });
-                        actualizarPaginacion();
-                    });
-            } else {
-                container.innerHTML = `<p>No se encontraron resultados.</p>`;
-                actualizarPaginacion();
-            }
-            document.getElementById("filtro-num-resultados").innerHTML = `${data.total} resultados`;
-        })
-        .catch(error => {
-            container.innerHTML = `<p>Error al obtener datos, prueba de nuevo.</p>`;
+    if (topicos) {
+        const aux = [];
+        topicos.forEach(topico => {
+            aux.push(topico.id);
         });
+        topicos = aux.join(',');
+        query = `/php/api/data.revisores.php?topicos=${topicos}${id_articulo ? `&id_articulo=${id_articulo}` : ``}`;
+    }
+
+    try {
+        fetch(query)
+            .then((resultado) => resultado.json())
+            .then((data) => {
+                dropdownMenu.innerHTML = '';
+
+                data.data.forEach((revisor) => {
+                    const item = document.createElement('div');
+                    item.classList.add('dropdown-item');
+                    item.textContent = revisor.email;
+                    item.setAttribute('data-rut', revisor.rut);
+                    dropdownMenu.appendChild(item);
+                });
+            }).catch((error) => {
+                console.log(error);
+            });
+    } catch (error) {
+        console.error("Error al cargar los revisores:", error);
+    }
 }
 
-window.addEventListener('DOMContentLoaded', () => {
+crearArticuloPreview = async (articulo) => {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'articulo-preview';
+    wrapper.id = 'modalWrapper';
+    wrapper.setAttribute('data-target','asignar-articulo');
 
-    const form = document.getElementById('filtro-form');
-    const formData = new FormData(form);
+    const topSection = document.createElement('div');
+    topSection.className = 'articulo-preview-tr';
 
-    if (formData) {
-        const ordenarPor = document.getElementById('ordenar_por');
-        if (ordenarPor) {
-            formData.append('ordenar_por', ordenarPor.value);
+    const link = document.createElement('a');
+    link.href = `/articulo/${articulo.id_articulo}`;
+
+    const iconSpan = document.createElement('span');
+
+    const response = await fetch(`/assets/svg/svg_articulo.svg`);
+    const svg_articulo = await response.text();
+    iconSpan.innerHTML = svg_articulo;
+
+    link.appendChild(iconSpan);
+    link.append(`[${articulo.id_articulo}] ${articulo.titulo}`);
+    topSection.appendChild(link);
+
+    const resumenP = document.createElement('p');
+    resumenP.textContent = articulo.resumen;
+    topSection.appendChild(resumenP);
+
+    const revisoresDiv = document.createElement('div');
+    revisoresDiv.className = 'articulo-preview-revisores';
+
+    let i = 0;
+    if (articulo.revisores) {
+        articulo.revisores.forEach(revisor => {
+            i++;
+            const revisorPreview = document.createElement('span');
+            revisorPreview.className = 'etiqueta rol-2';
+            revisorPreview.textContent = revisor.email;
+
+            revisoresDiv.appendChild(revisorPreview);
+        });
+    }
+
+    if (i < 3) wrapper.classList.add('articulo-necesita-revisores');
+
+    const etiquetasDiv = document.createElement('div');
+    etiquetasDiv.className = 'articulo-preview-etiquetas';
+
+    if (Array.isArray(articulo.topicos)) {
+        articulo.topicos.forEach(topico => {
+            const etiquetaSpan = document.createElement('span');
+            etiquetaSpan.className = 'etiqueta';
+            etiquetaSpan.textContent = topico.nombre;
+            etiquetasDiv.appendChild(etiquetaSpan);
+        });
+    }
+
+    const fechaDiv = document.createElement('div');
+    fechaDiv.className = 'articulo-preview-fecha';
+
+    const fechaP = document.createElement('p');
+    fechaP.textContent = `Publicación - ${obtenerTiempo(articulo.fecha_envio)}`;
+    fechaDiv.appendChild(fechaP);
+
+    wrapper.appendChild(topSection);
+    if (articulo.revisores) {
+        wrapper.appendChild(revisoresDiv);
+    }
+    wrapper.appendChild(etiquetasDiv);
+    wrapper.appendChild(fechaDiv);
+
+    const target = 'asignar-articulo';
+    const asignacionModal = document.getElementById(target);
+    const asignacionOverlay = document.querySelector(`[data-overlay-target=${target}]`);
+
+    wrapper.addEventListener('click', async () => {
+        if (!asignacionOverlay.dataset.listenerAdded) {
+            asignacionOverlay.addEventListener('click', () => {
+                asignacionModal.classList.toggle('modal-activo');
+                asignacionOverlay.classList.toggle('menu-overlay-activo');
+            });
+            asignacionOverlay.dataset.listenerAdded = 'true';
         }
-        const filtros = form ? new URLSearchParams(formData) : null;
-        cargarArticulos(filtros);
-    } else {
-        cargarArticulos();
-    }
-    
-    form.dispatchEvent(new Event('submit'));
-});
+        asignacionModal.classList.toggle('modal-activo');
+        asignacionOverlay.classList.toggle('menu-overlay-activo');
 
-document.getElementById('filtro-form').addEventListener('submit', (e) => {
-    e.preventDefault();
+        asignacionModal.innerHTML = '';
 
-    paginaActual = 0;
+        const asignacionContainer = document.createElement('div');
+        asignacionContainer.classList.add('modal-content');
 
-    const formData = new FormData(e.target);
+        const h2 = document.createElement('h2')
+        h2.innerHTML = '[' + articulo.id_articulo + '] ' + articulo.titulo;
 
-    const ordenarPor = document.getElementById('ordenar_por');
-    if (ordenarPor) {
-        formData.append('ordenar_por', ordenarPor.value);
-    }
+        const form = document.createElement('form');
+        form.className = 'formulario modal-form';
+        form.id = 'form-asignar-revisores';
+        form.method = 'POST';
 
-    const filtros = new URLSearchParams(formData);
-    cargarArticulos(filtros);
-});
+        const divRevisores = document.createElement('div');
+        divRevisores.className = 'input-conatiner input-revisores'
 
-document.addEventListener("DOMContentLoaded", () => {
-    fetch("/php/api/topicos.php")
-        .then((response) => response.json())
-        .then((data) => {
-            const selectTopicos = document.getElementById("topicos");
+        const dropdownContainer = document.createElement('div');
+        dropdownContainer.className = 'dropdown-2';
+        dropdownContainer.id = 'dropdown-container';
 
-            data.sort((a, b) => a.nombre.localeCompare(b.nombre));
+        const dropdownBtn = document.createElement('button');
+        dropdownBtn.type = 'button';
+        dropdownBtn.className = 'dropdown-button-2';
+        dropdownBtn.id = 'dropdown-button';
+        dropdownBtn.textContent = '+ Agregar Revisor';
 
-            data.forEach((topico) => {
-                const item = document.createElement("option");
+        const dropdownMenu = document.createElement('div');
+        dropdownMenu.className = 'dropdown-menu';
+        dropdownMenu.id = 'dropdown-menu';
 
-                item.textContent = topico.nombre;
-                item.setAttribute("value", topico.nombre);
-                selectTopicos.appendChild(item);
+        await cargarPosiblesRevisores(dropdownMenu,articulo.topicos,articulo.id_articulo);
+
+        dropdownContainer.append(dropdownBtn,dropdownMenu);
+        
+        const revisoresContainer = document.createElement('div');
+        revisoresContainer.id = 'articulo-revisores-container';
+        const revisoresSeleccionados = [];
+        if (articulo.revisores) {
+            articulo.revisores.forEach(revisor => {
+                const revisorDiv = document.createElement('div');
+                revisorDiv.className = 'selected-topic'
+                revisorDiv.setAttribute('data-rut',revisor.rut);
+                revisorDiv.innerHTML = revisor.email;
+                revisoresContainer.appendChild(revisorDiv);
+                
+                revisoresSeleccionados.push(revisor.rut);
+            });
+        } else {
+            revisoresContainer.innerHTML = 'No hay revisores asignados.'
+        }
+
+        const hiddenIdArticulo = document.createElement('input');
+        hiddenIdArticulo.type = 'hidden';
+        hiddenIdArticulo.id = 'hidden-id-articulo';
+        hiddenIdArticulo.name = 'id_articulo';
+        hiddenIdArticulo.value = articulo.id_articulo;
+
+        const hiddenRevisoresInput = document.createElement('input');
+        hiddenRevisoresInput.type = 'hidden';
+        hiddenRevisoresInput.id = 'hidden-revisores';
+        hiddenRevisoresInput.name = 'revisores';
+
+        hiddenRevisoresInput.value = revisoresSeleccionados.join(',');
+
+        dropdownBtn.addEventListener('click', () => {
+            dropdownMenu.classList.toggle('show');
+        })
+
+        dropdownContainer.addEventListener('click', (e) => {
+            if (e.target.classList.contains('dropdown-item')) {
+                const seleccionado = e.target;
+                const rutRevisor = seleccionado.getAttribute('data-rut');
+                const emailRevisor = seleccionado.textContent;
+
+                if (hiddenRevisoresInput.value.split(',').includes(rutRevisor)) return;
+
+                const divRevisor = document.createElement('div');
+                divRevisor.className = 'selected-topic';
+                divRevisor.textContent = emailRevisor;
+                divRevisor.setAttribute('data-rut', rutRevisor);
+
+                const hiddenValor = hiddenRevisoresInput.value ? hiddenRevisoresInput.value.split(",") : [];
+                if (hiddenValor.length === 0) {
+                    revisoresContainer.innerHTML = ''
+                }
+                revisoresContainer.appendChild(divRevisor);
+
+                hiddenValor.push(rutRevisor);
+                hiddenRevisoresInput.value = hiddenValor.join(',');
+
+                const existingError = revisoresContainer.querySelector('.error-message')
+                if (existingError) existingError.remove();
+
+                dropdownMenu.classList.remove("show");
+            }
         });
-    })
-})
 
-document.getElementById('ordenar_por').addEventListener('change', () => {
-    paginaActual = 0;
-    const form = document.getElementById('filtro-form');
-    form.dispatchEvent(new Event('submit'));
-});
+        revisoresContainer.addEventListener('click', (e) => {
+            if (e.target.classList.contains('selected-topic')) {
+                const divRevisor = e.target;
+                const rutRevisor = divRevisor.getAttribute('data-rut');
+
+                divRevisor.remove();
+
+                const aux = hiddenRevisoresInput.value.split(',').filter(rut => rut !== rutRevisor);
+                hiddenRevisoresInput.value = aux.join(',');
+
+                const hiddenValor = hiddenRevisoresInput.value ? hiddenRevisoresInput.value.split(",") : [];
+                if (hiddenValor.length === 0) revisoresContainer.innerHTML = 'No hay revisores asignados.';
+            }
+        });
+
+        divRevisores.append(dropdownContainer,revisoresContainer,hiddenRevisoresInput,hiddenIdArticulo);
+
+        const btnEnviarAsignacion = document.createElement('button');
+        btnEnviarAsignacion.type = 'submit';
+        btnEnviarAsignacion.textContent = 'Asignar'
+
+        const btnCancelarAsig = document.createElement('button');
+        btnCancelarAsig.className = 'btn-rojo';
+        btnCancelarAsig.type = 'button';
+        btnCancelarAsig.textContent = 'Cancelar';
+        btnCancelarAsig.addEventListener('click', () => {
+            asignacionModal.classList.toggle('modal-activo');
+            asignacionOverlay.classList.toggle('menu-overlay-activo');
+        });
+
+        const btnsContainer = document.createElement('div');
+        btnsContainer.className = 'btns-container';
+
+        btnsContainer.append(btnEnviarAsignacion,btnCancelarAsig);
+
+        form.append(divRevisores,btnsContainer);
+        
+        asignacionContainer.append(h2,form);
+
+        asignacionModal.appendChild(asignacionContainer);
+    });
+
+    return wrapper;
+}

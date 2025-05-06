@@ -3,7 +3,7 @@
 
 // ARREGLAR ESTO CON LA NUEVA ESTRUCTURA DEL SQL
 
-$tiempo_expiracion = 1 * 60;
+$tiempo_expiracion = 5 * 60;
 
 $user = getUsuarioData();
 $topicos = getTopicos();
@@ -17,7 +17,7 @@ $id_articulo = $_GET['id_articulo'];
 
 $stmt = $database->prepare('
 SELECT * FROM articulos_data
-WHERE articulo_id = ?
+WHERE id_articulo = ?
 ');
 $stmt->bind_param('s', $id_articulo);
 $stmt->execute();
@@ -26,6 +26,8 @@ $articulo = $stmt->get_result()->fetch_assoc();
 
 $pedir_clave = true;
 $error_clave = '';
+
+$es_autor = false;
 
 if (!empty($articulo)) {
     if (isset($_SESSION['articulos_verificados'][$id_articulo])) {
@@ -49,8 +51,14 @@ if (!empty($articulo)) {
         }
     }
 
-    $es_autor = strpos($articulo['autores'], $user['email']) !== false;
-    $autores = explode(', ', $articulo['autores']);
+    $contacto = json_decode($articulo['contacto'],true);
+    $autores = json_decode($articulo['autores'],true);
+    foreach ($autores as $autor) {
+        $autor_rut = $autor['rut'];
+        if ($autor_rut === $user['rut']) {
+            $es_autor = true;
+        }
+    }
 
     if ($pedir_clave) {
         $stmt = $database->prepare('
@@ -67,7 +75,7 @@ if (!empty($articulo)) {
         if (isset($_POST['pass'])) {
             $pass = $_POST['pass'];
 
-            if (password_verify($pass, $pass_articulo)) {
+            if ($pass === $pass_articulo) {
                 $_SESSION['articulos_verificados'][$id_articulo] = [
                     'verificado' => true,
                     'timestamp' => time(),
@@ -92,7 +100,6 @@ if (!empty($articulo)) {
 <?php elseif ($pedir_clave) : ?>
     <div class="menu big-border-radius">
         <h1>VERIFICACIÓN</h1>
-        <p>Para editar este artículo necesitas ingresar la clave.</p>
         <form method="post">
             <div class="">
                 <label for="pass">Contraseña</label>
@@ -136,17 +143,20 @@ if (!empty($articulo)) {
                     </tr>
 
                     <?php
-                        foreach ($autores as $index => $email) {
-                            $usuario = getUsuarioDataEmail($email);
-                            $nombre_autor = htmlspecialchars($usuario['nombre']);
-                            $email_autor = htmlspecialchars($usuario['email']);
-                            $is_contacto = ($email == $articulo['contacto']) ? 'checked' : '';
+                        foreach ($autores as $i => $autor) {
+                            $nombre_autor = htmlspecialchars($autor['nombre']);
+                            $email_autor = htmlspecialchars($autor['email']);
+                            $is_contacto = ($autor['rut'] === $contacto['rut']) ? 'checked' : '';
                     ?>
                         <tr class="autor-info">
                             <td><input type="text" name="nombre[]" value="<?= $nombre_autor ?>" readonly></td>
                             <td><input type="email" name="email[]" value="<?= $email_autor ?>" readonly></td>
-                            <td><input type="radio" name="contacto" value="<?= $index ?>" <?= $is_contacto ?>></td>
-                            <td><button class="remover" type="button">X</button></td>
+                            <td><input type="radio" name="contacto" value="<?= $i ?>" <?= $is_contacto ?>></td>
+                            <td><button class="remover" <?php 
+                            if (!($autor['rut'] === $user['rut'])) {
+                                echo 'onclick="eliminarAutor(this)"';
+                            }
+                            ?> type="button">X</button></td>
                         </tr>
                     <?php
                     }
@@ -159,41 +169,29 @@ if (!empty($articulo)) {
             </div>
 
             <div class="topicos_publicar">
-                <div class="dropdown" id="dropdown-container">
-                    <button type="button" class="dropdown-button" id="dropdown-button">+ Agregar Tópicos</button>
-                    <div class="dropdown-menu" id="dropdown-menu">
-                        <!-- opciones -->
-                    </div>
-                </div>
-                <div id="topicos-container">
+                <div id="topicos-container-preview">
                     <!-- mostrar los tópicos seleccionados -->
                     <?php
-                    $topicosSeleccionados = explode(', ', $articulo['topicos']);
+                    $topicosSeleccionados = json_decode($articulo['topicos'],true);
                     $idsTopicosSeleccionados = [];
 
                     $database = getDatabase();
 
-                    foreach ($topicosSeleccionados as $nombreTopico) {
-                        $stmt = $database->prepare('SELECT id FROM Topicos WHERE nombre = ?');
-                        $stmt->bind_param('s', $nombreTopico);
-                        $stmt->execute();
-                        $result = $stmt->get_result();
-                        $row = $result->fetch_assoc();
-                        
-                        if ($row) {
-                            $id = $row['id'];
+                    foreach ($topicosSeleccionados as $topico) {
+                        $topicoNombre = $topico['nombre'];
+                        if ($topico) {
+                            $id = $topico['id'];
                             $idsTopicosSeleccionados[] = $id;
-                            echo "<span class='selected-topic' data-id='$id'>$nombreTopico</span><br>";
+                            echo "<span class='etiqueta3' data-id='$id'>$topicoNombre</span><br>";
                         }
                     }
                     ?>
                 </div>
-                <input type="hidden" name="topicos" id="hidden-topics" value="<?= htmlspecialchars(implode(',', $idsTopicosSeleccionados)) ?>">
             </div>
 
-            <div class="btn_publicar">
+            <div class="btns-container">
                 <button type="submit">Guardar cambios</button>
-                <button class="btn-rojo">Eliminar</button>
+                <button type="button" class="btn-rojo">Eliminar</button>
                 <!-- implementar eliminar articulo -->
             </div>
         </form>
@@ -202,6 +200,5 @@ if (!empty($articulo)) {
         </div>
     </div>
 
-    <script src=<?php getJs("inputTopicos"); ?>></script>
     <script src=<?php getJs("inputAutores"); ?>></script>
 <?php endif ?>

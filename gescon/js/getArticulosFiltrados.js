@@ -66,62 +66,88 @@ const toggleFC = () => {
     }
 };
 
-cargarArticulos = (filtros = null) => {
+crearArticuloPreview = async (articulo) => {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'articulo-preview';
+
+    const topSection = document.createElement('div');
+    topSection.className = 'articulo-preview-tr';
+
+    const link = document.createElement('a');
+    link.href = `/articulo/${articulo.id_articulo}`;
+
+    const iconSpan = document.createElement('span');
+
+    const response = await fetch(`/assets/svg/svg_articulo.svg`);
+    const svg_articulo = await response.text();
+    iconSpan.innerHTML = svg_articulo;
+
+    link.appendChild(iconSpan);
+    link.append(` ${articulo.titulo}`);
+    topSection.appendChild(link);
+
+    const resumenP = document.createElement('p');
+    resumenP.textContent = articulo.resumen;
+    topSection.appendChild(resumenP);
+
+    const etiquetasDiv = document.createElement('div');
+    etiquetasDiv.className = 'articulo-preview-etiquetas';
+
+    if (Array.isArray(articulo.topicos)) {
+        articulo.topicos.forEach(topico => {
+            const etiquetaSpan = document.createElement('span');
+            etiquetaSpan.className = 'etiqueta';
+            etiquetaSpan.textContent = topico.nombre;
+            etiquetasDiv.appendChild(etiquetaSpan);
+        });
+    }
+
+    const fechaDiv = document.createElement('div');
+    fechaDiv.className = 'articulo-preview-fecha';
+
+    const fechaP = document.createElement('p');
+    fechaP.textContent = `Publicación - ${obtenerTiempo(articulo.fecha_envio)}`;
+    fechaDiv.appendChild(fechaP);
+
+    wrapper.appendChild(topSection);
+    wrapper.appendChild(etiquetasDiv);
+    wrapper.appendChild(fechaDiv);
+
+    wrapper.addEventListener('click', () => link.click());
+
+    return wrapper;
+}
+
+cargarArticulos = async (filtros = null) => {
     const container = document.getElementById('resultados-busqueda');
     container.innerHTML = `<p>Cargando artículos...</p>`;
     let queryString = filtros ? `${filtros.toString()}&` : '';
     queryString += `offset=${paginaActual * resultadosPorPagina}&limit=${resultadosPorPagina}`;
 
-    fetch(`/php/api/filtrar.articulos.php?${queryString}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.total > 0 && data.data.length > 0) {
-                fetch(`/assets/svg/svg_articulo.svg`)
-                    .then(response => response.text())
-                    .then(svg => {
-                        svg_articulo = svg;
-                        let res = ``;
-                        data.data.forEach(articulo => {
-                            res += `
-                            <div class="articulo-preview">
-                                <div class="articulo-preview-tr">
-                                    <a href="/articulo/${articulo.articulo_id}"><span>${svg_articulo}</span> ${articulo.titulo}</a>
-                                    <p>${articulo.resumen}</p>
-                                </div>
-                                <div class="articulo-preview-etiquetas">
-                                    ${Array.isArray(articulo.topicos) ? articulo.topicos.map(topico => `<span class="etiqueta">${topico.nombre}</span>`).join('') : ''}
-                                </div>
-                                <div class="articulo-preview-fecha">
-                                    <p>Fecha de publicación - ${articulo.fecha_envio}</p>
-                                </div>
-                            </div>
-                            `;
-                        });
-                        container.innerHTML = res;
-                        document.querySelectorAll('.articulo-preview').forEach((preview) => {
-                            preview.addEventListener('click', () => {
-                                const a = preview.querySelector('a');
-                                if (a) {
-                                    a.click();
-                                }
-                            });
-                        });
-                        actualizarPaginacion();
-                    });
-            } else {
-                container.innerHTML = `<p>No se encontraron resultados.</p>`;
-                actualizarPaginacion();
-            }
-            document.getElementById("filtro-num-resultados").innerHTML = `${data.total} resultados`;
-        })
-        .catch(error => {
-            container.innerHTML = `<p>Error al obtener datos, prueba de nuevo.</p>`;
-            container.innerHTML += `<p>${error}</p>`
-        });
-}
+    try {
+        const response = await fetch(`/php/api/filtrar.articulos.php?${queryString}`);
+        const data = await response.json();
+
+        if (data.total > 0 && data.data.length > 0) {
+            container.innerHTML = '';
+            
+            const previews = await Promise.all(data.data.map(articulo => crearArticuloPreview(articulo)));
+            previews.forEach(preview => container.appendChild(preview));
+
+            actualizarPaginacion();
+        } else {
+            container.innerHTML = `<p>No se encontraron resultados.</p>`;
+            actualizarPaginacion();
+        }
+
+        document.getElementById("filtro-num-resultados").innerHTML = `${data.total} resultados`;
+    } catch (error) {
+        container.innerHTML = `<p>Error al obtener datos, prueba de nuevo.</p>`;
+        container.innerHTML += `<p>${error}</p>`;
+    }
+};
 
 window.addEventListener('DOMContentLoaded', () => {
-
     const form = document.getElementById('filtro-form');
     const formData = new FormData(form);
 
@@ -136,7 +162,7 @@ window.addEventListener('DOMContentLoaded', () => {
         cargarArticulos();
     }
     
-    form.dispatchEvent(new Event('submit'));
+    // form.dispatchEvent(new Event('submit'));
 });
 
 document.getElementById('filtro-form').addEventListener('submit', (e) => {
