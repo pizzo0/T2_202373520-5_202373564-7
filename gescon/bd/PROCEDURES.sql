@@ -376,7 +376,8 @@ END;//
 DELIMITER ;
 
 DELIMITER //
-CREATE OR REPLACE PROCEDURE filtrar_articulos_data(
+CREATE PROCEDURE filtrar_articulos_data (
+    IN p_id_articulo INT,
     IN p_contacto VARCHAR(255),
     IN p_autor VARCHAR(255),
     IN p_revisor VARCHAR(255),
@@ -403,6 +404,9 @@ BEGIN
 
     SET @sql = CONCAT(
         'SELECT * FROM Articulos_Data WHERE 1=1 ',
+
+        IF (p_id_articulo IS NULL OR p_id_articulo = '', '',
+            CONCAT(' AND id_articulo = ', p_id_articulo, '')),
 
         IF(p_contacto IS NULL OR p_contacto = '', '', 
             CONCAT(' AND JSON_UNQUOTE(JSON_EXTRACT(contacto, "$.nombre")) LIKE ''%', p_contacto, '%''')),

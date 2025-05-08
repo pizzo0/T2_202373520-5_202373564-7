@@ -1,20 +1,21 @@
 RewriteEngine On
 
-# Redirige cualquier solicitud con ?page= a la URL amigable
+# Redirige cualquier solicitud con ?page= a la URL correspondiente
 RewriteCond %{THE_REQUEST} \s\?page=([^\s&]+) [NC]
 RewriteRule ^ index.php?page=%1 [R=301,L]
 
-# Si la URL es /articulo/1, redirige a /?page=articulo&id_articulo=1
+# Si la URL es /articulo/X, redirige a /?page=articulo&id_articulo=X
 RewriteRule ^articulo/([0-9]+)$ index.php?page=articulo&id_articulo=$1 [L,QSA]
 
-# Si la URL es /articulo/1, redirige a /?page=articulo&id_articulo=1
+# Si la URL es /editar/X, redirige a /?page=editar&id_articulo=X
 RewriteRule ^editar/([0-9]+)$ index.php?page=editar&id_articulo=$1 [L,QSA]
 
-# Redirige cualquier otra URL amigable a ?page
+# Redirige a ?page
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^([^/]+)$ index.php?page=$1 [L,QSA]
 
+# Ubicacion del index
 DirectoryIndex index.php
 
 ErrorDocument 404 /404

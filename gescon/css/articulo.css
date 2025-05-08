@@ -6,7 +6,7 @@
 }
 
 .vista-articulo-titulo {
-    font-size: calc(var(--font-size)*2.9);
+    font-size: calc(var(--font-size)*3.2);
     letter-spacing: -1px;
     text-transform: uppercase;
     margin-bottom: 2rem;
@@ -36,6 +36,48 @@
 .vista-articulo-fecha p {
     font-size: 14px;
     text-transform: uppercase;
+}
+
+.articulo-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+}
+
+.articulo-acciones {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.revisiones-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.preview-formulario {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+    width: 100%;
+    gap: 1rem;
+    padding: calc(var(--font-size) * 0.5) var(--font-size);
+    border: 1px solid var(--font-color);
+    border-radius: var(--default-border-radius);
+}
+
+.formularios-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 0.5rem;
 }
 
 @media (max-width: 900px) {

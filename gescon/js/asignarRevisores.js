@@ -41,7 +41,6 @@ crearArticuloPreview = async (articulo) => {
     topSection.className = 'articulo-preview-tr';
 
     const link = document.createElement('a');
-    link.href = `/articulo/${articulo.id_articulo}`;
 
     const iconSpan = document.createElement('span');
 

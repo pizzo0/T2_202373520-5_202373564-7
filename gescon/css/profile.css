@@ -63,6 +63,12 @@
     gap: 1rem;
 }
 
+.profile-revisiones-container {
+    display: flex;
+    overflow-y: auto;
+    flex-wrap: wrap;
+}
+
 .nombre-email-form {
     display: none !important;
 }
@@ -145,7 +151,7 @@
     max-height: calc(100% - 90px);
 }
 
-.profile-articulos-results .articulo-preview {
+.profile-articulos-results .articulo-preview, .profile-revisiones-container .articulo-preview{
     margin-bottom: 1rem;
 }
 
@@ -161,5 +167,12 @@
         overflow-y: auto;
         flex-wrap: wrap;
         max-height: calc(100vh - 249px);
+    }
+
+    .profile-revisiones-container {
+        display: flex;
+        overflow-y: auto;
+        flex-wrap: wrap;
+        max-height: calc(100vh - 191px);
     }
 }

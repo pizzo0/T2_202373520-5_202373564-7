@@ -9,7 +9,14 @@ $svg_ordenar = getAsset("/svg/ordenar.svg");
     <form method="post" id="filtro-form">
         <span id="filtro-num-resultados"><!-- resultados --></span>
         <div>
-            <span>Información del articulo:</span>
+            <span>Articulo en especifico:</span>
+            <br>
+            <label for="id_articulo">ID del Articulo:</label>
+            <input type="text" name="id_articulo" id="id_articulo">
+        </div>
+        
+        <div>
+            <span>Información del Articulo:</span>
             <br>
             <label for="titulo">Titulo:</label>
             <input type="text" name="titulo" id="titulo">

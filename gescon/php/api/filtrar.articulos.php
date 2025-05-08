@@ -6,6 +6,7 @@ require "../config/func.php";
 
 header("Content-Type: application/json");
 
+$id_articulo = $_GET['id_articulo'] ?? '';
 $titulo = $_GET['titulo'] ?? '';
 $contacto = $_GET['contacto'] ?? '';
 $autor = $_GET['autor'] ?? '';
@@ -19,10 +20,11 @@ $limit = isset($_GET['limit']) ? (int) $_GET['limit'] : 20;
 
 $database = getDatabase();
 
-$stmt = $database->prepare("CALL filtrar_articulos_data(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+$stmt = $database->prepare("CALL filtrar_articulos_data(? ,?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
 $stmt->bind_param(
-    'sssissssii',
+    'isssissssii',
+    $id_articulo,
     $contacto,
     $autor,
     $revisor,
@@ -43,7 +45,7 @@ $res = $stmt->get_result();
 $data = [];
 
 while ($fila = $res->fetch_assoc()) {
-    foreach (['contacto', 'autores', 'revisores', 'topicos'] as $campo) {
+    foreach (['contacto', 'autores', 'revisores', 'topicos','formularios'] as $campo) {
         if (isset($fila[$campo])) {
             $decoded = json_decode($fila[$campo], true);
             if (json_last_error() === JSON_ERROR_NONE) {

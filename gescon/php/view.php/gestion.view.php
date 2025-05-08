@@ -79,8 +79,16 @@ $svg_ordenar = getAsset("/svg/ordenar.svg");
     <div class="filtro-container">
         <form method="post" id="filtro-form">
             <span id="filtro-num-resultados"><!-- resultados --></span>
-            <span>Información del articulo:</span>
             <div>
+                <span>Articulo en especifico:</span>
+                <br>
+                <label for="id_articulo">ID del Articulo:</label>
+                <input type="text" name="id_articulo" id="id_articulo">
+            </div>
+            
+            <div>
+                <span>Información del Articulo:</span>
+                <br>
                 <label for="titulo">Titulo:</label>
                 <input type="text" name="titulo" id="titulo">
             </div>
@@ -110,7 +118,7 @@ $svg_ordenar = getAsset("/svg/ordenar.svg");
                 <label for="fecha_hasta">Hasta:</label>
                 <input type="date" name="fecha_hasta" id="fecha_hasta">
             </div>
-            <span>Extra:</span>
+            <span>Filtros extra:</span>
             <div class="checkbox-div">
                 <label class="checkbox-label" for="necesita-revisores">
                     <input type="checkbox" class="checkbox" id="necesita-revisores" name="necesita-revisores">

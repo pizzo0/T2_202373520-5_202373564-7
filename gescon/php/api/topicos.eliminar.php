@@ -17,7 +17,9 @@ $id = intval($input['id']);
 
 $database = getDatabase();
 
-$stmt = $database->prepare("DELETE FROM Topicos WHERE id = ?");
+$stmt = $database->prepare("
+DELETE FROM Topicos WHERE id = ?
+");
 $stmt->bind_param("i", $id);
 $stmt->execute();
 

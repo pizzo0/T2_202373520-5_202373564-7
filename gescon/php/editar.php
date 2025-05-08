@@ -1,5 +1,6 @@
 <?php
 
+
 if (!isset($_GET['id_articulo'])) {
     header("location: /");
     exit;
@@ -64,6 +65,5 @@ if (isset($_POST['pass'])) {
             "tipo" => "error",
             "mensaje" => "Ocurrió un error al editar el artículo :("
         ];
-        echo $th;
     }
 }

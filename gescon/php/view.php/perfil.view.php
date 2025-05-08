@@ -86,12 +86,12 @@ $svg_añadir = getAsset("/svg/añadir.svg");
             </div>
             <?php if ($user['id_rol'] >= 2) : ?>
             <div class="tab overflow-fix" id="tabRevisiones">
+                <p id="num-articulos-revisar"></p>
                 <div class="profile-revisiones-container">
                     <!-- articulos que puede revisar -->
-                     <p>hola</p>
                 </div>
             </div>
-            <!-- ARREGLAR ESTO -->
+            <script src=<?php getJs("usuarioArticulosRevisar");?>></script>
             <?php endif ?>
         </div>
     </div>

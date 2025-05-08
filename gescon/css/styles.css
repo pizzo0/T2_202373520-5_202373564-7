@@ -67,10 +67,18 @@ main:has(.menu), main:has(.menu_publicar) {
   margin: auto;
 }
 
-input, .input {
+input, .input, .input-box {
   border: 1px solid var(--font-color);
   padding:calc(var(--default-px)/2) var(--default-px) calc(var(--default-px)/2)  var(--default-px) ;
   width: 100%;
+  border-radius: var(--default-border-radius);
+}
+
+.input-box {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .input {
@@ -204,7 +212,7 @@ svg {
   fill: var(--font-color);
 }
 
-label {
+label, .label {
   font-size: 0.75rem;
   color: var(--font-color);
   position: relative;
@@ -213,6 +221,7 @@ label {
   padding: 0 3px;
   background-color: var(--bg-color);
   width: fit-content;
+  user-select: none;
 }
 
 .select-input {
@@ -344,4 +353,25 @@ option {
   align-items: center;
   flex-direction: row;
   gap: 0.5rem;
+}
+
+.reset-input {
+  border-radius: 0;
+  border: 0;
+  padding: 0;
+  width: auto;
+}
+
+.reset-input:focus {
+  border: none;
+}
+
+.range-input {
+  width: 100%;
+}
+
+.input-radio-label {
+  display: flex;
+  gap: 0.2rem;
+  flex-direction: row-reverse;
 }

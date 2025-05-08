@@ -7,21 +7,21 @@ require "../config/func.php";
 header("Content-Type: application/json");
 
 session_start();
-$user = getUsuarioData();
 
+$user = getUsuarioData();
 $database = getDatabase();
 
 $stmt = $database->prepare("
     SELECT * FROM articulos_data
     WHERE EXISTS (
         SELECT 1
-        FROM JSON_TABLE(autores, '$[*]' COLUMNS (rut VARCHAR(12) PATH '$.rut'))
-        AS autor WHERE TRIM(autor.rut) = ?
+        FROM JSON_TABLE(revisores, '$[*]' COLUMNS (rut VARCHAR(12) PATH '$.rut'))
+        AS revisor WHERE TRIM(revisor.rut) = ?
     )
     ORDER BY fecha_envio DESC
 ");
 
-$stmt->bind_param("s",$user['rut']);
+$stmt->bind_param("s", $user['rut']);
 $stmt->execute();
 $res = $stmt->get_result();
 

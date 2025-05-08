@@ -1,8 +1,8 @@
-const container = document.getElementsByClassName('profile-articulos-results')[0];
-const numeroArticulos = document.getElementById('num-articulos');
+const containerRevisar = document.querySelector('.profile-revisiones-container');
+const numRevisar = document.getElementById('num-articulos-revisar');
 
 document.addEventListener('DOMContentLoaded', () => {
-    fetch('/php/api/actual.usuario.articulos.php')
+    fetch('/php/api/actual.usuario.articulos.revisar.php')
         .then((response) => response.json())
         .then((data) => {
             if (data.total > 0) {
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
                             `;
                         });
-                        container.innerHTML += res;
+                        containerRevisar.innerHTML += res;
                         document.querySelectorAll('.articulo-preview').forEach((preview) => {
                             preview.addEventListener('click', () => {
                                 const a = preview.querySelector('a');
@@ -38,8 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         });
                     });
             } else {
-                container.innerHTML += `<p>Aun no publicas articulos</p>`;
+                containerRevisar.innerHTML += `<p>Aun no tienes articulos asignados para revisar</p>`;
             }
-            numeroArticulos.innerHTML = `Tienes ${data.total} articulos publicados`;
+            numRevisar.innerHTML = `Tienes ${data.total} articulos asignados`;
         });
 });
