@@ -8,10 +8,11 @@ header("Content-Type: application/json");
 $database = getDatabase();
 $stmt = $database->stmt_init();
 
+$rut_revisor = isset($_GET['rut_revisor']) ? $_GET['rut_revisor'] : '' ;
 $topicos = isset($_GET['topicos']) ? $_GET['topicos'] : '' ;
 $id_articulo = isset($_GET['id_articulo']) ? $_GET['id_articulo'] : '' ;
 
-$sql = "SELECT obtener_revisores('$topicos','$id_articulo') AS revisores";
+$sql = "SELECT obtener_revisores('$rut_revisor','$topicos','$id_articulo') AS revisores";
 $stmt->prepare($sql);
 $stmt->execute();
 

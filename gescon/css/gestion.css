@@ -68,7 +68,7 @@
     border-bottom: none;
 }
 
-.revisor-preview-rut, .revisor-preview-data, .revisor-preview-especialidades {
+.revisor-preview-rut, .revisor-preview-data, .revisor-preview-especialidades, .revisor-preview-acciones {
     display: flex;
     flex-direction: column;
     padding: var(--font-size);
@@ -149,6 +149,19 @@
     flex-direction: column;
     flex-wrap: wrap;
     gap: 0.5rem;
+}
+
+#revisor-articulos-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.input-articulos {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 1rem;
 }
 
 .articulo-necesita-revisores {

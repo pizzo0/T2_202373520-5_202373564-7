@@ -135,7 +135,21 @@ function getRedireccion($uri, $nombre) {
     $class = $query == $uri ? " active" : "";
     $url = config("site_url") . "/" . (config("pretty_uri") || $uri == "" ? "" : "?page=") . $uri;
 
-    return "<a href='" . $url . "' title='" . $nombre . "' class='item" . $class . "'>" . $nombre . "</a>";
+    $svg_name = (($uri == "login" || $uri == "signup") ? "" : ($uri ? $uri : 'home'));
+    $svg = ($svg_name != '' ? ("<span class='nav-option-svg'>" . getAsset("/svg/" . $svg_name . ".svg") . "</span>") : "");
+
+    return "<a class='nav-option " . (getPageSection() == $uri ? "nav-option-curr" : "") . "' href='" . $url . "' title='" . $nombre . "' class='item" . $class . "'>" . 
+        $svg . "<span class='nav-option-name'>" . $nombre . "</span>" .
+    "</a>";
+}
+
+// obtener pagina actual
+function getPageSection() {
+    $uri = $_SERVER['REQUEST_URI'];
+    $path = parse_url($uri, PHP_URL_PATH);
+    $segments = explode('/', trim($path, '/'));
+
+    return $segments[0] ?? '';
 }
 
 // obtener barra de navegacion
@@ -147,8 +161,13 @@ function getNav($sep = " | ") {
     $user = getUsuarioData();
 
     foreach ($items as $uri => $nombre) {
-        // Parte de autenticación
-        if ($uri === "login" || $uri === "signup") {
+        if (in_array($uri, ["gestion", "publicar"])) {
+            if (!$user) {
+                continue;
+            } else if ($uri === "gestion" && $user["id_rol"] != 3) {
+                continue;
+            }
+        } else if (in_array($uri, ["login", "signup"])) {
             if (!$user) {
                 $navAuth .= getRedireccion($uri, $nombre) . $sep;
             }
@@ -156,18 +175,27 @@ function getNav($sep = " | ") {
         } elseif ($uri === "perfil") {
             if ($user) {
                 $nombre = explode(" ",$user['nombre'])[0];
-                $navAuth .= "<a href='/" . (config("pretty_uri") || $uri == "" ? "" : "?page=") . $uri ."'>" . htmlspecialchars($nombre) . "</a>" . $sep;
+                $navAuth .= "<a class='nav-option " . (getPageSection() == $uri ? "nav-option-curr" : "") . "' href='/" . (config("pretty_uri") || $uri == "" ? "" : "?page=") . $uri ."'>" . 
+                    "<span class='nav-option-svg'>" . getAsset("/svg/user.svg") . "</span>" .
+                    "<span class='nav-option-name'>" . $nombre . "</span>" .
+                "</a>" . $sep;
             }
+            continue;
+        } else if ($uri === "") {
+            $navAuth .= getRedireccion($uri, $nombre) . $sep;
             continue;
         }
 
-        // Ítems principales
         $navMain .= getRedireccion($uri, $nombre) . $sep;
     }
 
-    // Imprimimos dos bloques separados
-    echo '<div class="sub-nav">' . trim($navMain, $sep) . '</div>';
+    $navMain .= "<a id='nav-close' class='nav-option menu-option'>" . 
+                    "<span class='nav-option-svg'>" . getAsset("/svg/nav.svg") . "</span>" .
+                    "<span class='nav-option-name'>Menu</span>" .
+                "</a>" . $sep;
+
     echo '<div class="sub-nav">' . trim($navAuth, $sep) . '</div>';
+    echo '<div class="sub-nav">' . trim($navMain, $sep) . '</div>';
 }
 
 // obtener el titulo de la pagina
@@ -203,7 +231,10 @@ function getPhp() {
 }
 
 function getAsset($path) {
-    return file_get_contents(config("assets_path") . $path);
+    $path_asset = config("assets_path") . $path;
+    $file = "";
+    if (file_exists($path_asset)) $file = file_get_contents($path_asset);
+    return $file;
 }
 
 function registrarUsuario($postData) {

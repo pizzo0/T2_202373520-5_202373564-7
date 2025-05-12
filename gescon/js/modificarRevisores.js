@@ -14,7 +14,25 @@ overlayRevisorMenu.addEventListener('click', () => {
     toggleBtnsRevisor[0]?.click();
 });
 
-async function cargarTopicos(dropdownMenu) {
+const cargarPosiblesArticulos = (dropdownMenu, posiblesArticulos) => {
+    let i = 0;
+    posiblesArticulos.forEach((articulo) => {
+        i++;
+        const item = document.createElement('div');
+        item.className = 'dropdown-item';
+        item.textContent = articulo;
+        item.setAttribute('data-articulo', articulo);
+        dropdownMenu.appendChild(item);
+    });
+    if (i === 0) {
+        const item = document.createElement('div');
+        item.textContent = "No hay articulos para asignar";
+        item.classList.add('dropdown-no-item');
+        dropdownMenu.appendChild(item);
+    }
+}
+
+const cargarTopicos = async (dropdownMenu) => {
     try {
         const response = await fetch("/php/api/topicos.php");
         const data = await response.json();
@@ -30,7 +48,7 @@ async function cargarTopicos(dropdownMenu) {
             dropdownMenu.appendChild(item);
         });
     } catch (error) {
-        console.error("Error al cargar los tópicos:", error);
+        console.error("Error al cargar los tópicos: ", error);
     }
 }
 
@@ -96,9 +114,172 @@ function cargarRevisores() {
                         });
                     }
 
+                    const divAcciones = document.createElement('div');
+                    divAcciones.className = 'revisor-preview-acciones btns-container';
+
+                    const btnEliminarRevisor = document.createElement('button');
+                    btnEliminarRevisor.type = 'button';
+                    btnEliminarRevisor.className = 'btn-rojo';
+                    btnEliminarRevisor.textContent = 'Eliminar';
+
+                    btnEliminarRevisor.addEventListener('click', async (e) => {
+                        e.stopPropagation();
+                    });
+
+                    const btnAsignarRevisor = document.createElement('button');
+                    btnAsignarRevisor.type = 'button';
+                    btnAsignarRevisor.textContent = 'Asignar articulos';
+                    btnAsignarRevisor.id = "modalBtn";
+                    btnAsignarRevisor.setAttribute('data-target', target);
+
+                    const asignacionModal = document.getElementById(target);
+                    const asignacionOverlay = document.querySelector(`[data-overlay-target=${target}]`);
+
+                    btnAsignarRevisor.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        
+                        const articulos_posibles = revisor.id_articulos_posibles || [];
+
+                        const modalModificarRevisor = document.getElementById(target);
+                        modalModificarRevisor.innerHTML = '';
+
+                        const modalRevisorContent = document.createElement('div');
+                        modalRevisorContent.className = 'modal-content';
+
+                        const h1 = document.createElement('h1');
+                        h1.textContent = 'Asignar articulos a revisor';
+
+                        const form = document.createElement('form');
+                        form.className = 'formulario modal-form';
+                        form.id = 'form-modificar-revisor';
+                        form.method = 'POST';
+
+                        const dropdownContainer = document.createElement('div');
+                        dropdownContainer.className = 'dropdown-2';
+                        dropdownContainer.id = 'dropdown-container';
+
+                        const dropdownBtn = document.createElement('button');
+                        dropdownBtn.type = 'button';
+                        dropdownBtn.className = 'dropdown-button-2';
+                        dropdownBtn.id = 'dropdown-button';
+                        dropdownBtn.textContent = '+ Agregar articulo (ID)';
+
+                        const dropdownMenu = document.createElement('div');
+                        dropdownMenu.className = 'dropdown-menu';
+                        dropdownMenu.id = 'dropdown-menu';
+
+                        cargarPosiblesArticulos(dropdownMenu,articulos_posibles);
+
+                        dropdownContainer.append(dropdownBtn,dropdownMenu);
+
+                        const articulosContainer = document.createElement('div');
+                        articulosContainer.id = "revisor-articulos-container";
+                        const articulosSeleccionados = [];
+                        if (revisor.id_articulos) {
+                            revisor.id_articulos.forEach(articulo => {
+                                const articuloDiv = document.createElement('div');
+                                articuloDiv.className = 'selected-topic';
+                                articuloDiv.setAttribute('data-articulo',articulo);
+                                articuloDiv.textContent = articulo;
+                                articulosContainer.appendChild(articuloDiv);
+                                articulosSeleccionados.push(articulo);
+                            });
+                        } else {
+                            articulosContainer.innerHTML = "No hay articulos asignados."
+                        }
+
+                        const hiddenRutRevisor = document.createElement('input');
+                        hiddenRutRevisor.type = 'hidden';
+                        hiddenRutRevisor.id = 'hidden-rut-revisor';
+                        hiddenRutRevisor.name = 'rut_revisor';
+                        hiddenRutRevisor.value = revisor.rut;
+
+                        const hiddenArticulosInput = document.createElement('input');
+                        hiddenArticulosInput.type = 'hidden';
+                        hiddenArticulosInput.id = 'hidden-articulos';
+                        hiddenArticulosInput.name = 'articulos';
+
+                        hiddenArticulosInput.value = articulosSeleccionados.join(',');
+
+                        dropdownBtn.addEventListener('click', () => {
+                            dropdownMenu.classList.toggle('show');
+                        });
+
+                        dropdownContainer.addEventListener('click', (e) => {
+                            if (e.target.classList.contains('dropdown-item')) {
+                                const seleccionado = e.target;
+                                const articuloSeleccionado = seleccionado.getAttribute('data-articulo');
+
+                                if (hiddenArticulosInput.value.split(',').includes(articuloSeleccionado)) return;
+
+                                const articuloDiv = document.createElement('div');
+                                articuloDiv.className = 'selected-topic';
+                                articuloDiv.textContent = articuloSeleccionado;
+                                articuloDiv.setAttribute('data-articulo', articuloSeleccionado);
+
+                                const hiddenValor = hiddenArticulosInput.value ? hiddenArticulosInput.value.split(',') : [];
+                                if (hiddenValor.length === 0) {
+                                    articulosContainer.innerHTML = '';
+                                }
+                                articulosContainer.appendChild(articuloDiv);
+
+                                hiddenValor.push(articuloSeleccionado);
+                                hiddenArticulosInput.value = hiddenValor.join(',');
+
+                                dropdownMenu.classList.remove('show');
+                            }
+                        });
+
+                        articulosContainer.addEventListener('click', (e) => {
+                            if (e.target.classList.contains('selected-topic')) {
+                                const articuloDiv = e.target;
+                                const articuloSeleccionado = articuloDiv.getAttribute('data-articulo');
+
+                                articuloDiv.remove();
+
+                                const aux = hiddenArticulosInput.value.split(',').filter(id => id !== articuloSeleccionado);
+                                hiddenArticulosInput.value = aux.join(',');
+
+                                const hiddenValor = hiddenArticulosInput.value ? hiddenArticulosInput.value.split(',') : [];
+                                if (hiddenValor.length === 0) articulosContainer.innerHTML = 'No hay articulos asignados.';
+                            }
+                        });
+
+                        const divArticulos = document.createElement('div');
+                        divArticulos.className = 'input-container input-articulos';
+                        divArticulos.append(dropdownContainer,articulosContainer,hiddenArticulosInput,hiddenRutRevisor);
+
+                        const btnAsignarArticulos = document.createElement('button');
+                        btnAsignarArticulos.type = 'submit';
+                        btnAsignarArticulos.textContent = 'Asignar';
+
+                        const btnCancelarAsig = document.createElement('button');
+                        btnCancelarAsig.className = 'btn-rojo';
+                        btnCancelarAsig.type = 'button';
+                        btnCancelarAsig.textContent = 'Cancelar';
+                        btnCancelarAsig.addEventListener('click', () => {
+                            asignacionModal.classList.toggle('modal-activo');
+                            asignacionOverlay.classList.toggle('menu-overlay-activo');
+                        });
+
+                        const btnsContainer = document.createElement('div');
+                        btnsContainer.className = 'btns-container';
+
+                        btnsContainer.append(btnAsignarArticulos,btnCancelarAsig);
+
+                        form.append(divArticulos,btnsContainer);
+
+                        modalRevisorContent.append(h1,form);
+
+                        modalModificarRevisor.appendChild(modalRevisorContent);
+                    });
+
+                    divAcciones.append(btnAsignarRevisor,btnEliminarRevisor);
+
                     preview.appendChild(divRut);
                     preview.appendChild(divData);
                     preview.appendChild(divEspecialidades);
+                    preview.appendChild(divAcciones);
 
                     preview.addEventListener('click', async () => {
                         const modalModificarRevisor = document.getElementById(target);

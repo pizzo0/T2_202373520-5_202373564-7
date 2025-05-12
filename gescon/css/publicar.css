@@ -34,6 +34,7 @@
 }
 .btn_publicar {
     display: flex;
+    align-items: flex-end;
     grid-area: btn;
 }
 
@@ -44,10 +45,10 @@
     "titulo titulo"
     "resumen autores"
     "topicos autores"
-    "btn btn"
+    "btn autores"
     ;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto 2fr auto auto;
+    grid-template-rows: auto auto auto auto;
     width: 100%;
     gap: calc(var(--default-px)*1);
 }
@@ -79,7 +80,7 @@
     display: block;
 }
 
-.dropdown-item {
+.dropdown-item, .dropdown-no-item {
     padding: 10px;
     cursor: pointer;
     white-space: nowrap;
@@ -87,7 +88,7 @@
     text-overflow: ellipsis;
 }
 
-.dropdown-item:hover {
+.dropdown-item:hover, .dropdown-no-item:hover {
     /* background-color: var(--font-color);
     color: var(--bg-color); */
     text-decoration: underline;

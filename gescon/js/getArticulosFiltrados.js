@@ -49,6 +49,7 @@ const clickFuera = (e) => {
     if (!container.contains(e.target)) {
         container.classList.remove('filtro-container-activo');
         overlay.classList.remove('filtro-overlay-activo');
+        document.body.classList.remove('no-scroll');
         document.removeEventListener('click', clickFuera);
     }
 };
@@ -56,6 +57,7 @@ const clickFuera = (e) => {
 const toggleFC = () => {
     const estaActivo = container.classList.toggle('filtro-container-activo');
     overlay.classList.toggle('filtro-overlay-activo', estaActivo);
+    document.body.classList.toggle('no-scroll');
 
     if (estaActivo) {
         setTimeout(() => {

@@ -16,13 +16,22 @@ cargarPosiblesRevisores = async (dropdownMenu,topicos = null,id_articulo = null)
             .then((data) => {
                 dropdownMenu.innerHTML = '';
 
+                let i = 0;
                 data.data.forEach((revisor) => {
+                    i++;
                     const item = document.createElement('div');
                     item.classList.add('dropdown-item');
                     item.textContent = revisor.email;
                     item.setAttribute('data-rut', revisor.rut);
                     dropdownMenu.appendChild(item);
                 });
+                if (i === 0) {
+                    const item = document.createElement('div');
+                    item.textContent = "No hay revisores para asignar";
+                    item.classList.add('dropdown-no-item');
+                    dropdownMenu.appendChild(item);
+                }
+
             }).catch((error) => {
                 console.log(error);
             });
@@ -41,6 +50,9 @@ crearArticuloPreview = async (articulo) => {
     topSection.className = 'articulo-preview-tr';
 
     const link = document.createElement('a');
+    link.href = `/articulo/${articulo.id_articulo}`;
+
+    link.addEventListener('click', (e) => e.stopPropagation());
 
     const iconSpan = document.createElement('span');
 
@@ -108,11 +120,13 @@ crearArticuloPreview = async (articulo) => {
             asignacionOverlay.addEventListener('click', () => {
                 asignacionModal.classList.toggle('modal-activo');
                 asignacionOverlay.classList.toggle('menu-overlay-activo');
+                document.body.classList.toggle('no-scroll');
             });
             asignacionOverlay.dataset.listenerAdded = 'true';
         }
         asignacionModal.classList.toggle('modal-activo');
         asignacionOverlay.classList.toggle('menu-overlay-activo');
+        document.body.classList.toggle('no-scroll');
 
         asignacionModal.innerHTML = '';
 
@@ -128,7 +142,7 @@ crearArticuloPreview = async (articulo) => {
         form.method = 'POST';
 
         const divRevisores = document.createElement('div');
-        divRevisores.className = 'input-conatiner input-revisores'
+        divRevisores.className = 'input-container input-revisores';
 
         const dropdownContainer = document.createElement('div');
         dropdownContainer.className = 'dropdown-2';
@@ -180,7 +194,7 @@ crearArticuloPreview = async (articulo) => {
 
         dropdownBtn.addEventListener('click', () => {
             dropdownMenu.classList.toggle('show');
-        })
+        });
 
         dropdownContainer.addEventListener('click', (e) => {
             if (e.target.classList.contains('dropdown-item')) {
@@ -204,7 +218,7 @@ crearArticuloPreview = async (articulo) => {
                 hiddenValor.push(rutRevisor);
                 hiddenRevisoresInput.value = hiddenValor.join(',');
 
-                const existingError = revisoresContainer.querySelector('.error-message')
+                const existingError = revisoresContainer.querySelector('.error-message');
                 if (existingError) existingError.remove();
 
                 dropdownMenu.classList.remove("show");
@@ -239,6 +253,7 @@ crearArticuloPreview = async (articulo) => {
         btnCancelarAsig.addEventListener('click', () => {
             asignacionModal.classList.toggle('modal-activo');
             asignacionOverlay.classList.toggle('menu-overlay-activo');
+            document.body.classList.toggle('no-scroll');
         });
 
         const btnsContainer = document.createElement('div');
@@ -248,7 +263,10 @@ crearArticuloPreview = async (articulo) => {
 
         form.append(divRevisores,btnsContainer);
         
-        asignacionContainer.append(h2,form);
+        const h1 = document.createElement('h1');
+        h1.textContent = 'Asignar revisores a articulo';
+
+        asignacionContainer.append(h1,h2,form);
 
         asignacionModal.appendChild(asignacionContainer);
     });

@@ -40,7 +40,7 @@ if (isset($_GET['id_articulo'])) {
         $aux2 = [];
         foreach ($revisores as $revisor) {
             $aux2[] = $revisor['nombre'] . ' (' . $revisor['email'] . ')';
-            if (!$esRevisor) {
+            if (!$esRevisor && $user) {
                 $esRevisor = $revisor['rut'] === $user['rut'];
             }
         }

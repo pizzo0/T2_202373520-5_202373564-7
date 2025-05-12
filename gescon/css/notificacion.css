@@ -17,6 +17,8 @@
     z-index: 999;
 
     justify-content: center;
+
+    max-width: 500px;
     
     transition: transform 0.5s ease;
 }
@@ -80,4 +82,10 @@
 .noti-error {
     background-color: #160000;
     border: 1px solid #ffb2b2;
+}
+
+@media (min-width: 900px) {
+    .notificacion {
+        top: 0px;
+    }
 }

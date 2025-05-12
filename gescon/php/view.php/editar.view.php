@@ -191,8 +191,7 @@ if (!empty($articulo)) {
 
             <div class="btns-container">
                 <button type="submit">Guardar cambios</button>
-                <button type="button" class="btn-rojo">Eliminar</button>
-                <!-- implementar eliminar articulo -->
+                <button type="button" class="btn-rojo" id="eliminar-articulo" data-articulo="<?= $id_articulo ?>">Eliminar</button>
             </div>
         </form>
         <div>
@@ -201,4 +200,5 @@ if (!empty($articulo)) {
     </div>
 
     <script src=<?php getJs("inputAutores"); ?>></script>
+    <script src=<?php getJs("eliminarArticulo"); ?>></script>
 <?php endif ?>

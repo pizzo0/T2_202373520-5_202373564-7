@@ -1,5 +1,8 @@
 const toggleNavBtns = document.querySelectorAll('#mostrar-nav');
 const nav = document.getElementById('nav');
+const btnSideNav = document.getElementById('nav-close');
+const navOptions = Array.from(document.querySelectorAll('.nav-option')).slice(0,-1);
+
 
 let navActivo = false;
 
@@ -67,4 +70,40 @@ document.body.addEventListener('touchend', () => {
     if (__x_diff < -150 && !navActivo) {
         toggleNavBtns[0].click();
     }
-})
+});
+
+window.addEventListener('DOMContentLoaded', () => {
+    const navState = localStorage.getItem('navState');
+    if (navState === 'closed') {
+        nav.classList.add('nav-closed');
+    } else {
+        nav.classList.remove('nav-closed');
+    }
+});
+
+let navOptionActive = localStorage.getItem('navState') === 'closed' ? true : false;
+
+btnSideNav.addEventListener('click', () => {
+    if (nav.classList.contains('nav-closed')) {
+        nav.classList.remove('nav-closed');
+        navOptionActive = false;
+        localStorage.setItem('navState', 'open');
+    } else {
+        nav.classList.add('nav-closed');
+        navOptionActive = true;
+        localStorage.setItem('navState', 'closed');
+    }
+});
+
+navOptions.forEach((navOpt) => {
+    navOpt.addEventListener('mouseenter', () => {
+        if (navOptionActive && nav.classList.contains('nav-closed')) {
+            nav.classList.remove('nav-closed');
+        }
+    });
+    navOpt.addEventListener('mouseleave', () => {
+        if (navOptionActive && !nav.classList.contains('nav-closed')) {
+            nav.classList.add('nav-closed');
+        }
+    });
+});

@@ -1,7 +1,8 @@
 DELIMITER //
 CREATE FUNCTION obtener_revisores(
+    p_rut_revisor TEXT,
     p_topicos TEXT,
-    p_id_articulo TEXT  -- lo usamos como TEXT para que '' también sea válido
+    p_id_articulo TEXT
 ) RETURNS JSON
 DETERMINISTIC
 READS SQL DATA
@@ -30,18 +31,52 @@ BEGIN
                     FROM Articulos_Revisores Revisores
                     WHERE Revisores.rut_revisor = Usuarios.rut
                 ),
+                'id_articulos_posibles', (
+                    SELECT JSON_ARRAYAGG(id_unico)
+                    FROM (
+                        SELECT Articulos.id AS id_unico
+                        FROM Articulos
+                        JOIN Articulos_Topicos ON Articulos.id = Articulos_Topicos.id_articulo
+                        WHERE Articulos_Topicos.id_topico IN (
+                            SELECT id_topico
+                            FROM Usuarios_Especialidad
+                            WHERE rut_usuario = Usuarios.rut
+                        )
+                        AND Articulos.id NOT IN (
+                            SELECT id_articulo
+                            FROM Articulos_Revisores
+                            WHERE rut_revisor = Usuarios.rut
+                        )
+                        AND Articulos.id NOT IN (
+                            SELECT id_articulo
+                            FROM Articulos_Autores
+                            WHERE rut_autor = Usuarios.rut
+                        )
+                        GROUP BY Articulos.id
+                    ) AS posibles
+                ),
                 'id_rol', Usuarios.id_rol
             )
         )
         INTO res FROM Usuarios
         WHERE Usuarios.id_rol >= 2
         AND (
-            p_id_articulo IS NULL OR p_id_articulo = '' OR
-            Usuarios.rut NOT IN (
-                SELECT rut_autor
-                FROM Articulos_Autores
-                WHERE id_articulo = CAST(p_id_articulo AS UNSIGNED)
+            p_id_articulo IS NULL OR p_id_articulo = '' OR (
+                Usuarios.rut NOT IN (
+                    SELECT rut_autor
+                    FROM Articulos_Autores
+                    WHERE id_articulo = CAST(p_id_articulo AS UNSIGNED)
+                )
+                AND Usuarios.rut NOT IN (
+                    SELECT rut_revisor
+                    FROM Articulos_Revisores
+                    WHERE id_articulo = CAST(p_id_articulo AS UNSIGNED)
+                )
             )
+        )
+        AND (
+            p_rut_revisor IS NULL OR p_rut_revisor = '' OR 
+            Usuarios.rut = p_rut_revisor
         );
 
         RETURN res;
@@ -66,12 +101,22 @@ BEGIN
             WHERE Usuarios.id_rol >= 2
             AND FIND_IN_SET(Usuarios_Especialidad.id_topico, p_topicos) > 0
             AND (
-                p_id_articulo IS NULL OR p_id_articulo = '' OR
-                Usuarios.rut NOT IN (
-                    SELECT rut_autor
-                    FROM Articulos_Autores
-                    WHERE id_articulo = CAST(p_id_articulo AS UNSIGNED)
+                p_id_articulo IS NULL OR p_id_articulo = '' OR (
+                    Usuarios.rut NOT IN (
+                        SELECT rut_autor
+                        FROM Articulos_Autores
+                        WHERE id_articulo = CAST(p_id_articulo AS UNSIGNED)
+                    )
+                    AND Usuarios.rut NOT IN (
+                        SELECT rut_revisor
+                        FROM Articulos_Revisores
+                        WHERE id_articulo = CAST(p_id_articulo AS UNSIGNED)
+                    )
                 )
+            )
+            AND (
+                p_rut_revisor IS NULL OR p_rut_revisor = '' OR 
+                Usuarios.rut = p_rut_revisor
             )
         ) Usuarios;
 

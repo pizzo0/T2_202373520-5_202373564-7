@@ -150,6 +150,42 @@ if ($user['id_rol'] === 3 && $_SERVER["REQUEST_METHOD"] === "POST") {
                 "mensaje" => "Error al asignar."
             ];
         }
+    } elseif (isset($_POST["articulos"])) {
+        try {
+            $articulos = $_POST["articulos"];
+            $rut_revisor = $_POST["rut_revisor"];
+
+            $stmt = $database->prepare("
+            DELETE FROM Articulos_Revisores
+            WHERE rut_revisor = ?
+            ");
+            $stmt->bind_param("s",$rut_revisor);
+            $stmt->execute();
+            
+            $stmt = $database->prepare("
+            CALL asignar_revisor (?,?)
+            ");
+
+            if (!empty($articulos)) {
+                $articulos = explode(",",$articulos);
+                foreach ($articulos as $id_articulo) {
+                    $stmt->bind_param("is", $id_articulo, $rut_revisor);
+                    $stmt->execute();
+                }
+            }
+            $database->commit();
+
+            $_SESSION["notificacion"] = [
+                "tipo" => "ok",
+                "mensaje" => "Articulo(s) asignado(s)."
+            ];
+        } catch (\Throwable $th) {
+            $database->rollback();
+            $_SESSION["notificacion"] = [
+                "tipo" => "error",
+                "mensaje" => "Error al asignar."
+            ];
+        }
     }
 }
 

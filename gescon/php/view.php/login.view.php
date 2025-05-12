@@ -2,7 +2,6 @@
 global $error;
 
 ?>
-
 <div class="menu">
     <h1>Acceso</h1>
     <form method="post" class="formulario">

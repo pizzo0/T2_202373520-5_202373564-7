@@ -35,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             
             $_SESSION["notificacion"] = [
                 "tipo" => "ok",
-                "mensaje" => "Articulo publicado con exito :)"
+                "mensaje" => "Articulo publicado con exito :)<br>Correo enviado al autor de contacto!"
             ];
     
             header("location: /articulo/$id_articulo");

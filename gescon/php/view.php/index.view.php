@@ -1,4 +1,3 @@
 <div class="index-content">
-    <h1>GESCON</h1>
-    <p>nose que poner aqui xd</p>
+    <h1 class="main-h1">Gescon</h1>
 </div>

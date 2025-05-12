@@ -11,12 +11,14 @@ setTimeout(() => {
                 overlay.addEventListener('click', () => {
                     modal.classList.toggle('modal-activo');
                     overlay.classList.toggle('menu-overlay-activo');
+                    document.body.classList.toggle('no-scroll');
                 });
                 overlay.dataset.listenerAdded = 'true';
             }
     
             modal.classList.toggle('modal-activo');
             overlay.classList.toggle('menu-overlay-activo');
+            document.body.classList.toggle('no-scroll');
         });
     });
 }, 100);
