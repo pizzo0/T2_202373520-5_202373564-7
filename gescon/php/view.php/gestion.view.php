@@ -18,7 +18,6 @@ $svg_ordenar = getAsset("/svg/ordenar.svg");
         <div class="tab" id="tabRevisores">
             <button id="toggle_crear_revisor">+ Crear revisor</button>
             <div class="revisores-container"> <!-- revisores --> </div>
-            <!-- HACER FUNCIONAR EL BOTON ELIMINAR!!!! -->
         </div>
         <div class="tab" id="tabTopicos">
             <button id="modalBtn" data-target="crear-topico-container">+ Crear topico/especialidad</button>

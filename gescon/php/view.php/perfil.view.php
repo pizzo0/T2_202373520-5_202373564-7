@@ -44,15 +44,35 @@ $svg_añadir = getAsset("/svg/añadir.svg");
         </form>
         <div class="btns-container">
             <button id="toggle-editar-perfil">Cambiar contraseña</button>
-            <form method="POST">
+            <!-- <form method="POST">
                 <input type="hidden" name="eliminar" value="1">
                 <button clasS="btn-rojo" type="submit">Eliminar cuenta</button>
-            </form>
+            </form> -->
+            <button clasS="btn-rojo modalBtnEliminarCuenta" type="submit" id="modalBtn" data-target="eliminar-cuenta">Eliminar cuenta</button>
             <button class="btn-rojo" onclick="window.location.href='/logout'" >Cerrar sesion</button>
         </div>
         <button id="editar-perfil-btn">Salir de opciones</button>
     </div>
 </div>
+
+<div class="modal-overlay" data-overlay-target="eliminar-cuenta"></div>
+<div class="modal" id="eliminar-cuenta">
+    <div class="modal-content">
+        <h1>Elimniar cuenta</h1>
+        <p>Para eliminar tu cuenta definitivamente, ingresa tu contraseña:</p>
+        <form method="POST" class="formulario form-gap">
+            <div class="input-container">
+                <label for="confirmar-eliminar">Contraseña</label>
+                <input type="password" name="confirmar-eliminar" id="confirmar-eliminar" required>
+            </div>
+            <div class="btns-container">
+                <button type="submit" class="btn-rojo">Eliminar cuenta</button>
+                <button type="button" id="cerrar-eliminar-cuenta">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <div class="menu-overlay"></div>
 <div class="profile-container">
     <div class="profile-usuario-container">
@@ -61,7 +81,7 @@ $svg_añadir = getAsset("/svg/añadir.svg");
             <span class="etiqueta2 rol-<?= $user['id_rol'] ?>"><?php echo getRolNombre($user['id_rol']); ?></span>
         </div>
         <p>Para editar un articulo, presiona sobre el.</p>
-        <button id="editar-perfil-btn">Opciones de perfil</button>
+        <button id="editar-perfil-btn">Opciones</button>
         <?php if ($user['id_rol'] === 3) : ?>
             <a class="btn" style="width: 100%;" href="/gestion">Gestión</a>
         <?php endif ?>
@@ -79,6 +99,13 @@ $svg_añadir = getAsset("/svg/añadir.svg");
                 <div class="profile-articulos-container overflow-fix">
                     <button onclick="window.location.href='/publicar'" style="width:100%;"><span><?= $svg_añadir ?></span> Crear un nuevo articulo</button>
                     <p id="num-articulos"></p>
+                    <div class="input-container">
+                        <label class="checkbox-label" for="articulos-revisados">
+                            <input type="checkbox" class="checkbox" id="articulos-revisados" name="articulos-revisados">
+                            <span class="checkbox-slider"></span>
+                        </label>
+                        <label class="reset-label" for="articulos-revisados">Mostrar solo articulos revisados</label>
+                    </div>
                     <div class="profile-articulos-results">
                         <!-- articulos del usuario -->
                     </div>
@@ -100,3 +127,4 @@ $svg_añadir = getAsset("/svg/añadir.svg");
 <script src=<?php getJs("editarPerfil");?>></script>
 <script src=<?php getJs("usuarioArticulos");?>></script>
 <script src=<?php getJs("tabs");?>></script>
+<script src=<?php getJs("modal");?>></script>

@@ -21,4 +21,4 @@ setTimeout(() => {
             document.body.classList.toggle('no-scroll');
         });
     });
-}, 100);
+}, 0);

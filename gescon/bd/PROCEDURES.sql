@@ -40,34 +40,34 @@ DELIMITER ;
 
 DELIMITER //
 CREATE PROCEDURE asignar_revisor_random(
-	IN p_id_articulo INT
+	IN p_id_articulo INT,
+    OUT p_nombre_asignado VARCHAR(12)
 )
 BEGIN
     DECLARE v_rut_revisor VARCHAR(12);
+    DECLARE v_nombre_revisor VARCHAR(255);
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET v_rut_revisor = NULL;
     
-    SELECT Usuarios.rut INTO v_rut_revisor FROM Usuarios
+    SELECT Usuarios.rut, Usuarios.nombre INTO v_rut_revisor,v_nombre_revisor FROM Usuarios
     JOIN Usuarios_Especialidad especialidad ON Usuarios.rut = especialidad.rut_usuario
     JOIN Articulos_Topicos topico ON especialidad.id_topico = topico.id_topico
-    AND topico.id_articulo = p_id_articulo
+        AND topico.id_articulo = p_id_articulo
     JOIN Roles ON Usuarios.id_rol = Roles.id
     WHERE Roles.id >= 2
     AND Usuarios.rut NOT IN (
-		SELECT rut_autor FROM Articulos_Autores
+        SELECT rut_autor FROM Articulos_Autores
         WHERE id_articulo = p_id_articulo
     )
     AND Usuarios.rut NOT IN (
-		SELECT rut_revisor FROM Articulos_Revisores
+        SELECT rut_revisor FROM Articulos_Revisores
         WHERE id_articulo = p_id_articulo
     )
     ORDER BY RAND()
     LIMIT 1;
 
-    IF v_rut_revisor IS NOT NULL AND NOT EXISTS (
-        SELECT 1 FROM Usuarios
-        JOIN Articulos_Revisores revisores ON Usuarios.rut = revisores.rut_revisor
-        WHERE p_id_articulo = revisores.id_articulo
-    ) THEN
+    SET p_nombre_asignado = v_nombre_revisor;
+
+    IF v_rut_revisor IS NOT NULL THEN
         CALL asignar_revisor(p_id_articulo, v_rut_revisor);
     END IF;
 END;//

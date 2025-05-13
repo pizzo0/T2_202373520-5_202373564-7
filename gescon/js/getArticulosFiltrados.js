@@ -104,6 +104,17 @@ crearArticuloPreview = async (articulo) => {
         });
     }
 
+    const autoresDiv = document.createElement('div');
+    autoresDiv.className = 'articulo-preview-autores';
+    
+    if (Array.isArray(articulo.autores)) {
+        articulo.autores.forEach(autor => {
+            const itemAutor = document.createElement('span');
+            itemAutor.textContent = '* ' + autor.nombre;
+            autoresDiv.appendChild(itemAutor);
+        });
+    }
+
     const fechaDiv = document.createElement('div');
     fechaDiv.className = 'articulo-preview-fecha';
 
@@ -113,6 +124,7 @@ crearArticuloPreview = async (articulo) => {
 
     wrapper.appendChild(topSection);
     wrapper.appendChild(etiquetasDiv);
+    wrapper.appendChild(autoresDiv);
     wrapper.appendChild(fechaDiv);
 
     wrapper.addEventListener('click', () => link.click());

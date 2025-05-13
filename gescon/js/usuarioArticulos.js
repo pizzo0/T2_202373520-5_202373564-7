@@ -1,7 +1,27 @@
+let totalArticulos = 0; // Declarado afuera para que no se reinicie
+
 const container = document.getElementsByClassName('profile-articulos-results')[0];
 const numeroArticulos = document.getElementById('num-articulos');
+const filtroRevisados = document.getElementById('articulos-revisados');
 
 document.addEventListener('DOMContentLoaded', () => {
+    revisarFiltro();
+});
+
+filtroRevisados.addEventListener('click', () => {
+    revisarFiltro();
+});
+
+revisarFiltro = () => {
+    totalArticulos = 0;
+    if (filtroRevisados.checked) {
+        cargarArticulosAutor(true);
+    } else {
+        cargarArticulosAutor(false);
+    }
+}
+
+cargarArticulosAutor = (revisado = false) => {
     fetch('/php/api/actual.usuario.articulos.php')
         .then((response) => response.json())
         .then((data) => {
@@ -9,9 +29,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 fetch(`assets/svg/svg_articulo.svg`)
                     .then(response => response.text())
                     .then(svg => {
+                        container.innerHTML = '';
                         svg_articulo = svg;
                         let res = ``;
                         data.data.forEach(articulo => {
+                            if (articulo.formularios === null && revisado) {
+                                return;
+                            }
+                            totalArticulos++;
                             res += `
                             <div class="articulo-preview">
                                 <div class="articulo-preview-tr">
@@ -27,6 +52,15 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
                             `;
                         });
+                        if (totalArticulos === 0) {
+                            res += `
+                            <div class="articulo-preview">
+                                <div class="articulo-preview-tr">
+                                    <p>No hay articulos</p>
+                                </div>
+                            </div>
+                            `;
+                        }
                         container.innerHTML += res;
                         document.querySelectorAll('.articulo-preview').forEach((preview) => {
                             preview.addEventListener('click', () => {
@@ -36,10 +70,11 @@ document.addEventListener('DOMContentLoaded', () => {
                                 }
                             });
                         });
+                        numeroArticulos.innerHTML = `Tienes ${totalArticulos} articulos publicados ${revisado ? '[Revisados]' : ''}`;
                     });
             } else {
-                container.innerHTML += `<p>Aun no publicas articulos</p>`;
+                container.innerHTML = `<p>Aun no publicas articulos</p>`;
+                numeroArticulos.innerHTML = `Tienes 0 articulos publicados ${revisado ? '[Revisados]' : ''}`;
             }
-            numeroArticulos.innerHTML = `Tienes ${data.total} articulos publicados`;
         });
-});
+}

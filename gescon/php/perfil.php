@@ -41,7 +41,6 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                     "tipo" => "ok",
                     "mensaje" => "Nombre guardado con éxito."
                 ];
-    
             }
         }
         
@@ -132,28 +131,51 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     
                 $_SESSION["notificacion"] = [
                     "tipo" => "ok",
-                    "mensaje" => "Contraseña guardada con éxito."
+                    "mensaje" => "Contraseña guardada con exito."
                 ];
             } catch (\Throwable $th) {
                 $_SESSION["notificacion"] = [
                     "tipo" => "error",
-                    "mensaje" => "Ocurrio un error al intentar modificar tu contraseña, intentalo de nuevo.."
+                    "mensaje" => "Ocurrio un error al intentar modificar tu contraseña, intentalo de nuevo..."
                 ];
             }
     
         }
     
-        if (isset($_POST['eliminar'])) {
-            if ($_POST['eliminar'] == 1) {
-                eliminarUsuario($rut);
-        
+        if (isset($_POST['confirmar-eliminar'])) {
+            $confirmar_eliminar = $_POST['confirmar-eliminar'];
+            try {
+                $stmt = $database->prepare("
+                    SELECT password FROM Usuarios
+                    WHERE rut = ?
+                ");
+
+                $stmt->bind_param("s", $user['rut']);
+                $stmt->execute();
+                
+                $pass_user = $stmt->get_result()->fetch_assoc()['password'];
+
+                if ($pass_user === $confirmar_eliminar) {
+                    eliminarUsuario($user['rut']);
+                    
+                    $_SESSION["notificacion"] = [
+                        "tipo" => "ok",
+                        "mensaje" => "Cuenta eliminada con exito."
+                    ];
+                    
+                    header("Location: /");
+                    exit();
+                } else {
+                    $_SESSION["notificacion"] = [
+                        "tipo" => "error",
+                        "mensaje" => "Contraseña incorrecta."
+                    ];
+                }
+            } catch (Exception $e) {
                 $_SESSION["notificacion"] = [
-                    "tipo" => "ok",
-                    "mensaje" => "Tu cuenta fue eliminada con exito."
+                    "tipo" => "error",
+                    "mensaje" => "Ocurrio un error inesperado. Intentalo de nuevo..."
                 ];
-        
-                header("Location: /");
-                exit();
             }
         }
     } catch (\Throwable $th) {

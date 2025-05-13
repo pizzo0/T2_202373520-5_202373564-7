@@ -1,4 +1,4 @@
-crearRevisionPreview = (formulario,index,email) => {
+crearRevisionPreview = (formulario,index,email,id_rol) => {
     const calidad = formulario.calidad;
     const originalidad = formulario.originalidad;
     const valoracion = formulario.valoracion;
@@ -47,7 +47,7 @@ crearRevisionPreview = (formulario,index,email) => {
             })
         })
         .then((response) => response.json().then(data => ({ok: response.ok, data})))
-        .then(({ ok, data }) => {
+        .then(({ok,data}) => {
             if (!ok) {
                 alert("Error: " + (data.error || "Error desconocido"));
             } else {
@@ -65,6 +65,22 @@ crearRevisionPreview = (formulario,index,email) => {
     const modalConsulta = document.getElementById('consultar-form');
 
     consultarBtn.addEventListener('click', () => {
+        const target = consultarBtn.getAttribute('data-target');
+        const modal = document.getElementById(target);
+        const overlay = document.querySelector(`[data-overlay-target=${target}]`);
+
+        if (!overlay.dataset.listenerAdded) {
+            overlay.addEventListener('click', () => {
+                modal.classList.toggle('modal-activo');
+                overlay.classList.toggle('menu-overlay-activo');
+                document.body.classList.toggle('no-scroll');
+            });
+            overlay.dataset.listenerAdded = 'true';
+        }
+        modal.classList.toggle('modal-activo');
+        overlay.classList.toggle('menu-overlay-activo');
+        document.body.classList.toggle('no-scroll');
+        
         modalConsulta.innerHTML = `
             <div class="revision-view modal-content">
                 <h1>[${(index + 1)}] Formulario de Evaluación</h1>
@@ -88,7 +104,7 @@ crearRevisionPreview = (formulario,index,email) => {
     });
 
     divAcciones.appendChild(consultarBtn);
-    if (email === email_revisor) {
+    if (email === email_revisor ||  id_rol === 3) {
         divAcciones.appendChild(eliminarFormularioBtn);
     }
 
@@ -116,7 +132,7 @@ cargarFormularios = () => {
                     if (articulo.formularios) {
                         articulo.formularios.forEach((formulario,index) => {
                             i++;
-                            formulariosContainer.appendChild(crearRevisionPreview(formulario,index,usuario.email));
+                            formulariosContainer.appendChild(crearRevisionPreview(formulario,index,usuario.email,usuario.id_rol));
                         });
                     }
                     if (i == 0) {

@@ -141,7 +141,7 @@ if (isset($_GET['id_articulo'])) {
                 </div>
                 <div class="modal-overlay" data-overlay-target="crear-form"></div>
             <?php endif ?>
-            <?php if ($esAutor || $esRevisor) : ?>
+            <?php if ($esAutor || $esRevisor || $user['id_rol'] === 3) : ?>
                 <div class="revisiones-container">
                     <h2>Revisiones</h2>
                     <div class="formularios-container">

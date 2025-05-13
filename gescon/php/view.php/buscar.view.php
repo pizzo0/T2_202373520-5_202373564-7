@@ -4,6 +4,7 @@
 
 $svg_filtro = getAsset("/svg/filtro.svg");
 $svg_ordenar = getAsset("/svg/ordenar.svg");
+$svg_buscar = getAsset("/svg/buscar.svg");
 ?>
 <div class="filtro-container">
     <form method="post" id="filtro-form">
@@ -55,6 +56,11 @@ $svg_ordenar = getAsset("/svg/ordenar.svg");
 
 <div class="buscar-container">
     <div class="buscar-filtros-container">
+        <h1>Articulos</h1>
+        <div class="main-buscar-container">
+            <input class="l-input" type="text">
+            <button class="r-button"><?= $svg_buscar ?></button>
+        </div>
         <div class="main-buscar-filtros-container">
             <button id="btn-filtrar" onclick="toggleFC()"><span><?= $svg_filtro ?></span> Filtrar resultados</button>
             <div class="ordenar-container" id="select">

@@ -112,19 +112,46 @@ function cargarRevisores() {
                             span.textContent = topico.nombre || 'Desconocido';
                             divEspecialidades.appendChild(span);
                         });
+                    } else {
+                        const itemVacio = document.createElement('div');
+                        itemVacio.textContent = 'No tiene especialidades asignadas';
+                        divEspecialidades.appendChild(itemVacio);
+                    }
+
+                    const divArticulosAsignados = document.createElement('div');
+                    divArticulosAsignados.className = 'revisor-preview-articulos';
+                    if (revisor.id_articulos) {
+                        revisor.id_articulos.forEach(id_articulo => {
+                            const itemArticulo = document.createElement('div');
+                            itemArticulo.className = 'etiqueta';
+                            itemArticulo.textContent = id_articulo;
+                            divArticulosAsignados.appendChild(itemArticulo);
+                        });
+                    } else {
+                        const itemVacio = document.createElement('div');
+                        itemVacio.textContent = 'No tiene articulos asignados'
+                        divArticulosAsignados.appendChild(itemVacio);
                     }
 
                     const divAcciones = document.createElement('div');
                     divAcciones.className = 'revisor-preview-acciones btns-container';
 
+                    const formEliminar = document.createElement('form');
+                    formEliminar.method = "POST";
+
+                    const hiddenInputRut = document.createElement('input');
+                    hiddenInputRut.type = 'hidden';
+                    hiddenInputRut.name = 'eliminar';
+                    hiddenInputRut.value = revisor.rut;
+
                     const btnEliminarRevisor = document.createElement('button');
-                    btnEliminarRevisor.type = 'button';
+                    btnEliminarRevisor.type = 'submit';
                     btnEliminarRevisor.className = 'btn-rojo';
                     btnEliminarRevisor.textContent = 'Eliminar';
 
-                    btnEliminarRevisor.addEventListener('click', async (e) => {
-                        e.stopPropagation();
-                    });
+                    btnEliminarRevisor.addEventListener('click', (e) => e.stopPropagation());
+
+                    formEliminar.append(hiddenInputRut,btnEliminarRevisor);
 
                     const btnAsignarRevisor = document.createElement('button');
                     btnAsignarRevisor.type = 'button';
@@ -274,11 +301,12 @@ function cargarRevisores() {
                         modalModificarRevisor.appendChild(modalRevisorContent);
                     });
 
-                    divAcciones.append(btnAsignarRevisor,btnEliminarRevisor);
+                    divAcciones.append(btnAsignarRevisor,formEliminar);
 
                     preview.appendChild(divRut);
                     preview.appendChild(divData);
                     preview.appendChild(divEspecialidades);
+                    preview.appendChild(divArticulosAsignados);
                     preview.appendChild(divAcciones);
 
                     preview.addEventListener('click', async () => {

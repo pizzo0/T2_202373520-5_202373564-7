@@ -186,6 +186,48 @@ if ($user['id_rol'] === 3 && $_SERVER["REQUEST_METHOD"] === "POST") {
                 "mensaje" => "Error al asignar."
             ];
         }
+    } else if (isset($_POST['eliminar'])) {
+        $rut = $_POST['eliminar'];
+        eliminarUsuario($rut);
+
+        $_SESSION["notificacion"] = [
+            "tipo" => "ok",
+            "mensaje" => "Revisor fue eliminado con exito."
+        ];
+    } else if (isset($_POST['id_articulo_revisor_aleatorio'])) {
+        $id_articulo = $_POST['id_articulo_revisor_aleatorio'];
+
+        try {
+            $stmt = $database->prepare("
+                CALL asignar_revisor_random (?,@rut_revisor)
+            ");
+            $stmt->bind_param("i",$id_articulo);
+            $stmt->execute();
+            $stmt->close();
+            
+            $revisor = $database->query("
+                SELECT @rut_revisor AS rut_revisor
+            ")->fetch_assoc()['rut_revisor'];
+
+            if ($revisor !== null) {
+                $_SESSION["notificacion"] = [
+                    "tipo" => "ok",
+                    "mensaje" => "Revisor aleatorio asignado con exito [" . $revisor ."]."
+                ];
+            } else {
+                $_SESSION["notificacion"] = [
+                    "tipo" => "alerta",
+                    "mensaje" => "No se encontraron revisores para asignar."
+                ];
+            }
+        } catch (Exception $e) {
+            $database->rollback();
+            $_SESSION["notificacion"] = [
+                "tipo" => "error",
+                "mensaje" => "Ocurrio un error al intentar asginar un revisor."
+            ];
+            print_r($e);
+        }
     }
 }
 

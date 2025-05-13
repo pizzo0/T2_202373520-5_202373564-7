@@ -68,7 +68,7 @@
     border-bottom: none;
 }
 
-.revisor-preview-rut, .revisor-preview-data, .revisor-preview-especialidades, .revisor-preview-acciones {
+.revisor-preview-rut, .revisor-preview-data, .revisor-preview-especialidades, .revisor-preview-articulos, .revisor-preview-acciones {
     display: flex;
     flex-direction: column;
     padding: var(--font-size);
@@ -82,7 +82,7 @@
     align-items: center;
 }
 
-.revisor-preview-especialidades {
+.revisor-preview-especialidades, .revisor-preview-articulos {
     flex-direction: row;
     gap: 0.1rem;
 }

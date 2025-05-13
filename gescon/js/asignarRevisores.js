@@ -136,6 +136,20 @@ crearArticuloPreview = async (articulo) => {
         const h2 = document.createElement('h2')
         h2.innerHTML = '[' + articulo.id_articulo + '] ' + articulo.titulo;
 
+        const formRevisorAleatorio = document.createElement('form');
+        formRevisorAleatorio.method = 'POST';
+
+        const asignarAleatorio = document.createElement('button');
+        asignarAleatorio.type = 'submit';
+        asignarAleatorio.textContent = 'Asignar revisor aleatorio'
+
+        const hiddenIdArticuloAleatorio = document.createElement('input');
+        hiddenIdArticuloAleatorio.type = 'hidden';
+        hiddenIdArticuloAleatorio.name = 'id_articulo_revisor_aleatorio';
+        hiddenIdArticuloAleatorio.value = articulo.id_articulo;
+
+        formRevisorAleatorio.append(asignarAleatorio,hiddenIdArticuloAleatorio);
+
         const form = document.createElement('form');
         form.className = 'formulario modal-form';
         form.id = 'form-asignar-revisores';
@@ -266,7 +280,7 @@ crearArticuloPreview = async (articulo) => {
         const h1 = document.createElement('h1');
         h1.textContent = 'Asignar revisores a articulo';
 
-        asignacionContainer.append(h1,h2,form);
+        asignacionContainer.append(h1,h2,formRevisorAleatorio,form);
 
         asignacionModal.appendChild(asignacionContainer);
     });
