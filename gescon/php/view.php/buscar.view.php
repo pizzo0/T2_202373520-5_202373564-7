@@ -15,14 +15,9 @@ $svg_buscar = getAsset("/svg/buscar.svg");
             <label for="id_articulo">ID del Articulo:</label>
             <input type="text" name="id_articulo" id="id_articulo">
         </div>
-        
         <div>
             <span>Información del Articulo:</span>
             <br>
-            <label for="titulo">Titulo:</label>
-            <input type="text" name="titulo" id="titulo">
-        </div>
-        <div>
             <label for="contacto">Contacto:</label>
             <input type="text" name="contacto" id="contacto">
         </div>
@@ -58,11 +53,11 @@ $svg_buscar = getAsset("/svg/buscar.svg");
     <div class="buscar-filtros-container">
         <h1>Articulos</h1>
         <div class="main-buscar-container">
-            <input class="l-input" type="text">
-            <button class="r-button"><?= $svg_buscar ?></button>
+           <input type="text" class="l-input" name="titulo" form="filtro-form" placeholder="Escribe el titulo de un articulo aqui" value="<?= $_POST['titulo'] ?? '' ?>">
+            <button type="submit" class="r-button" form="filtro-form"><?= $svg_buscar ?></button>
         </div>
         <div class="main-buscar-filtros-container">
-            <button id="btn-filtrar" onclick="toggleFC()"><span><?= $svg_filtro ?></span> Filtrar resultados</button>
+            <button type="button" id="btn-filtrar" onclick="toggleFC()"><span><?= $svg_filtro ?></span> Filtrar resultados</button>
             <div class="ordenar-container" id="select">
                 <label for="ordenar_por">Ordenar por:</label>
                 <select class="select-input" style="width:200px;" name="ordenar_por" id="ordenar_por">
@@ -86,4 +81,12 @@ $svg_buscar = getAsset("/svg/buscar.svg");
     </div>
 </div>
 
+<script>
+    document.querySelector('input[name="titulo"]').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            document.querySelector('.r-button').click();
+        }
+    });
+</script>
 <script src=<?php getJs(js_file: "getArticulosFiltrados");?>></script>

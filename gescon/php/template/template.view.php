@@ -21,7 +21,7 @@ $svg_home = getAsset("/svg/home.svg");
     <div class="main-content">
         <header class="header">
             <a href="/" class="nav-page">GESCON</a>
-            <nav id="nav" class="no-overflow nav nav-closed">
+            <nav id="nav" class="no-overflow nav">
                 <?php getNav(""); ?>
                 <button id="mostrar-nav"><?= $svg_cerrar ?></button>
             </nav>

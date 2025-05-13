@@ -82,9 +82,6 @@ $svg_añadir = getAsset("/svg/añadir.svg");
         </div>
         <p>Para editar un articulo, presiona sobre el.</p>
         <button id="editar-perfil-btn">Opciones</button>
-        <?php if ($user['id_rol'] === 3) : ?>
-            <a class="btn" style="width: 100%;" href="/gestion">Gestión</a>
-        <?php endif ?>
     </div>
     
     <div class="profile-content-container">
@@ -94,9 +91,9 @@ $svg_añadir = getAsset("/svg/añadir.svg");
                 <button class="tab-btn" id="tabBtn" data-target="tabRevisiones">Revisar</button>
             <?php endif ?>
         </div>
-        <div class="tabs-container overflow-fix" id="tabContent">
-            <div class="tab overflow-fix" id="tabArticulos">
-                <div class="profile-articulos-container overflow-fix">
+        <div class="tabs-container" id="tabContent">
+            <div class="tab" id="tabArticulos">
+                <div class="profile-articulos-container">
                     <button onclick="window.location.href='/publicar'" style="width:100%;"><span><?= $svg_añadir ?></span> Crear un nuevo articulo</button>
                     <p id="num-articulos"></p>
                     <div class="input-container">
@@ -112,7 +109,7 @@ $svg_añadir = getAsset("/svg/añadir.svg");
                 </div>
             </div>
             <?php if ($user['id_rol'] >= 2) : ?>
-            <div class="tab overflow-fix" id="tabRevisiones">
+            <div class="tab" id="tabRevisiones">
                 <p id="num-articulos-revisar"></p>
                 <div class="profile-revisiones-container">
                     <!-- articulos que puede revisar -->

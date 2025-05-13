@@ -175,8 +175,6 @@ window.addEventListener('DOMContentLoaded', () => {
     } else {
         cargarArticulos();
     }
-    
-    // form.dispatchEvent(new Event('submit'));
 });
 
 document.getElementById('filtro-form').addEventListener('submit', (e) => {

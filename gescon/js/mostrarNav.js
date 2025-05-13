@@ -95,15 +95,15 @@ btnSideNav.addEventListener('click', () => {
     }
 });
 
-navOptions.forEach((navOpt) => {
-    navOpt.addEventListener('mouseenter', () => {
-        if (navOptionActive && nav.classList.contains('nav-closed')) {
-            nav.classList.remove('nav-closed');
-        }
-    });
-    navOpt.addEventListener('mouseleave', () => {
-        if (navOptionActive && !nav.classList.contains('nav-closed')) {
-            nav.classList.add('nav-closed');
-        }
-    });
-});
+// navOptions.forEach((navOpt) => {
+//     navOpt.addEventListener('mouseenter', () => {
+//         if (navOptionActive && nav.classList.contains('nav-closed')) {
+//             nav.classList.remove('nav-closed');
+//         }
+//     });
+//     navOpt.addEventListener('mouseleave', () => {
+//         if (navOptionActive && !nav.classList.contains('nav-closed')) {
+//             nav.classList.add('nav-closed');
+//         }
+//     });
+// });

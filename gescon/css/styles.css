@@ -80,6 +80,7 @@ h1 {
 
 .main-h1 {
   font-size: calc(var(--font-size)*10);
+  letter-spacing: -4px;
 }
 
 body {
@@ -92,6 +93,7 @@ body {
 }
 
 main {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: calc(var(--default-px)*0.5);
@@ -224,15 +226,15 @@ input[type="radio"]:checked {
 }
 
 .rol-1 {
-  background-color: #180b34 !important;
+  background-color: #0e061e !important;
   border: 1px solid #b598ff !important;
 }
 .rol-2 {
-  background-color: #340b0b !important;
+  background-color: #230707 !important;
   border: 1px solid #ff9898 !important;
 }
 .rol-3 {
-  background-color: #083120 !important;
+  background-color: #061e14 !important;
   border: 1px solid #98ffd1 !important;
 }
 
@@ -431,10 +433,10 @@ option {
   z-index: -1;
   overflow: hidden;
 }
-
+/* 
 main:has(.big-bg-text){
   position: relative;
-}
+} */
 
 .big-bg-text h1 {
   font-size: calc(var(--default-px)*20);
@@ -449,6 +451,21 @@ main:has(.big-bg-text){
 .no-scroll {
   overflow: hidden;
   height: 100%;
+}
+
+.index-buscar-container {
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  overflow: hidden;
+  padding: 0 5rem 5rem 5rem;
+}
+.index-buscar-container .r-button {
+  height: 50px;
+  width: 50px;
+}
+.index-buscar-container .l-input {
+  height: 50px;
 }
 
 @media screen and (max-width: 900px) {

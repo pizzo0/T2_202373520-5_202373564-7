@@ -23,6 +23,7 @@ if ($user['id_rol'] === 3 && $_SERVER["REQUEST_METHOD"] === "POST") {
                 "tipo" => "ok",
                 "mensaje" => "Revisor ($nombre) creado con exito."
             ];
+            unset($_POST);
         } else {
             $_SESSION["notificacion"] = [
                 "tipo" => "error",

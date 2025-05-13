@@ -299,6 +299,21 @@ function cargarRevisores() {
                         modalRevisorContent.append(h1,form);
 
                         modalModificarRevisor.appendChild(modalRevisorContent);
+
+                        const overlay = document.querySelector(`[data-overlay-target=${target}]`);
+
+                        if (!overlay.dataset.listenerAdded) {
+                            overlay.addEventListener('click', () => {
+                                modalModificarRevisor.classList.toggle('modal-activo');
+                                overlay.classList.toggle('menu-overlay-activo');
+                                document.body.classList.toggle('no-scroll');
+                            });
+                            overlay.dataset.listenerAdded = 'true';
+                        }
+
+                        modalModificarRevisor.classList.toggle('modal-activo');
+                        overlay.classList.toggle('menu-overlay-activo');
+                        document.body.classList.toggle('no-scroll');
                     });
 
                     divAcciones.append(btnAsignarRevisor,formEliminar);
@@ -311,6 +326,7 @@ function cargarRevisores() {
 
                     preview.addEventListener('click', async () => {
                         const modalModificarRevisor = document.getElementById(target);
+
                         modalModificarRevisor.innerHTML = '';
 
                         const modalRevisorContent = document.createElement('div');
@@ -538,6 +554,21 @@ function cargarRevisores() {
                             }
                             });
                         });
+
+                        const overlay = document.querySelector(`[data-overlay-target=${target}]`);
+
+                        if (!overlay.dataset.listenerAdded) {
+                            overlay.addEventListener('click', () => {
+                                modalModificarRevisor.classList.toggle('modal-activo');
+                                overlay.classList.toggle('menu-overlay-activo');
+                                document.body.classList.toggle('no-scroll');
+                            });
+                            overlay.dataset.listenerAdded = 'true';
+                        }
+
+                        modalModificarRevisor.classList.toggle('modal-activo');
+                        overlay.classList.toggle('menu-overlay-activo');
+                        document.body.classList.toggle('no-scroll');
                     });
 
                     revisorPreview.appendChild(preview);

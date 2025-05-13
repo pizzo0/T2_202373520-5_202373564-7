@@ -169,7 +169,7 @@
     .filtro-container {
         transform:
             translateX(-100%);
-        width: 55%;
+        width: 40%;
         border-top: none;
         border-right: 1px solid var(--font-color);
         height: 100vh;
