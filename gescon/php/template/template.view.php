@@ -29,7 +29,7 @@ $svg_home = getAsset("/svg/home.svg");
             <script>
                 setTimeout(() => {
                     document.querySelector('.nav').classList.add('nav-transition');
-                }, 150);
+                }, 5);
             </script>
         </header>
         <main>

@@ -37,7 +37,7 @@ cargarArticulosRevisor = (noEstaRevisado = false) => {
                                 data.data.forEach(articulo => {
                                     let hizoRevision = false;
                                     if (articulo.formularios) articulo.formularios.forEach((formulario) => {
-                                        if (formulario.email_revisor === usuarioData.email && !hizoRevision) {
+                                        if (formulario.revisor.rut === usuarioData.rut && !hizoRevision) {
                                             hizoRevision = true;
                                         }
                                     });
@@ -69,7 +69,7 @@ cargarArticulosRevisor = (noEstaRevisado = false) => {
                                     res += `
                                     <div class="articulo-preview">
                                         <div class="articulo-preview-tr">
-                                            <p>No hay articulos</p>
+                                            <p>No hay articulos para revisar</p>
                                         </div>
                                     </div>
                                     `;
@@ -83,12 +83,12 @@ cargarArticulosRevisor = (noEstaRevisado = false) => {
                                         }
                                     });
                                 });
-                                numRevisar.innerHTML = `Tienes ${totalArticulosRevisor} articulos publicados ${noEstaRevisado ? '[Por revisar]' : ''}`;
+                                numRevisar.innerHTML = `Tienes ${totalArticulosRevisor} articulos ${noEstaRevisado ? '[Por revisar]' : ''}`;
                             });
                         });
             } else {
-                containerRevisar.innerHTML = `<p>Aun no publicas articulos</p>`;
-                numRevisar.innerHTML = `Tienes 0 articulos publicados ${noEstaRevisado ? '[Por revisar]' : ''}`;
+                containerRevisar.innerHTML = `<p>No tienes articulos asignados</p>`;
+                numRevisar.innerHTML = `Tienes 0 articulos ${noEstaRevisado ? '[Por revisar]' : ''}`;
             }
         });
 };

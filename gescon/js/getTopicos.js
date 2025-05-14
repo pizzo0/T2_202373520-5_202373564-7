@@ -1,7 +1,7 @@
 const topicosContainer = document.querySelector('.topicos-container');
 
 document.addEventListener("DOMContentLoaded", () => {
-    fetch("php/api/topicos.php")
+    fetch("/php/api/topicos.php")
         .then((response) => response.json())
         .then((data) => {
 

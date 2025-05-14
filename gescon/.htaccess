@@ -1,21 +1,29 @@
 RewriteEngine On
 
-# Redirige cualquier solicitud con ?page= a la URL correspondiente
+# redirige a la URL que corresponde
 RewriteCond %{THE_REQUEST} \s\?page=([^\s&]+) [NC]
 RewriteRule ^ index.php?page=%1 [R=301,L]
 
-# Si la URL es /articulo/X, redirige a /?page=articulo&id_articulo=X
+# redirige /gestion o /gestion/...
+RewriteRule ^gestion/(topicos|asignacion)$ index.php?page=gestion&sub=$1 [L,QSA]
+
+# redirige /articulo/...
 RewriteRule ^articulo/([0-9]+)$ index.php?page=articulo&id_articulo=$1 [L,QSA]
 
-# Si la URL es /editar/X, redirige a /?page=editar&id_articulo=X
+# redirige /editar/...
 RewriteRule ^editar/([0-9]+)$ index.php?page=editar&id_articulo=$1 [L,QSA]
 
-# Redirige a ?page
+# redirige ?page=...
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^([^/]+)$ index.php?page=$1 [L,QSA]
 
-# Ubicacion del index
+# bloquea los componentes de las paginas para que no se puedan acceder
+RewriteCond %{REQUEST_URI} \.[^.]+\.view\.php$ [NC]
+RewriteRule .* - [F,L]
+
+# ubicacion del index
 DirectoryIndex index.php
 
+DirectoryIndex index.php
 ErrorDocument 404 /404

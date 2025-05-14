@@ -83,7 +83,7 @@ SELECT
     ) AS valoracion,
     (
         SELECT CASE
-            WHEN COUNT(*) > 0 THEN 1
+            WHEN COUNT(*) >= 3 THEN 1
             ELSE 0
         END
         FROM Formulario
