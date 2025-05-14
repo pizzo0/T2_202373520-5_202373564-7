@@ -7,17 +7,19 @@ require "../config/func.php";
 header("Content-Type: application/json");
 
 session_start();
-
 $user = getUsuarioData();
 $database = getDatabase();
 
 $stmt = $database->prepare("
-    SELECT * FROM articulos_data
-    WHERE EXISTS (
-        SELECT 1
-        FROM JSON_TABLE(revisores, '$[*]' COLUMNS (rut VARCHAR(12) PATH '$.rut'))
-        AS revisor WHERE TRIM(revisor.rut) = ?
-    )
+    SELECT *
+    FROM Articulos_Data,
+    JSON_TABLE(
+        revisores, '$[*]'
+        COLUMNS (
+            rut VARCHAR(12) PATH '$.rut'
+        )
+    ) AS revisor
+    WHERE revisor.rut = ?
     ORDER BY fecha_envio DESC
 ");
 

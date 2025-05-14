@@ -8,16 +8,18 @@ header("Content-Type: application/json");
 
 session_start();
 $user = getUsuarioData();
-
 $database = getDatabase();
 
 $stmt = $database->prepare("
-    SELECT * FROM articulos_data
-    WHERE EXISTS (
-        SELECT 1
-        FROM JSON_TABLE(autores, '$[*]' COLUMNS (rut VARCHAR(12) PATH '$.rut'))
-        AS autor WHERE TRIM(autor.rut) = ?
-    )
+    SELECT *
+    FROM Articulos_Data,
+    JSON_TABLE(
+        autores, '$[*]'
+        COLUMNS (
+            rut VARCHAR(12) PATH '$.rut'
+        )
+    ) AS autor
+    WHERE autor.rut = ?
     ORDER BY fecha_envio DESC
 ");
 

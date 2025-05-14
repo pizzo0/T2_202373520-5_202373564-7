@@ -22,7 +22,9 @@ $revisado = isset($_GET['revisado']) ? (int) $_GET['revisado'] : null;
 
 $database = getDatabase();
 
-$stmt = $database->prepare("CALL filtrar_articulos_data(? ,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+$stmt = $database->prepare("
+    CALL filtrar_articulos_data(? ,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+");
 
 $stmt->bind_param(
     'isssiissssiii',
