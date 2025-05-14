@@ -108,11 +108,11 @@ if ($user['id_rol'] === 3 && $_SERVER["REQUEST_METHOD"] === "POST") {
                 "tipo" => "ok",
                 "mensaje" => "Revisor modificado con exito."
             ];
-        } catch (\Throwable $th) {
+        } catch (Exception $e) {
             $database->rollback();
             $_SESSION["notificacion"] = [
                 "tipo" => "error",
-                "mensaje" => "Ocurrio un error al modificar al revisor... $th"
+                "mensaje" => "Ocurrio un error al modificar al revisor... $e"
             ];
         }
     } elseif (isset($_POST["revisores"])) {
@@ -144,11 +144,11 @@ if ($user['id_rol'] === 3 && $_SERVER["REQUEST_METHOD"] === "POST") {
                 "tipo" => "ok",
                 "mensaje" => "Revisor(es) asignado(s)."
             ];
-        } catch (\Throwable $th) {
+        } catch (Exception $e) {
             $database->rollback();
             $_SESSION["notificacion"] = [
                 "tipo" => "error",
-                "mensaje" => "Error al asignar."
+                "mensaje" => "Error al asignar.<br>" . $e->getMessage()
             ];
         }
     } elseif (isset($_POST["articulos"])) {
@@ -180,7 +180,7 @@ if ($user['id_rol'] === 3 && $_SERVER["REQUEST_METHOD"] === "POST") {
                 "tipo" => "ok",
                 "mensaje" => "Articulo(s) asignado(s)."
             ];
-        } catch (\Throwable $th) {
+        } catch (Exception $e) {
             $database->rollback();
             $_SESSION["notificacion"] = [
                 "tipo" => "error",
@@ -197,23 +197,33 @@ if ($user['id_rol'] === 3 && $_SERVER["REQUEST_METHOD"] === "POST") {
         ];
     } else if (isset($_POST['id_articulo_revisor_aleatorio'])) {
         $id_articulo = $_POST['id_articulo_revisor_aleatorio'];
+        $revisores_asignados = [];
 
         try {
-            $stmt = $database->prepare("
-                CALL asignar_revisor_random (?,@rut_revisor)
-            ");
-            $stmt->bind_param("i",$id_articulo);
-            $stmt->execute();
-            $stmt->close();
-            
-            $revisor = $database->query("
-                SELECT @rut_revisor AS rut_revisor
-            ")->fetch_assoc()['rut_revisor'];
+            $database->begin_transaction();
 
-            if ($revisor !== null) {
+            while (true) {
+                $stmt = $database->prepare("CALL asignar_revisor_random(?, @rut_revisor)");
+                $stmt->bind_param("i", $id_articulo);
+                $stmt->execute();
+                $stmt->close();
+
+                $result = $database->query("SELECT @rut_revisor AS rut_revisor");
+                $revisor = $result->fetch_assoc()['rut_revisor'];
+
+                if ($revisor === null) {
+                    break;
+                }
+
+                $revisores_asignados[] = $revisor;
+            }
+
+            $database->commit();
+
+            if (count($revisores_asignados) > 0) {
                 $_SESSION["notificacion"] = [
                     "tipo" => "ok",
-                    "mensaje" => "Revisor aleatorio asignado con exito [" . $revisor ."]."
+                    "mensaje" => "Se asignaron revisores aleatorios: [" . implode(", ", $revisores_asignados) . "]."
                 ];
             } else {
                 $_SESSION["notificacion"] = [
@@ -221,13 +231,13 @@ if ($user['id_rol'] === 3 && $_SERVER["REQUEST_METHOD"] === "POST") {
                     "mensaje" => "No se encontraron revisores para asignar."
                 ];
             }
+
         } catch (Exception $e) {
             $database->rollback();
             $_SESSION["notificacion"] = [
                 "tipo" => "error",
-                "mensaje" => "Ocurrio un error al intentar asginar un revisor."
+                "mensaje" => "Ocurrió un error al intentar asignar revisores: " . $e->getMessage()
             ];
-            print_r($e);
         }
     }
 }

@@ -110,7 +110,9 @@ crearArticuloPreview = async (articulo) => {
     if (Array.isArray(articulo.autores)) {
         articulo.autores.forEach(autor => {
             const itemAutor = document.createElement('span');
-            itemAutor.textContent = '* ' + autor.nombre;
+            itemAutor.className = 'etiqueta rol-1';
+            itemAutor.textContent = autor.nombre;
+            
             autoresDiv.appendChild(itemAutor);
         });
     }

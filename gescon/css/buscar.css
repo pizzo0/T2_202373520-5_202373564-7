@@ -92,7 +92,7 @@
     padding: var(--font-size);
 }
 
-.articulo-preview-etiquetas {
+.articulo-preview-etiquetas, .articulo-preview-autores {
     flex-direction: row;
     flex-wrap: wrap;
     gap: 0.1rem;

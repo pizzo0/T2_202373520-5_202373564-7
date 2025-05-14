@@ -4,6 +4,12 @@ CREATE PROCEDURE asignar_revisor (
     IN p_rut_revisor VARCHAR(12)
 )
 BEGIN
+    -- verificamos si ya hay 3 revisores asignados
+    IF (SELECT COUNT(*) FROM Articulos_Revisores WHERE id_articulo = p_id_articulo) >= 3 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'El Articulo ya tiene 3 revisores asignados.';
+    END IF;
+
 	-- verificamos que sea revisor
 	IF NOT EXISTS (
 	SELECT 1 FROM Usuarios
@@ -47,28 +53,33 @@ BEGIN
     DECLARE v_rut_revisor VARCHAR(12);
     DECLARE v_nombre_revisor VARCHAR(255);
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET v_rut_revisor = NULL;
-    
-    SELECT Usuarios.rut, Usuarios.nombre INTO v_rut_revisor,v_nombre_revisor FROM Usuarios
-    JOIN Usuarios_Especialidad especialidad ON Usuarios.rut = especialidad.rut_usuario
-    JOIN Articulos_Topicos topico ON especialidad.id_topico = topico.id_topico
-        AND topico.id_articulo = p_id_articulo
-    JOIN Roles ON Usuarios.id_rol = Roles.id
-    WHERE Roles.id >= 2
-    AND Usuarios.rut NOT IN (
-        SELECT rut_autor FROM Articulos_Autores
-        WHERE id_articulo = p_id_articulo
-    )
-    AND Usuarios.rut NOT IN (
-        SELECT rut_revisor FROM Articulos_Revisores
-        WHERE id_articulo = p_id_articulo
-    )
-    ORDER BY RAND()
-    LIMIT 1;
 
-    SET p_nombre_asignado = v_nombre_revisor;
+    IF (SELECT COUNT(*) FROM Articulos_Revisores WHERE id_articulo = p_id_articulo) >= 3 THEN
+        SET p_nombre_asignado = NULL;
+    ELSE
+        SELECT Usuarios.rut, Usuarios.nombre INTO v_rut_revisor,v_nombre_revisor FROM Usuarios
+        JOIN Usuarios_Especialidad especialidad ON Usuarios.rut = especialidad.rut_usuario
+        JOIN Articulos_Topicos topico ON especialidad.id_topico = topico.id_topico
+            AND topico.id_articulo = p_id_articulo
+        JOIN Roles ON Usuarios.id_rol = Roles.id
+        WHERE Roles.id >= 2
+        AND Usuarios.rut NOT IN (
+            SELECT rut_autor FROM Articulos_Autores
+            WHERE id_articulo = p_id_articulo
+        )
+        AND Usuarios.rut NOT IN (
+            SELECT rut_revisor FROM Articulos_Revisores
+            WHERE id_articulo = p_id_articulo
+        )
+        ORDER BY RAND()
+        LIMIT 1;
 
-    IF v_rut_revisor IS NOT NULL THEN
-        CALL asignar_revisor(p_id_articulo, v_rut_revisor);
+        IF v_rut_revisor IS NOT NULL THEN
+            CALL asignar_revisor(p_id_articulo, v_rut_revisor);
+            SET p_nombre_asignado = v_nombre_revisor;
+        ELSE
+            SET p_nombre_asignado = NULL;
+        END IF;
     END IF;
 END;//
 DELIMITER ;
@@ -387,7 +398,8 @@ CREATE PROCEDURE filtrar_articulos_data (
     IN fecha_fin DATE,
     IN p_orden VARCHAR(50),
     IN limite INT,
-    IN offset_val INT
+    IN offset_val INT,
+    IN p_revisado TINYINT
 )
 BEGIN
     DECLARE orden_sql TEXT;
@@ -422,6 +434,9 @@ BEGIN
 
         IF(p_titulo IS NULL OR p_titulo = '', '', 
             CONCAT(' AND titulo LIKE ''%', p_titulo, '%''')),
+        
+        IF(p_revisado IS NULL, '',
+            CONCAT(' AND revisado = ', p_revisado)),
 
         ' AND fecha_envio BETWEEN ''', fecha_inicio, ''' AND ''', fecha_fin, ''' ',
 

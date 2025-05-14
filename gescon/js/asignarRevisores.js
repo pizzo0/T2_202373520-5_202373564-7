@@ -68,22 +68,42 @@ crearArticuloPreview = async (articulo) => {
     resumenP.textContent = articulo.resumen;
     topSection.appendChild(resumenP);
 
+    const autoresDiv = document.createElement('div');
+    autoresDiv.className = 'articulo-preview-autores';
+
+    if (articulo.autores) {
+        articulo.autores.forEach(autor => {
+            const autorPreview = document.createElement('span');
+            autorPreview.className = 'etiqueta rol-1';
+            autorPreview.textContent = autor.nombre;
+
+            autoresDiv.appendChild(autorPreview);
+        });
+    }
+
+
     const revisoresDiv = document.createElement('div');
     revisoresDiv.className = 'articulo-preview-revisores';
-
+    
     let i = 0;
     if (articulo.revisores) {
         articulo.revisores.forEach(revisor => {
             i++;
             const revisorPreview = document.createElement('span');
             revisorPreview.className = 'etiqueta rol-2';
-            revisorPreview.textContent = revisor.email;
+            revisorPreview.textContent = revisor.nombre;
 
             revisoresDiv.appendChild(revisorPreview);
         });
     }
 
-    if (i < 3) wrapper.classList.add('articulo-necesita-revisores');
+    if (i == 0) {
+        const noRevisorPreview = document.createElement('span');
+        noRevisorPreview.textContent = 'No hay revisores asignados.';
+        revisoresDiv.appendChild(noRevisorPreview);
+    }
+
+    if (i < 3) wrapper.classList.add('articulo-flag');
 
     const etiquetasDiv = document.createElement('div');
     etiquetasDiv.className = 'articulo-preview-etiquetas';
@@ -105,10 +125,9 @@ crearArticuloPreview = async (articulo) => {
     fechaDiv.appendChild(fechaP);
 
     wrapper.appendChild(topSection);
-    if (articulo.revisores) {
-        wrapper.appendChild(revisoresDiv);
-    }
     wrapper.appendChild(etiquetasDiv);
+    wrapper.appendChild(autoresDiv);
+    wrapper.appendChild(revisoresDiv);
     wrapper.appendChild(fechaDiv);
 
     const target = 'asignar-articulo';

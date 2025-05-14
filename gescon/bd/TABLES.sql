@@ -88,5 +88,6 @@ CREATE TABLE Formulario (
     FOREIGN KEY (rut_revisor) REFERENCES Usuarios(rut) ON DELETE CASCADE,
     CONSTRAINT verificar_calidad CHECK (calidad BETWEEN 1 AND 7),
     CONSTRAINT verificar_originalidad CHECK (originalidad BETWEEN 1 AND 7),
-    CONSTRAINT verificar_valoracion CHECK (valoracion BETWEEN 1 AND 7)
+    CONSTRAINT verificar_valoracion CHECK (valoracion BETWEEN 1 AND 7),
+    UNIQUE (id_articulo,rut_revisor)
 );

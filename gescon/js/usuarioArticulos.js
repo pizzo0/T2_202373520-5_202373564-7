@@ -1,5 +1,4 @@
-let totalArticulos = 0; // Declarado afuera para que no se reinicie
-
+let totalArticulos = 0;
 const container = document.getElementsByClassName('profile-articulos-results')[0];
 const numeroArticulos = document.getElementById('num-articulos');
 const filtroRevisados = document.getElementById('articulos-revisados');
@@ -21,7 +20,7 @@ revisarFiltro = () => {
     }
 }
 
-cargarArticulosAutor = (revisado = false) => {
+cargarArticulosAutor = (estaRevisado = false) => {
     fetch('/php/api/actual.usuario.articulos.php')
         .then((response) => response.json())
         .then((data) => {
@@ -33,18 +32,21 @@ cargarArticulosAutor = (revisado = false) => {
                         svg_articulo = svg;
                         let res = ``;
                         data.data.forEach(articulo => {
-                            if (articulo.formularios === null && revisado) {
+                            if (!articulo.revisado && estaRevisado) {
                                 return;
                             }
                             totalArticulos++;
                             res += `
-                            <div class="articulo-preview">
+                            <div class="articulo-preview ${!articulo.revisado ? `articulo-flag` : ``}">
                                 <div class="articulo-preview-tr">
                                     <a href="/articulo/${articulo.id_articulo}"><span>${svg_articulo}</span> ${articulo.titulo}</a>
                                     <p>${articulo.resumen}</p>
                                 </div>
                                 <div class="articulo-preview-etiquetas">
                                     ${articulo.topicos.map(topico => `<span class="etiqueta">${topico.nombre}</span>`).join('')}
+                                </div>
+                                <div class="articulo-preview-autores">
+                                    ${articulo.autores.map(autor => `<span clasS="etiqueta rol-1">${autor.nombre}</span>`).join('')}
                                 </div>
                                 <div class="articulo-preview-fecha">
                                     <p>Publicación - ${obtenerTiempo(articulo.fecha_envio)}</p>
@@ -70,11 +72,11 @@ cargarArticulosAutor = (revisado = false) => {
                                 }
                             });
                         });
-                        numeroArticulos.innerHTML = `Tienes ${totalArticulos} articulos publicados ${revisado ? '[Revisados]' : ''}`;
+                        numeroArticulos.innerHTML = `Tienes ${totalArticulos} articulos publicados ${estaRevisado ? '[Revisados]' : ''}`;
                     });
             } else {
                 container.innerHTML = `<p>Aun no publicas articulos</p>`;
-                numeroArticulos.innerHTML = `Tienes 0 articulos publicados ${revisado ? '[Revisados]' : ''}`;
+                numeroArticulos.innerHTML = `Tienes 0 articulos publicados ${estaRevisado ? '[Revisados]' : ''}`;
             }
         });
 }

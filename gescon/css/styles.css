@@ -4,7 +4,7 @@
   --font-color : #fff;
   --font-size : 14px;
   --default-px : 20px;
-  --default-border-radius : 5px;
+  --default-border-radius : 8px;
   --pad-px : 12px;
 }
 
@@ -351,8 +351,8 @@ option {
 
   position: relative;
   display: inline-block;
-  width: 46px;
-  height: 22px;
+  width: 48px;
+  height: 24px;
 }
 
 .checkbox-slider {
@@ -373,8 +373,8 @@ option {
   content: "";
   height: 16px;
   width: 16px;
-  bottom: 2px;
-  left: 2px;
+  bottom: 3px;
+  left: 3px;
   background-color: var(--font-color);
   border-radius: 50%;
   transition: .2s;
@@ -466,6 +466,16 @@ main:has(.big-bg-text){
 }
 .index-buscar-container .l-input {
   height: 50px;
+}
+
+.switch-container {
+  display: flex;
+  flex-direction: row;
+  padding: 1rem;
+  gap: 1rem;
+  align-items: center;
+  border: 1px solid var(--font-color);
+  border-radius: var(--default-border-radius);
 }
 
 @media screen and (max-width: 900px) {

@@ -4,16 +4,14 @@ crearRevisionPreview = (formulario,index,email,id_rol) => {
     const valoracion = formulario.valoracion;
     const argumentos = formulario.argumentos_valoracion;
     const comentarios = formulario.comentarios;
-    const email_revisor = formulario.email_revisor;
 
     const previewFormulario = document.createElement('div');
     previewFormulario.className = 'preview-formulario';
 
-    const numRevision = document.createElement('span');
-    numRevision.textContent = 'R' + (index + 1);
+    console.log(formulario.revisor.nombre);
 
     const emailRevisor = document.createElement('span');
-    emailRevisor.textContent = email_revisor;
+    emailRevisor.textContent = formulario.revisor.nombre;
     emailRevisor.className = 'etiqueta rol-2'
 
     const divAcciones = document.createElement('div');
@@ -43,7 +41,7 @@ crearRevisionPreview = (formulario,index,email,id_rol) => {
             },
             body: JSON.stringify({
                 id_formulario: formulario.id_formulario,
-                email_revisor: formulario.email_revisor
+                rut_revisor: formulario.revisor.rut
             })
         })
         .then((response) => response.json().then(data => ({ok: response.ok, data})))
@@ -84,7 +82,7 @@ crearRevisionPreview = (formulario,index,email,id_rol) => {
         modalConsulta.innerHTML = `
             <div class="revision-view modal-content">
                 <h1>[${(index + 1)}] Formulario de Evaluación</h1>
-                <div>
+                <div class="vista-articulo-evaluacion">
                     <span class="etiqueta2">Calidad: ${calidad}/7</span>
                     <span class="etiqueta2">Originalidad: ${originalidad}/7</span>
                     <span class="etiqueta2">Valoración: ${valoracion}/7</span>
@@ -104,11 +102,11 @@ crearRevisionPreview = (formulario,index,email,id_rol) => {
     });
 
     divAcciones.appendChild(consultarBtn);
-    if (email === email_revisor ||  id_rol === 3) {
+    if (email === formulario.revisor.email ||  id_rol === 3) {
         divAcciones.appendChild(eliminarFormularioBtn);
     }
 
-    previewFormulario.append(numRevision,emailRevisor,divAcciones);
+    previewFormulario.append(emailRevisor,divAcciones);
 
     return previewFormulario;
 }

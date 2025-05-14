@@ -103,7 +103,7 @@
     border: 1px solid var(--font-color);
 }
 
-.nav .sub-nav .nav-option {
+.nav.nav-transition .sub-nav .nav-option {
     transition: all 0.15s ease;
 }
 

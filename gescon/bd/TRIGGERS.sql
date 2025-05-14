@@ -167,6 +167,14 @@ DELIMITER //
 CREATE TRIGGER verificar_insert_formulario BEFORE INSERT ON Formulario
 FOR EACH ROW
 BEGIN
+    IF (
+        SELECT COUNT(*) FROM Formulario
+        WHERE id_articulo = NEW.id_articulo AND rut_revisor = NEW.rut_revisor
+    ) > 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Ya existe un formulario de este revisor para el articulo.';
+    END IF;
+
     IF NEW.calidad < 1 OR NEW.calidad > 7 THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'La calidad debe ser un valor entre 1 y 7.';

@@ -164,17 +164,17 @@
     gap: 1rem;
 }
 
-.articulo-necesita-revisores {
+.articulo-flag {
     border: 1px solid #febebe ;
 }
 
-.articulo-necesita-revisores > div {
+.articulo-flag > div {
     border-bottom: 1px solid #febebe ;
 }
-.articulo-necesita-revisores > div:first-child {
+.articulo-flag > div:first-child {
     background-color: #160000;
 }
-.articulo-necesita-revisores > div:last-child {
+.articulo-flag > div:last-child {
     background-color: #160000;
     border-bottom: none;
 }

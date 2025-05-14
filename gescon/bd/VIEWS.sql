@@ -50,7 +50,15 @@ SELECT
             JSON_OBJECT(
                 'id_formulario', Formulario.id_formulario,
                 'id_articulo', Formulario.id_articulo,
-                'email_revisor', (SELECT email FROM Usuarios WHERE rut = Formulario.rut_revisor),
+                'revisor', (
+                    SELECT JSON_OBJECT(
+                        'rut', Usuarios.rut,
+                        'nombre', Usuarios.nombre,
+                        'email', Usuarios.email
+                    )
+                    FROM Usuarios
+                    WHERE rut = Formulario.rut_revisor
+                ),
                 'calidad', Formulario.calidad,
                 'originalidad', Formulario.originalidad,
                 'valoracion', Formulario.valoracion,
@@ -60,7 +68,27 @@ SELECT
         )
         FROM Formulario
         WHERE Formulario.id_articulo = Articulos.id
-    ) AS formularios
+    ) AS formularios,
+    (
+        SELECT ROUND(AVG(Formulario.calidad),1) FROM Formulario
+        WHERE Formulario.id_articulo = Articulos.id
+    ) AS calidad,
+    (
+        SELECT ROUND(AVG(Formulario.originalidad),1) FROM Formulario
+        WHERE Formulario.id_articulo = Articulos.id
+    ) AS originalidad,
+    (
+        SELECT ROUND(AVG(Formulario.valoracion),1) FROM Formulario
+        WHERE Formulario.id_articulo = Articulos.id
+    ) AS valoracion,
+    (
+        SELECT CASE
+            WHEN COUNT(*) > 0 THEN 1
+            ELSE 0
+        END
+        FROM Formulario
+        WHERE Formulario.id_articulo = Articulos.id
+    ) AS revisado
 
 FROM Articulos
 LEFT JOIN Usuarios AS Usuarios_contacto ON Articulos.rut_contacto = Usuarios_contacto.rut;

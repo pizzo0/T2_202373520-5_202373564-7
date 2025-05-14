@@ -8,6 +8,7 @@ $svg_añadir = getAsset("/svg/añadir.svg");
 ?>
 <div class="menu-perfil big-border-radius">
     <div class="menu-perfil-forms">
+        <h1>Opciones</h1>
         <form method="post" class="formulario nombre-email-form form-activo">
             <div class="form-div">
                 <h2>Cambiar nombre y/o correo.</h2>
@@ -94,14 +95,13 @@ $svg_añadir = getAsset("/svg/añadir.svg");
         <div class="tabs-container" id="tabContent">
             <div class="tab" id="tabArticulos">
                 <div class="profile-articulos-container">
-                    <button onclick="window.location.href='/publicar'" style="width:100%;"><span><?= $svg_añadir ?></span> Crear un nuevo articulo</button>
                     <p id="num-articulos"></p>
-                    <div class="input-container">
+                    <div class="switch-container">
                         <label class="checkbox-label" for="articulos-revisados">
                             <input type="checkbox" class="checkbox" id="articulos-revisados" name="articulos-revisados">
                             <span class="checkbox-slider"></span>
                         </label>
-                        <label class="reset-label" for="articulos-revisados">Mostrar solo articulos revisados</label>
+                        <label class="reset-label" for="articulos-revisados">Solo articulos revisados</label>
                     </div>
                     <div class="profile-articulos-results">
                         <!-- articulos del usuario -->
@@ -110,9 +110,18 @@ $svg_añadir = getAsset("/svg/añadir.svg");
             </div>
             <?php if ($user['id_rol'] >= 2) : ?>
             <div class="tab" id="tabRevisiones">
-                <p id="num-articulos-revisar"></p>
-                <div class="profile-revisiones-container">
-                    <!-- articulos que puede revisar -->
+                <div class="profile-articulos-container">
+                    <p id="num-articulos-revisar"></p>
+                    <div class="switch-container">
+                        <label class="checkbox-label" for="articulos-revisados-revisor">
+                            <input type="checkbox" class="checkbox" id="articulos-revisados-revisor" name="articulos-revisados-revisor">
+                            <span class="checkbox-slider"></span>
+                        </label>
+                        <label class="reset-label" for="articulos-revisados-revisor">Solo articulos no revisados por ti</label>
+                    </div>
+                    <div class="profile-revisiones-container">
+                        <!-- articulos que puede revisar -->
+                    </div>
                 </div>
             </div>
             <script src=<?php getJs("usuarioArticulosRevisar");?>></script>

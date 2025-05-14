@@ -27,7 +27,7 @@ $res = $stmt->get_result();
 
 $data = [];
 while ($articulo = $res->fetch_assoc()) {
-    foreach(['contacto','autores','revisores','topicos'] as $aux) {
+    foreach(['contacto','autores','revisores','topicos','formularios'] as $aux) {
         $articulo[$aux] = $articulo[$aux] ? json_decode($articulo[$aux],true) : null;
     }
     $data[] = $articulo;

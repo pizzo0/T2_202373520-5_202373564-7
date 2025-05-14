@@ -17,13 +17,14 @@ $revisor = $_GET['revisor'] ?? '';
 $ordenar_por = $_GET['ordenar_por'] ?? 'fecha_envio_desc';
 $offset = isset($_GET['offset']) ? (int) $_GET['offset'] : 0;
 $limit = isset($_GET['limit']) ? (int) $_GET['limit'] : 20;
+$revisado = isset($_GET['revisado']) ? (int) $_GET['revisado'] : null;
 
 $database = getDatabase();
 
-$stmt = $database->prepare("CALL filtrar_articulos_data(? ,?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+$stmt = $database->prepare("CALL filtrar_articulos_data(? ,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
 $stmt->bind_param(
-    'isssissssii',
+    'isssissssiii',
     $id_articulo,
     $contacto,
     $autor,
@@ -34,7 +35,8 @@ $stmt->bind_param(
     $fecha_hasta,
     $ordenar_por,
     $limit,
-    $offset
+    $offset,
+    $revisado
 );
 
 $topicoInt = is_numeric($topico) ? (int) $topico : 0;

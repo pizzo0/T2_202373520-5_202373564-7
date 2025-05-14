@@ -21,11 +21,16 @@ $svg_home = getAsset("/svg/home.svg");
     <div class="main-content">
         <header class="header">
             <a href="/" class="nav-page">GESCON</a>
-            <nav id="nav" class="no-overflow nav">
+            <nav id="nav" class="no-overflow nav nav-closed">
                 <?php getNav(""); ?>
                 <button id="mostrar-nav"><?= $svg_cerrar ?></button>
             </nav>
             <span id="mostrar-nav" class="open-nav"><?= $svg_nav ?></span>
+            <script>
+                setTimeout(() => {
+                    document.querySelector('.nav').classList.add('nav-transition');
+                }, 150);
+            </script>
         </header>
         <main>
             <?php getContenido(); ?>

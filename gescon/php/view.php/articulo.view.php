@@ -28,7 +28,7 @@ if (isset($_GET['id_articulo'])) {
     
     $aux = [];
     foreach (json_decode($articulo['autores'],true) as $autor) {
-        $aux[] = $autor['nombre'] . ' (' . $autor['email'] . ')';
+        $aux[] = $autor['nombre'] . ' (' . "<a>" . $autor['email'] . "</a>" . ')';
     }
     $autores = implode(',<br>',$aux);
 
@@ -39,7 +39,7 @@ if (isset($_GET['id_articulo'])) {
         $revisores = json_decode($revisores,true);
         $aux2 = [];
         foreach ($revisores as $revisor) {
-            $aux2[] = $revisor['nombre'] . ' (' . $revisor['email'] . ')';
+            $aux2[] = $revisor['nombre'] . ' (' . "<a>" . $revisor['email'] . "</a>" . ')';
             if (!$esRevisor && $user) {
                 $esRevisor = $revisor['rut'] === $user['rut'];
             }
@@ -47,6 +47,10 @@ if (isset($_GET['id_articulo'])) {
         $revisores = implode(',<br>', $aux2);
     }
     $contacto = json_decode($articulo['contacto'],true);
+
+    $calidad = $articulo['calidad'];
+    $originalidad = $articulo['originalidad'];
+    $valoracion = $articulo['valoracion'];
 }
 ?>
 <?php if (empty($articulo)) : ?>
@@ -68,12 +72,21 @@ if (isset($_GET['id_articulo'])) {
                     }
                 ?>
             </div>
-            <p class="vista-articulo-subtexto">Contacto:</p>
-            <p><?= $contacto['nombre'] . ' (' . $contacto['email'] . ')' ?></p>
-            <p class="vista-articulo-subtexto">Autor(es):</p>
-            <p><?= $autores ?></p>
-            <p class="vista-articulo-subtexto">Revisor(es):</p>
-            <p><?= $revisores ?></p>
+            <div class="vista-articulo-autores-revisores">
+                <p class="vista-articulo-subtexto">Contacto:</p>
+                <p class="vista-articulo-subtexto"><?= $contacto['nombre']?> (<a><?= $contacto['email'] ?></a>)</p>
+                <p class="vista-articulo-subtexto">Autor(es):</p>
+                <p class="vista-articulo-subtexto"><?= $autores ?></p>
+                <p class="vista-articulo-subtexto">Revisor(es):</p>
+                <p class="vista-articulo-subtexto"><?= $revisores ?></p>
+            </div>
+            <?php if (!is_null($calidad) && !is_null($originalidad) && !is_null($valoracion)) : ?>
+                <div class="vista-articulo-evaluacion">
+                    <span class="etiqueta2">Calidad: <?= $calidad ?>/7.0</span>
+                    <span class="etiqueta2">Originalidad: <?= $originalidad ?>/7.0</span>
+                    <span class="etiqueta2">Valoración: <?= $valoracion ?>/7.0</span>
+                </div>
+            <?php endif ?>
             <div class="vista-articulo-fecha">
                 <p>Publicado: <?= obtenerTiempo($articulo['fecha_envio']) ?></p>
                 <?php if (!empty($articulo['fecha_editado'])) :?>
