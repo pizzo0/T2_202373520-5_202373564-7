@@ -208,9 +208,9 @@ BEGIN
     
     -- asignamos 3 revisores aleatorios
     -- notar que puede ocurrir que sean < 3
-	CALL asignar_revisor_random (v_id_articulo);
-	CALL asignar_revisor_random (v_id_articulo);
-	CALL asignar_revisor_random (v_id_articulo);
+	CALL asignar_revisor_random (v_id_articulo, @xd);
+	CALL asignar_revisor_random (v_id_articulo, @xd);
+	CALL asignar_revisor_random (v_id_articulo, @xd);
 
     SELECT LAST_INSERT_ID() AS id_articulo;
     
@@ -386,16 +386,18 @@ BEGIN
 END;//
 DELIMITER ;
 
+
 DELIMITER //
 CREATE PROCEDURE filtrar_articulos_data (
     IN p_id_articulo INT,
     IN p_contacto VARCHAR(255),
     IN p_autor VARCHAR(255),
     IN p_revisor VARCHAR(255),
+    IN p_necesita_revisores TINYINT,
     IN p_id_topico INT,
     IN p_titulo VARCHAR(150),
-    IN fecha_inicio DATE,
-    IN fecha_fin DATE,
+    IN fecha_inicio DATETIME,
+    IN fecha_fin DATETIME,
     IN p_orden VARCHAR(50),
     IN limite INT,
     IN offset_val INT,
@@ -414,36 +416,48 @@ BEGIN
         ELSE 'fecha_envio DESC'
     END;
 
-    SET @sql = CONCAT(
-        'SELECT * FROM Articulos_Data WHERE 1=1 ',
+    SET @filtros = CONCAT(
+        ' FROM Articulos_Data WHERE 1=1 ',
 
         IF (p_id_articulo IS NULL OR p_id_articulo = '', '',
-            CONCAT(' AND id_articulo = ', p_id_articulo, '')),
+            CONCAT(' AND id_articulo = ', p_id_articulo)),
 
         IF(p_contacto IS NULL OR p_contacto = '', '', 
-            CONCAT(' AND JSON_UNQUOTE(JSON_EXTRACT(contacto, "$.nombre")) LIKE ''%', p_contacto, '%''')),
+            CONCAT(' AND JSON_UNQUOTE(JSON_EXTRACT(contacto, "$.nombre")) COLLATE utf8mb4_general_ci LIKE ''%', p_contacto, '%''')),
 
         IF(p_autor IS NULL OR p_autor = '', '', 
-            CONCAT(' AND EXISTS (SELECT 1 FROM JSON_TABLE(autores, "$[*]" COLUMNS (nombre VARCHAR(255) PATH "$.nombre")) AS autor WHERE autor.nombre LIKE ''%', p_autor, '%'' )')),
+            CONCAT(' AND EXISTS (SELECT 1 FROM JSON_TABLE(autores, "$[*]" COLUMNS (nombre VARCHAR(255) PATH "$.nombre")) AS autor WHERE autor.nombre COLLATE utf8mb4_general_ci LIKE ''%', p_autor, '%'' )')),
 
         IF(p_revisor IS NULL OR p_revisor = '', '', 
-            CONCAT(' AND EXISTS (SELECT 1 FROM JSON_TABLE(revisores, "$[*]" COLUMNS (nombre VARCHAR(255) PATH "$.nombre")) AS revisor WHERE revisor.nombre LIKE ''%', p_revisor, '%'' )')),
+            CONCAT(' AND EXISTS (SELECT 1 FROM JSON_TABLE(revisores, "$[*]" COLUMNS (nombre VARCHAR(255) PATH "$.nombre")) AS revisor WHERE revisor.nombre COLLATE utf8mb4_general_ci LIKE ''%', p_revisor, '%'' )')),
 
         IF(p_id_topico IS NULL OR p_id_topico = 0, '', 
             CONCAT(' AND EXISTS (SELECT 1 FROM JSON_TABLE(topicos, "$[*]" COLUMNS (id INT PATH "$.id")) AS topico WHERE topico.id = ', p_id_topico, ')')),
 
         IF(p_titulo IS NULL OR p_titulo = '', '', 
-            CONCAT(' AND titulo LIKE ''%', p_titulo, '%''')),
-        
+            CONCAT(' AND titulo COLLATE utf8mb4_general_ci LIKE ''%', p_titulo, '%''')),
+
         IF(p_revisado IS NULL, '',
             CONCAT(' AND revisado = ', p_revisado)),
 
-        ' AND fecha_envio BETWEEN ''', fecha_inicio, ''' AND ''', fecha_fin, ''' ',
+        IF(p_necesita_revisores IS NULL, '',
+            CONCAT(' AND necesita_revisores = ', p_necesita_revisores)),
 
+        ' AND fecha_envio BETWEEN ''', fecha_inicio, ''' AND ''', fecha_fin, ''' '
+    );
+
+    SET @sql_count = CONCAT('SELECT COUNT(*) AS total', @filtros);
+
+    SET @sql = CONCAT(
+        'SELECT *', @filtros,
         ' ORDER BY ', orden_sql,
         ' LIMIT ', limite,
         ' OFFSET ', offset_val
     );
+
+    PREPARE stmt_count FROM @sql_count;
+    EXECUTE stmt_count;
+    DEALLOCATE PREPARE stmt_count;
 
     PREPARE stmt FROM @sql;
     EXECUTE stmt;

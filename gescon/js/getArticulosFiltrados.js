@@ -1,49 +1,55 @@
-const container = document.getElementsByClassName('filtro-container')[0];
-const overlay = document.getElementById('filtro-overlay');
-
-let paginaActual = 0;
+const params = new URLSearchParams(window.location.search);
+let paginaActual = params.get('offset') ? parseInt(params.get('offset')) : 0;
 const resultadosPorPagina = 20;
 let totalResultados = 0;
 
+const container = document.querySelector('.filtro-container');
+const resContainer = document.getElementById('resultados-busqueda');
+
+const form = document.getElementById('filtro-form');
+const overlay = document.getElementById('filtro-overlay');
+
+const numResultados = document.querySelectorAll('#filtro-num-resultados');
+const paginaInfo = document.getElementById('pagina-info');
 const btnAnterior = document.getElementById('btnAnterior');
 const btnSiguiente = document.getElementById('btnSiguiente');
-const paginaInfo = document.getElementById('pagina-info');
 
 btnAnterior.addEventListener('click', () => {
     if (paginaActual > 0) {
         paginaActual--;
-        enviarFormularioConPagina();
+        form.requestSubmit();
     }
 });
 
 btnSiguiente.addEventListener('click', () => {
     if ((paginaActual + 1) * resultadosPorPagina < totalResultados) {
         paginaActual++;
-        enviarFormularioConPagina();
+        form.requestSubmit();
     }
 });
 
-function actualizarPaginacion() {
-    btnAnterior.disabled = paginaActual === 0;
-    btnSiguiente.disabled = (paginaActual + 1) * resultadosPorPagina >= totalResultados;
+const ordenarPorSelect = document.getElementById('ordenar_por');
+ordenarPorSelect.addEventListener('change', () => form.requestSubmit());
 
-    let totalPaginas = Math.ceil(totalResultados / resultadosPorPagina);
-    totalPaginas = Math.max(1, totalPaginas);
-    paginaInfo.textContent = `Página ${paginaActual + 1} de ${totalPaginas}`;
-}
+form.addEventListener('submit', (e) => {
+    e.preventDefault();
 
-function enviarFormularioConPagina() {
-    const form = document.getElementById('filtro-form');
     const formData = new FormData(form);
+    const nuevoParams = new URLSearchParams();
 
-    const ordenarPor = document.getElementById('ordenar_por');
-    if (ordenarPor) {
-        formData.append('ordenar_por', ordenarPor.value);
+    for (const [k,v] of formData.entries()) if (v.trim() !== "") {
+        if (k === "necesita-revisores") {
+            nuevoParams.append(k,"1");
+            continue;
+        }
+        nuevoParams.append(k,v);
     }
 
-    const filtros = new URLSearchParams(formData);
-    cargarArticulos(filtros);
-}
+    if (paginaActual !== 0) nuevoParams.append("offset",paginaActual);
+
+    const nuevoHref = `${location.pathname}?${nuevoParams.toString()}`;
+    window.location.href = nuevoHref;
+});
 
 const clickFuera = (e) => {
     if (!container.contains(e.target)) {
@@ -55,166 +61,112 @@ const clickFuera = (e) => {
 };
 
 const toggleFC = () => {
-    const estaActivo = container.classList.toggle('filtro-container-activo');
-    overlay.classList.toggle('filtro-overlay-activo', estaActivo);
-    document.body.classList.toggle('no-scroll');
+    const activo = container.classList.toggle("filtro-container-activo");
+    overlay.classList.toggle("filtro-overlay-activo", activo);
+    document.body.classList.toggle("no-scroll");
 
-    if (estaActivo) {
-        setTimeout(() => {
-            document.addEventListener('click', clickFuera);
-        }, 0);
+    if (activo) {
+        setTimeout(() => document.addEventListener("click", clickFuera), 0);
     } else {
-        document.removeEventListener('click', clickFuera);
+        document.removeEventListener("click", clickFuera);
     }
 };
 
-crearArticuloPreview = async (articulo) => {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'articulo-preview';
+let crearPreview = async (articulo) => {
+    const wrapper = document.createElement("div");
+    wrapper.className = "articulo-preview";
 
-    const topSection = document.createElement('div');
-    topSection.className = 'articulo-preview-tr';
+    const contacto = document.createElement("div");
+    contacto.className = "articulo-preview-contacto";
 
-    const link = document.createElement('a');
-    link.href = `/articulo/${articulo.id_articulo}`;
+    const spanContacto = document.createElement("span");
+    spanContacto.textContent = "Contacto - " + articulo.contacto.nombre;
 
-    const iconSpan = document.createElement('span');
+    contacto.appendChild(spanContacto);
 
-    const response = await fetch(`/assets/svg/svg_articulo.svg`);
-    const svg_articulo = await response.text();
-    iconSpan.innerHTML = svg_articulo;
+    const tr = document.createElement("div");
+    tr.className = "articulo-preview-tr";
 
-    link.appendChild(iconSpan);
-    link.append(` ${articulo.titulo}`);
-    topSection.appendChild(link);
+    const enlace = document.createElement("a");
+    enlace.href = `/articulo/${articulo.id_articulo}`;
 
-    const resumenP = document.createElement('p');
-    resumenP.textContent = articulo.resumen;
-    topSection.appendChild(resumenP);
+    const icono = document.createElement("span");
+    const resp = await fetch(`/assets/svg/svg_articulo.svg`);
+    icono.innerHTML = await resp.text();
+    enlace.appendChild(icono);
+    enlace.append(` ${articulo.titulo}`);
 
-    const etiquetasDiv = document.createElement('div');
-    etiquetasDiv.className = 'articulo-preview-etiquetas';
+    tr.appendChild(enlace);
 
+    const resumen = document.createElement("p");
+    resumen.textContent = articulo.resumen;
+    tr.appendChild(resumen);
+
+    const etiquetas = document.createElement("div");
+    etiquetas.className = "articulo-preview-etiquetas";
     if (Array.isArray(articulo.topicos)) {
-        articulo.topicos.forEach(topico => {
-            const etiquetaSpan = document.createElement('span');
-            etiquetaSpan.className = 'etiqueta';
-            etiquetaSpan.textContent = topico.nombre;
-            etiquetasDiv.appendChild(etiquetaSpan);
+        articulo.topicos.forEach(t => {
+            const span = document.createElement("span");
+            span.className = "etiqueta";
+            span.textContent = t.nombre;
+            etiquetas.appendChild(span);
         });
     }
 
-    const autoresDiv = document.createElement('div');
-    autoresDiv.className = 'articulo-preview-autores';
-    
+    const autores = document.createElement("div");
+    autores.className = "articulo-preview-autores";
     if (Array.isArray(articulo.autores)) {
-        articulo.autores.forEach(autor => {
-            const itemAutor = document.createElement('span');
-            itemAutor.className = 'etiqueta rol-1';
-            itemAutor.textContent = autor.nombre;
-            
-            autoresDiv.appendChild(itemAutor);
+        articulo.autores.forEach(a => {
+            const span = document.createElement("span");
+            span.className = "etiqueta rol-1";
+            span.textContent = a.nombre;
+            autores.appendChild(span);
         });
     }
 
-    const fechaDiv = document.createElement('div');
-    fechaDiv.className = 'articulo-preview-fecha';
+    const fecha = document.createElement("div");
+    fecha.className = "articulo-preview-fecha";
+    const pFecha = document.createElement("p");
+    pFecha.textContent = `Publicación - ${obtenerTiempo(articulo.fecha_envio)}`;
+    fecha.appendChild(pFecha);
 
-    const fechaP = document.createElement('p');
-    fechaP.textContent = `Publicación - ${obtenerTiempo(articulo.fecha_envio)}`;
-    fechaDiv.appendChild(fechaP);
+    wrapper.append(contacto,tr,etiquetas,autores,fecha)
 
-    wrapper.appendChild(topSection);
-    wrapper.appendChild(etiquetasDiv);
-    wrapper.appendChild(autoresDiv);
-    wrapper.appendChild(fechaDiv);
-
-    wrapper.addEventListener('click', () => link.click());
+    wrapper.addEventListener("click", () => enlace.click());
 
     return wrapper;
-}
-
-cargarArticulos = async (filtros = null) => {
-    const container = document.getElementById('resultados-busqueda');
-    container.innerHTML = `<p>Cargando artículos...</p>`;
-    let queryString = filtros ? `${filtros.toString()}&` : '';
-    queryString += `offset=${paginaActual * resultadosPorPagina}&limit=${resultadosPorPagina}`;
-
-    try {
-        const response = await fetch(`/php/api/filtrar.articulos.php?${queryString}`);
-        const data = await response.json();
-
-        if (data.total > 0 && data.data.length > 0) {
-            container.innerHTML = '';
-            
-            const previews = await Promise.all(data.data.map(articulo => crearArticuloPreview(articulo)));
-            previews.forEach(preview => container.appendChild(preview));
-
-            actualizarPaginacion();
-        } else {
-            container.innerHTML = `<p>No se encontraron resultados.</p>`;
-            actualizarPaginacion();
-        }
-
-        document.getElementById("filtro-num-resultados").innerHTML = `${data.total} resultados`;
-    } catch (error) {
-        container.innerHTML = `<p>Error al obtener datos, prueba de nuevo.</p>`;
-        container.innerHTML += `<p>${error}</p>`;
-    }
 };
 
-window.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('filtro-form');
-    const formData = new FormData(form);
+const cargarArticulos = async () => {
+    const resp = await fetch(`/php/api/filtrar.articulos.php?${params.toString()}`);
+    const data = await resp.json();
 
-    if (formData) {
-        const ordenarPor = document.getElementById('ordenar_por');
-        if (ordenarPor) {
-            formData.append('ordenar_por', ordenarPor.value);
-        }
-        const filtros = form ? new URLSearchParams(formData) : null;
-        cargarArticulos(filtros);
-    } else {
-        cargarArticulos();
-    }
-});
+    if (!data || !Array.isArray(data.data) || data.total === 0) {
+        const noArticulos = document.createElement('p')
+        noArticulos.textContent = 'No se encontraron articulos...';
 
-document.getElementById('filtro-form').addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    paginaActual = 0;
-
-    const formData = new FormData(e.target);
-
-    const ordenarPor = document.getElementById('ordenar_por');
-    if (ordenarPor) {
-        formData.append('ordenar_por', ordenarPor.value);
+        resContainer.appendChild(noArticulos);
+        return;
     }
 
-    const filtros = new URLSearchParams(formData);
-    cargarArticulos(filtros);
-});
+    const articulos = data.data;
+    totalResultados = data.total;
 
-document.addEventListener("DOMContentLoaded", () => {
-    fetch("/php/api/topicos.php")
-        .then((response) => response.json())
-        .then((data) => {
-            const selectTopicos = document.getElementById("topicos");
+    if (numResultados) numResultados.forEach(numContainer => {
+        numContainer.innerHTML = totalResultados + " articulos encontrados";
+    });
 
-            data.sort((a, b) => a.nombre.localeCompare(b.nombre));
+    const aux = document.createElement('div');
+    aux.id = "resultados-busqueda";
 
-            data.forEach((topico) => {
-                const item = document.createElement("option");
+    if (articulos) for (const articulo of articulos) {
+        const articuloPreview = await crearPreview(articulo);
+        aux.appendChild(articuloPreview);
+    }
 
-                item.textContent = topico.nombre;
-                item.setAttribute("value", topico.nombre);
-                selectTopicos.appendChild(item);
-        });
-    })
-})
+    const totalPaginas =  Math.max(1,Math.ceil(totalResultados/resultadosPorPagina));
+    paginaInfo.textContent = `Pagina ${paginaActual + 1} de ${totalPaginas}`;
+    resContainer.replaceWith(aux);
+}
 
-document.getElementById('ordenar_por').addEventListener('change', () => {
-    paginaActual = 0;
-    const form = document.getElementById('filtro-form');
-    form.dispatchEvent(new Event('submit'));
-});
+cargarArticulos();

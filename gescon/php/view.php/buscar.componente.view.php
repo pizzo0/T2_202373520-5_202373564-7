@@ -13,6 +13,7 @@ include "buscar.componente.filtro.view.php"
         <h1><?= htmlspecialchars($titulo) ?></h1>
         <?php include "buscar.componente.busqueda.view.php" ?>
     </div>
+    <span id="filtro-num-resultados"></span>
     <div id="resultados-busqueda">
         <!-- cargan los resultados -->
     </div>

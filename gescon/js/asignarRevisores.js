@@ -1,4 +1,4 @@
-cargarPosiblesRevisores = async (dropdownMenu,topicos = null,id_articulo = null) => {
+const cargarPosiblesRevisores = async (dropdownMenu,topicos = null,id_articulo = null) => {
     let query = `/php/api/data.revisores.php`;
 
     if (topicos) {
@@ -21,7 +21,7 @@ cargarPosiblesRevisores = async (dropdownMenu,topicos = null,id_articulo = null)
                     i++;
                     const item = document.createElement('div');
                     item.classList.add('dropdown-item');
-                    item.textContent = revisor.email;
+                    item.textContent = revisor.nombre;
                     item.setAttribute('data-rut', revisor.rut);
                     dropdownMenu.appendChild(item);
                 });
@@ -40,7 +40,7 @@ cargarPosiblesRevisores = async (dropdownMenu,topicos = null,id_articulo = null)
     }
 }
 
-crearArticuloPreview = async (articulo) => {
+crearPreview = async (articulo) => {
     const wrapper = document.createElement('div');
     wrapper.className = 'articulo-preview';
     wrapper.id = 'modalWrapper';
@@ -203,7 +203,7 @@ crearArticuloPreview = async (articulo) => {
                 const revisorDiv = document.createElement('div');
                 revisorDiv.className = 'selected-topic'
                 revisorDiv.setAttribute('data-rut',revisor.rut);
-                revisorDiv.innerHTML = revisor.email;
+                revisorDiv.innerHTML = revisor.nombre;
                 revisoresContainer.appendChild(revisorDiv);
                 
                 revisoresSeleccionados.push(revisor.rut);

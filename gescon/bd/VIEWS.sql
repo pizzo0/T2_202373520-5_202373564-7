@@ -35,6 +35,14 @@ SELECT
         WHERE Articulos_Revisores.id_articulo = Articulos.id
     ) AS revisores,
     (
+        SELECT CASE 
+            WHEN COUNT(*) < 3 THEN 1
+            ELSE 0
+        END
+        FROM Articulos_revisores
+        WHERE Articulos_Revisores.id_articulo = Articulos.id
+    ) AS necesita_revisores,
+    (
         SELECT JSON_ARRAYAGG(
             JSON_OBJECT(
                 'id', Topicos.id,
