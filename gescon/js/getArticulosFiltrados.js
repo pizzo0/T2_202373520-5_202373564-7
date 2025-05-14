@@ -97,16 +97,14 @@ const cargarArticulos = async () => {
     const aux = document.createElement('div');
     aux.id = "resultados-busqueda";
 
-    if (articulos) for (const articulo of articulos) {
+    if (articulos.length > 0) for (const articulo of articulos) {
         const articuloPreview = await crearPreview(articulo);
         aux.appendChild(articuloPreview);
-    }
-
-    if (!data || !Array.isArray(data.data) || data.total === 0) {
-        const noArticulos = document.createElement('p')
+    } else {
+        const noArticulos = document.createElement('span')
         noArticulos.textContent = 'No se encontraron articulos...';
 
-        resContainer.appendChild(noArticulos);
+        aux.appendChild(noArticulos);
     }
 
     const totalPaginas =  Math.max(1,Math.ceil(totalResultados/resultadosPorPagina));

@@ -7,7 +7,7 @@ $svg_buscar = getAsset("/svg/buscar.svg");
     <h1 class="main-h1">{Gescon}</h1>
 </div>
 <div class="index-buscar-container main-buscar-container">
-    <form method="POST" action="/buscar" class="main-buscar-container">
+    <form method="GET" action="/buscar" class="main-buscar-container">
         <input class="l-input" type="text" name="titulo" placeholder="Escribe el titulo de un articulo aqui">
         <button class="r-button"><?= $svg_buscar ?></button>
     </form>
