@@ -37,7 +37,7 @@ form.addEventListener('submit', (e) => {
     const formData = new FormData(form);
     const nuevoParams = new URLSearchParams();
 
-    const revisadoChecked = formData.get("revisado") === "on" ? 1 : (params.has("revisado") ? parseInt(params.get("revisado")) : 1);
+    const revisadoChecked = formData.get("revisado") === "on" ? 1 : 0;
     nuevoParams.append("revisado", revisadoChecked ? 1 : 0);
     
     if (!(location.pathname === '/buscar')) {
@@ -78,16 +78,14 @@ const toggleFC = () => {
 };
 
 const cargarArticulos = async () => {
+    // se filtran los revisados automaticamente si estamos en /buscar :v
+    if (!params.has("revisado") && (location.pathname === '/buscar')) {
+        params.append("revisado", 1);
+        document.getElementById('revisado').checked = true;
+    }
+
     const resp = await fetch(`/php/api/filtrar.articulos.php?${params.toString()}`);
     const data = await resp.json();
-
-    if (!data || !Array.isArray(data.data) || data.total === 0) {
-        const noArticulos = document.createElement('p')
-        noArticulos.textContent = 'No se encontraron articulos...';
-
-        resContainer.appendChild(noArticulos);
-        return;
-    }
 
     const articulos = data.data;
     totalResultados = data.total;
@@ -102,6 +100,13 @@ const cargarArticulos = async () => {
     if (articulos) for (const articulo of articulos) {
         const articuloPreview = await crearPreview(articulo);
         aux.appendChild(articuloPreview);
+    }
+
+    if (!data || !Array.isArray(data.data) || data.total === 0) {
+        const noArticulos = document.createElement('p')
+        noArticulos.textContent = 'No se encontraron articulos...';
+
+        resContainer.appendChild(noArticulos);
     }
 
     const totalPaginas =  Math.max(1,Math.ceil(totalResultados/resultadosPorPagina));

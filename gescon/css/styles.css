@@ -192,6 +192,10 @@ input:focus, .input:focus {
   fill: var(--bg-color) !important;
 }
 
+.button-disabled, button:disabled, button[disabled] {
+  opacity: 75%;
+}
+
 .border_max {
   border-radius: calc(var(--default-px)/2);
 }

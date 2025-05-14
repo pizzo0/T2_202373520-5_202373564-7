@@ -14,7 +14,7 @@ $revisor = isset($_GET['revisor']) ? ("value='" . $_GET['revisor'] . "'") : '';
 $topico = isset($_GET['topicos']) ? $_GET['topicos'] : "";
 $fecha_desde = isset($_GET['fecha_desde']) ? ("value='" . $_GET['fecha_desde'] . "'") : '';
 $fecha_hasta = isset($_GET['fecha_hasta']) ? ("value='" . $_GET['fecha_hasta'] . "'") : '';
-$revisado = isset($_GET['revisado']) ? ((int) $_GET['revisado'] === 1 ? 'checked' : 0) : 'checked';
+$revisado = isset($_GET['revisado']) ? ((int) $_GET['revisado'] === 1 ? 'checked' : 0) : '';
 
 $filtro_extra = isset($filtro_extra) ? $filtro_extra : false;
 if ($filtro_extra) $necesita_revisores = isset($_GET['necesita-revisores']) ? ((int) $_GET['necesita-revisores'] === 1 ? 'checked' : 0) : '';

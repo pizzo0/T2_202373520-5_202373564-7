@@ -51,6 +51,18 @@ if (isset($_GET['id_articulo'])) {
     $calidad = $articulo['calidad'];
     $originalidad = $articulo['originalidad'];
     $valoracion = $articulo['valoracion'];
+
+    $yaReviso = false;
+    if ($esRevisor && $articulo['formularios']) {
+        $formularios = json_decode($articulo['formularios'],true);
+        foreach ($formularios as $formulario) {
+            $rut_revisor_formulario = $formulario['revisor']['rut'];
+            if ($rut_revisor_formulario === $user['rut']) {
+                $yaReviso = true;
+            }
+        }
+    }
+
 }
 ?>
 <?php if (empty($articulo)) : ?>
@@ -99,7 +111,7 @@ if (isset($_GET['id_articulo'])) {
                 <button type="button" onClick="window.location.href='/editar/<?=$id_articulo?>'">Editar articulo</button>
             <?php endif ?>
             <?php if ($esRevisor) : ?>
-                <button type="button" id="modalBtn" data-target="crear-form">Crear formulario</button>
+                <button type="button" id="modalBtn" data-target="crear-form" <?= $yaReviso ? 'disabled' : '' ?>>+ Crear revisión</button>
                 <div class="modal" id="crear-form">
                     <div class="modal-content">
                         <form class="crear-formulario formulario" method="POST">

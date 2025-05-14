@@ -12,7 +12,7 @@ $ordenar_por = isset($_GET['ordenar_por']) ? $_GET['ordenar_por'] : '';
     <button type="button" id="btn-filtrar" onclick="toggleFC()"><span><?= $svg_filtro ?></span> Filtrar resultados</button>
     <div class="ordenar-container" id="select">
         <label for="ordenar_por">Ordenar por:</label>
-        <select class="select-input" style="width:200px;" name="ordenar_por" id="ordenar_por" form="filtro-form">
+        <select class="select-input" style="max-width:130px;" name="ordenar_por" id="ordenar_por" form="filtro-form">
             <option value="fecha_envio_desc" <?= $ordenar_por ? ($ordenar_por === "fecha_envio_desc" ? 'selected' : '') : '' ?>>
                 Más reciente
             </option>
