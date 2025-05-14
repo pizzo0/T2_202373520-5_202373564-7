@@ -14,11 +14,11 @@ $fecha_desde = !empty($_GET['fecha_desde']) ? $_GET['fecha_desde'] : '1900-01-01
 $fecha_hasta = !empty($_GET['fecha_hasta']) ? $_GET['fecha_hasta'] : date('Y-m-d H:i:s');
 $topico = $_GET['topicos'] ?? '';
 $revisor = $_GET['revisor'] ?? '';
-$necesita_revisores = $_GET['necesita-revisores'] ?? null;
+$necesita_revisores = isset($_GET['necesita-revisores']) ? ((int) $_GET['necesita-revisores'] === 1 ? 1 : null) : null;
 $ordenar_por = $_GET['ordenar_por'] ?? 'fecha_envio_desc';
 $limit = 20; // este no puede cambiar xd
 $offset = (isset($_GET['offset']) ? (int) $_GET['offset'] : 0)*$limit;
-$revisado = isset($_GET['revisado']) ? (int) $_GET['revisado'] : null;
+$revisado = isset($_GET['revisado']) ? ((int) $_GET['revisado'] === 1 ? 1 : null) : null;
 
 $database = getDatabase();
 

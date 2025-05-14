@@ -1,3 +1,4 @@
+<script src=<?php getJs(js_file: "crearPreview");?>></script>
 <?php
 
 

@@ -20,7 +20,7 @@ revisarFiltro = () => {
     }
 }
 
-cargarArticulosAutor = (estaRevisado = false) => {
+cargarArticulosAutor = async (estaRevisado = false) => {
     fetch('/php/api/actual.usuario.articulos.php')
         .then((response) => response.json())
         .then((data) => {
@@ -30,32 +30,15 @@ cargarArticulosAutor = (estaRevisado = false) => {
                     .then(svg => {
                         container.innerHTML = '';
                         svg_articulo = svg;
-                        let res = ``;
-                        data.data.forEach(articulo => {
+                        data.data.forEach(async (articulo) => {
                             if (!articulo.revisado && estaRevisado) {
                                 return;
                             }
                             totalArticulos++;
-                            res += `
-                            <div class="articulo-preview ${!articulo.revisado ? `articulo-flag` : ``}">
-                                <div class="articulo-preview-tr">
-                                    <a href="/articulo/${articulo.id_articulo}"><span>${svg_articulo}</span> ${articulo.titulo}</a>
-                                    <p>${articulo.resumen}</p>
-                                </div>
-                                <div class="articulo-preview-etiquetas">
-                                    ${articulo.topicos.map(topico => `<span class="etiqueta">${topico.nombre}</span>`).join('')}
-                                </div>
-                                <div class="articulo-preview-autores">
-                                    ${articulo.autores.map(autor => `<span clasS="etiqueta rol-1">${autor.nombre}</span>`).join('')}
-                                </div>
-                                <div class="articulo-preview-fecha">
-                                    <p>Publicación - ${obtenerTiempo(articulo.fecha_envio)}</p>
-                                </div>
-                            </div>
-                            `;
+                            container.appendChild(await crearPreview(articulo));
                         });
                         if (totalArticulos === 0) {
-                            res += `
+                            container.innerHTML += `
                             <div class="articulo-preview">
                                 <div class="articulo-preview-tr">
                                     <p>No hay articulos</p>
@@ -63,7 +46,6 @@ cargarArticulosAutor = (estaRevisado = false) => {
                             </div>
                             `;
                         }
-                        container.innerHTML += res;
                         document.querySelectorAll('.articulo-preview').forEach((preview) => {
                             preview.addEventListener('click', () => {
                                 const a = preview.querySelector('a');

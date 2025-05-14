@@ -1,5 +1,5 @@
 const params = new URLSearchParams(window.location.search);
-let paginaActual = params.get('offset') ? parseInt(params.get('offset')) : 0;
+let paginaActual = params.has('offset') ? parseInt(params.get('offset')) : 0;
 const resultadosPorPagina = 20;
 let totalResultados = 0;
 
@@ -37,12 +37,17 @@ form.addEventListener('submit', (e) => {
     const formData = new FormData(form);
     const nuevoParams = new URLSearchParams();
 
-    for (const [k,v] of formData.entries()) if (v.trim() !== "") {
-        if (k === "necesita-revisores") {
-            nuevoParams.append(k,"1");
-            continue;
-        }
-        nuevoParams.append(k,v);
+    const revisadoChecked = formData.get("revisado") === "on" ? 1 : (params.has("revisado") ? parseInt(params.get("revisado")) : 1);
+    nuevoParams.append("revisado", revisadoChecked ? 1 : 0);
+    
+    if (!(location.pathname === '/buscar')) {
+        const revisoresChecked = formData.get("necesita-revisores") === "on" ? 1 : 0;
+        nuevoParams.append("necesita-revisores", revisoresChecked ? 1 : 0);
+    }
+
+
+    for (const [k, v] of formData.entries()) if (k !== "necesita-revisores" && k !== "revisado") if (v.trim() !== "") {
+        nuevoParams.append(k, v);
     }
 
     if (paginaActual !== 0) nuevoParams.append("offset",paginaActual);
@@ -70,71 +75,6 @@ const toggleFC = () => {
     } else {
         document.removeEventListener("click", clickFuera);
     }
-};
-
-let crearPreview = async (articulo) => {
-    const wrapper = document.createElement("div");
-    wrapper.className = "articulo-preview";
-
-    const contacto = document.createElement("div");
-    contacto.className = "articulo-preview-contacto";
-
-    const spanContacto = document.createElement("span");
-    spanContacto.textContent = "Contacto - " + articulo.contacto.nombre;
-
-    contacto.appendChild(spanContacto);
-
-    const tr = document.createElement("div");
-    tr.className = "articulo-preview-tr";
-
-    const enlace = document.createElement("a");
-    enlace.href = `/articulo/${articulo.id_articulo}`;
-
-    const icono = document.createElement("span");
-    const resp = await fetch(`/assets/svg/svg_articulo.svg`);
-    icono.innerHTML = await resp.text();
-    enlace.appendChild(icono);
-    enlace.append(` ${articulo.titulo}`);
-
-    tr.appendChild(enlace);
-
-    const resumen = document.createElement("p");
-    resumen.textContent = articulo.resumen;
-    tr.appendChild(resumen);
-
-    const etiquetas = document.createElement("div");
-    etiquetas.className = "articulo-preview-etiquetas";
-    if (Array.isArray(articulo.topicos)) {
-        articulo.topicos.forEach(t => {
-            const span = document.createElement("span");
-            span.className = "etiqueta";
-            span.textContent = t.nombre;
-            etiquetas.appendChild(span);
-        });
-    }
-
-    const autores = document.createElement("div");
-    autores.className = "articulo-preview-autores";
-    if (Array.isArray(articulo.autores)) {
-        articulo.autores.forEach(a => {
-            const span = document.createElement("span");
-            span.className = "etiqueta rol-1";
-            span.textContent = a.nombre;
-            autores.appendChild(span);
-        });
-    }
-
-    const fecha = document.createElement("div");
-    fecha.className = "articulo-preview-fecha";
-    const pFecha = document.createElement("p");
-    pFecha.textContent = `Publicación - ${obtenerTiempo(articulo.fecha_envio)}`;
-    fecha.appendChild(pFecha);
-
-    wrapper.append(contacto,tr,etiquetas,autores,fecha)
-
-    wrapper.addEventListener("click", () => enlace.click());
-
-    return wrapper;
 };
 
 const cargarArticulos = async () => {

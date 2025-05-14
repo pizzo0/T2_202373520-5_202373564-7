@@ -13,4 +13,5 @@
         </div>
     </div>
 </div>
+<script src=<?php getJs("crearPreview");?>></script>
 <script src=<?php getJs("usuarioArticulos");?>></script>

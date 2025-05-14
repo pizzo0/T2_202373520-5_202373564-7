@@ -20,7 +20,7 @@ revisarFiltroRevisor = () => {
     }
 }
 
-cargarArticulosRevisor = (noEstaRevisado = false) => {
+cargarArticulosRevisor = async (noEstaRevisado = false) => {
     fetch('/php/api/actual.usuario.articulos.revisar.php')
         .then((response) => response.json())
         .then((data) => {
@@ -33,8 +33,7 @@ cargarArticulosRevisor = (noEstaRevisado = false) => {
                             .then((usuarioData) => {
                                 containerRevisar.innerHTML = '';
                                 svg_articulo = svg;
-                                let res = ``;
-                                data.data.forEach(articulo => {
+                                data.data.forEach(async (articulo) => {
                                     let hizoRevision = false;
                                     if (articulo.formularios) articulo.formularios.forEach((formulario) => {
                                         if (formulario.revisor.rut === usuarioData.rut && !hizoRevision) {
@@ -46,27 +45,10 @@ cargarArticulosRevisor = (noEstaRevisado = false) => {
                                         return;
                                     }
                                     totalArticulosRevisor++;
-                                    // `articulo-flag`
-                                    res += `
-                                    <div class="articulo-preview ${!hizoRevision ? `articulo-flag` : ``}">
-                                        <div class="articulo-preview-tr">
-                                            <a href="/articulo/${articulo.id_articulo}"><span>${svg_articulo}</span> ${articulo.titulo}</a>
-                                            <p>${articulo.resumen}</p>
-                                        </div>
-                                        <div class="articulo-preview-etiquetas">
-                                            ${articulo.topicos.map(topico => `<span class="etiqueta">${topico.nombre}</span>`).join('')}
-                                        </div>
-                                        <div class="articulo-preview-autores">
-                                            ${articulo.autores.map(autor => `<span clasS="etiqueta rol-1">${autor.nombre}</span>`).join('')}
-                                        </div>
-                                        <div class="articulo-preview-fecha">
-                                            <p>Publicación - ${obtenerTiempo(articulo.fecha_envio)}</p>
-                                        </div>
-                                    </div>
-                                    `;
+                                    containerRevisar.appendChild(await crearPreview(articulo,!hizoRevision));
                                 });
                                 if (totalArticulosRevisor === 0) {
-                                    res += `
+                                    containerRevisar.innerHTML += `
                                     <div class="articulo-preview">
                                         <div class="articulo-preview-tr">
                                             <p>No hay articulos para revisar</p>
@@ -74,7 +56,6 @@ cargarArticulosRevisor = (noEstaRevisado = false) => {
                                     </div>
                                     `;
                                 }
-                                containerRevisar.innerHTML += res;
                                 document.querySelectorAll('.articulo-preview').forEach((preview) => {
                                     preview.addEventListener('click', () => {
                                         const a = preview.querySelector('a');

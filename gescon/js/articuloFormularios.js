@@ -46,7 +46,7 @@ crearRevisionPreview = (formulario,index,email,id_rol) => {
         })
         .then((response) => response.json().then(data => ({ok: response.ok, data})))
         .then(({ok,data}) => {
-            if (!ok) {
+            if (!data.ok) {
                 alert("Error: " + (data.error || "Error desconocido"));
             } else {
                 alert("Formulario eliminado correctamente.");

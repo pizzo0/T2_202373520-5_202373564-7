@@ -40,7 +40,7 @@ const cargarPosiblesRevisores = async (dropdownMenu,topicos = null,id_articulo =
     }
 }
 
-crearPreview = async (articulo) => {
+const crearPreview = async (articulo) => {
     const wrapper = document.createElement('div');
     wrapper.className = 'articulo-preview';
     wrapper.id = 'modalWrapper';

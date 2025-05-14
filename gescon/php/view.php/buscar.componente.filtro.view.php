@@ -14,9 +14,10 @@ $revisor = isset($_GET['revisor']) ? ("value='" . $_GET['revisor'] . "'") : '';
 $topico = isset($_GET['topicos']) ? $_GET['topicos'] : "";
 $fecha_desde = isset($_GET['fecha_desde']) ? ("value='" . $_GET['fecha_desde'] . "'") : '';
 $fecha_hasta = isset($_GET['fecha_hasta']) ? ("value='" . $_GET['fecha_hasta'] . "'") : '';
+$revisado = isset($_GET['revisado']) ? ((int) $_GET['revisado'] === 1 ? 'checked' : 0) : 'checked';
 
 $filtro_extra = isset($filtro_extra) ? $filtro_extra : false;
-if ($filtro_extra) $necesita_revisores = isset($_GET['necesita-revisores']) ? 'checked' : '';
+if ($filtro_extra) $necesita_revisores = isset($_GET['necesita-revisores']) ? ((int) $_GET['necesita-revisores'] === 1 ? 'checked' : 0) : '';
 
 ?>
 
@@ -65,8 +66,15 @@ if ($filtro_extra) $necesita_revisores = isset($_GET['necesita-revisores']) ? 'c
             <label for="fecha_hasta">Hasta:</label>
             <input type="date" name="fecha_hasta" id="fecha_hasta" <?= $fecha_hasta ?>>
         </div>
+        <span>Sobre el articulo:</span>
+        <div class="checkbox-div">
+            <label class="checkbox-label" for="revisado">
+                <input type="checkbox" class="checkbox" id="revisado" name="revisado" <?= $revisado ?>>
+                <span class="checkbox-slider"></span>
+            </label>
+            <label class="reset-label" for="revisado">Esta revisado</label>
+        </div>
         <?php if ($filtro_extra) : ?>
-            <span>Filtros extra:</span>
             <div class="checkbox-div">
                 <label class="checkbox-label" for="necesita-revisores">
                     <input type="checkbox" class="checkbox" id="necesita-revisores" name="necesita-revisores" <?= $necesita_revisores ?>>

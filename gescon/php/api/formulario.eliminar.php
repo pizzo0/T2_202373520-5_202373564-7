@@ -26,7 +26,7 @@ $rut_revisor = $input['rut_revisor'];
 
 $user = getUsuarioData();
 
-if ($user['rut'] != $rut_revisor || $user['id_rol'] != 3) {
+if ($user['rut'] !== $rut_revisor && $user['id_rol'] !== 3) {
     echo json_encode(['ok' => false, 'error' => 'No tienes permiso para eliminar este formulario.']);
     exit;
 }
