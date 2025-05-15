@@ -1,4 +1,6 @@
 <?php
+ob_start();
+
 $svg_alerta = getAsset("/svg/alerta.svg");
 $svg_ok = getAsset("/svg/ok.svg");
 $svg_error = getAsset("/svg/error.svg");
@@ -60,3 +62,6 @@ $svg_home = getAsset("/svg/home.svg");
     </script>
 </body>
 </html>
+<?php
+ob_end_flush();
+?>

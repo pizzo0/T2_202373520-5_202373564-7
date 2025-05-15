@@ -1,6 +1,5 @@
 <?php
 
-
 if (!isset($_GET['id_articulo'])) {
     header("location: /");
     exit;

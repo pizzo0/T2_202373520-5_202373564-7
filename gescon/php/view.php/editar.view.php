@@ -1,8 +1,6 @@
 <?php
 
 
-// ARREGLAR ESTO CON LA NUEVA ESTRUCTURA DEL SQL
-
 $tiempo_expiracion = 5 * 60;
 
 $user = getUsuarioData();
@@ -93,14 +91,49 @@ if (!empty($articulo)) {
         }
     }
 }
-?>
+$fecha_limite = strtotime($articulo['fecha_limite'] ?? '');
 
+if ($es_autor) {
+    $fecha_actual = new DateTime();
+
+    if ($fecha_actual->getTimestamp() > $fecha_limite) {
+        $_SESSION['notificacion'] = [
+            'tipo' => 'error',
+            'mensaje' => 'La fecha limite para modificar tu articulo ya paso :('
+        ];
+        header("location: /articulo/$id_articulo");
+        exit;
+    }
+}
+
+$fmt_dia = new IntlDateFormatter(
+    'es_CL',
+    IntlDateFormatter::FULL,
+    IntlDateFormatter::NONE,
+    'America/Santiago'
+);
+$fmt_hora = new IntlDateFormatter(
+    'es_CL',
+    IntlDateFormatter::NONE,
+    IntlDateFormatter::SHORT,
+    'America/Santiago'
+);
+$fecha_limite_texto = "Tienes hasta el " . $fmt_dia->format($fecha_limite) . " a las " . $fmt_hora->format($fecha_limite) . " para modificar el articulo";
+
+if ($pedir_clave && $es_autor) {
+    $_SESSION['notificacion'] = [
+        'tipo' => 'alerta',
+        'mensaje' => $fecha_limite_texto
+    ];
+}
+?>
 <?php if (empty($articulo) || $es_autor === false) : ?>
     <?php include '404.view.php'; ?>
 <?php elseif ($pedir_clave) : ?>
     <div class="menu big-border-radius">
         <h1>VERIFICACIÓN</h1>
         <form method="post">
+            <p>Ingresa la contraseña enviada al autor de contacto para hacer tus modificaciones.</p>
             <div class="">
                 <label for="pass">Contraseña</label>
                 <input type="password" name="pass" placeholder="Contraseña del artículo" required>

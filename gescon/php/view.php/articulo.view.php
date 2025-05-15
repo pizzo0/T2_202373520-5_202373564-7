@@ -15,55 +15,57 @@ if (isset($_GET['id_articulo'])) {
     ');
     $stmt->bind_param('s', $id_articulo);
     $stmt->execute();
-
     $articulo = $stmt->get_result()->fetch_assoc();
-    if (!empty($articulo) && !empty($user)) {
-        foreach (json_decode($articulo['autores'],true) as $autor_data) {
-            $autor_rut = $autor_data['rut'];
-            if (!$esAutor) {
-                $esAutor = $autor_rut === $user['rut'];
+
+    if (!empty($articulo)) {
+        if (!empty($articulo) && !empty($user)) {
+            foreach (json_decode($articulo['autores'],true) as $autor_data) {
+                $autor_rut = $autor_data['rut'];
+                if (!$esAutor) {
+                    $esAutor = $autor_rut === $user['rut'];
+                }
             }
         }
-    }
-    
-    $aux = [];
-    foreach (json_decode($articulo['autores'],true) as $autor) {
-        $aux[] = $autor['nombre'] . ' (' . "<a>" . $autor['email'] . "</a>" . ')';
-    }
-    $autores = implode(',<br>',$aux);
+        
+        $aux = [];
+        foreach (json_decode($articulo['autores'],true) as $autor) {
+            $aux[] = $autor['nombre'] . ' (' . "<a>" . $autor['email'] . "</a>" . ')';
+        }
+        $autores = implode(',<br>',$aux);
 
-    $revisores = $articulo['revisores'];
-    if (is_null($revisores)) {
-        $revisores = 'No hay revisores aun.';
-    } else {
-        $revisores = json_decode($revisores,true);
-        $aux2 = [];
-        foreach ($revisores as $revisor) {
-            $aux2[] = $revisor['nombre'] . ' (' . "<a>" . $revisor['email'] . "</a>" . ')';
-            if (!$esRevisor && $user) {
-                $esRevisor = $revisor['rut'] === $user['rut'];
+        $revisores = $articulo['revisores'];
+        if (is_null($revisores)) {
+            $revisores = 'No hay revisores aun.';
+        } else {
+            $revisores = json_decode($revisores,true);
+            $aux2 = [];
+            foreach ($revisores as $revisor) {
+                $aux2[] = $revisor['nombre'] . ' (' . "<a>" . $revisor['email'] . "</a>" . ')';
+                if (!$esRevisor && $user) {
+                    $esRevisor = $revisor['rut'] === $user['rut'];
+                }
+            }
+            $revisores = implode(',<br>', $aux2);
+        }
+        $contacto = json_decode($articulo['contacto'],true);
+
+        $calidad = $articulo['calidad'];
+        $originalidad = $articulo['originalidad'];
+        $valoracion = $articulo['valoracion'];
+
+        $yaReviso = false;
+        if ($esRevisor && $articulo['formularios']) {
+            $formularios = json_decode($articulo['formularios'],true);
+            foreach ($formularios as $formulario) {
+                $rut_revisor_formulario = $formulario['revisor']['rut'];
+                if ($rut_revisor_formulario === $user['rut']) {
+                    $yaReviso = true;
+                }
             }
         }
-        $revisores = implode(',<br>', $aux2);
+
+        $revisado_icono = getAsset("/svg/revisado.svg");
     }
-    $contacto = json_decode($articulo['contacto'],true);
-
-    $calidad = $articulo['calidad'];
-    $originalidad = $articulo['originalidad'];
-    $valoracion = $articulo['valoracion'];
-
-    $yaReviso = false;
-    if ($esRevisor && $articulo['formularios']) {
-        $formularios = json_decode($articulo['formularios'],true);
-        foreach ($formularios as $formulario) {
-            $rut_revisor_formulario = $formulario['revisor']['rut'];
-            if ($rut_revisor_formulario === $user['rut']) {
-                $yaReviso = true;
-            }
-        }
-    }
-
-    $revisado_icono = getAsset("/svg/revisado.svg");
 
 }
 ?>

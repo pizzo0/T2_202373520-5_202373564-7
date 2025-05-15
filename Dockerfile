@@ -5,4 +5,8 @@ RUN apt update \
     && apt install libzip-dev zlib1g-dev -y \
     && rm -rf /var/lib/apt/lists/* \
     && docker-php-ext-install zip
+RUN apt-get update \
+    && apt-get install -y libicu-dev \
+    && docker-php-ext-install intl \
+    && rm -rf /var/lib/apt/lists/*
 RUN a2enmod rewrite

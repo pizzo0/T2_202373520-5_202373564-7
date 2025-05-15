@@ -8,6 +8,8 @@ services:
       - ./gescon:/var/www/html/
     depends_on:
       - db
+    environment:
+      TZ: America/Santiago
   db:
     image: mysql:latest
     expose:
