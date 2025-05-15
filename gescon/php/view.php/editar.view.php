@@ -106,26 +106,14 @@ if ($es_autor) {
     }
 }
 
-$fmt_dia = new IntlDateFormatter(
-    'es_CL',
-    IntlDateFormatter::FULL,
-    IntlDateFormatter::NONE,
-    'America/Santiago'
-);
-$fmt_hora = new IntlDateFormatter(
-    'es_CL',
-    IntlDateFormatter::NONE,
-    IntlDateFormatter::SHORT,
-    'America/Santiago'
-);
-$fecha_limite_texto = "Tienes hasta el " . $fmt_dia->format($fecha_limite) . " a las " . $fmt_hora->format($fecha_limite) . " para modificar el articulo";
-
 if ($pedir_clave && $es_autor) {
+    $fecha_limite_texto = "Tienes hasta el " . obtenerFechaDia($fecha_limite_texto) . " a las " . obtenerFechaHora($fecha_limite) . " para modificar el articulo";
     $_SESSION['notificacion'] = [
         'tipo' => 'alerta',
         'mensaje' => $fecha_limite_texto
     ];
 }
+
 ?>
 <?php if (empty($articulo) || $es_autor === false) : ?>
     <?php include '404.view.php'; ?>

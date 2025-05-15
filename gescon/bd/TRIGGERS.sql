@@ -175,6 +175,14 @@ BEGIN
         SET MESSAGE_TEXT = 'Ya existe un formulario de este revisor para el articulo.';
     END IF;
 
+    IF CURRENT_TIMESTAMP < (
+        SELECT fecha_limite FROM Articulos
+        WHERE id = NEW.id_articulo
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'No puedes hacer revisiones hasta llegar a la fecha correspondiente.';
+    END IF;
+
     IF NEW.calidad < 1 OR NEW.calidad > 7 THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'La calidad debe ser un valor entre 1 y 7.';

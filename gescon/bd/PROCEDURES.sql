@@ -253,6 +253,15 @@ BEGIN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El articulo no existe.';
     END IF;
 
+    -- revisamos que este dentro de la fecha limite
+
+    IF CURRENT_TIMESTAMP > (
+        SELECT fecha_limite FROM Articulos WHERE id = p_id_articulo
+    ) THEN
+		SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'No puedes modificar el articulo luego de la fecha limite.';
+    END IF;
+
     -- revisamos si hay cambios
 
     SELECT titulo, resumen, rut_contacto INTO old_titulo, old_resumen, old_rut_contacto FROM Articulos

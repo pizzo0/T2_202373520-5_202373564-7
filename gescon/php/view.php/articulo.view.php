@@ -64,9 +64,17 @@ if (isset($_GET['id_articulo'])) {
             }
         }
 
+        $fecha_limite = strtotime($articulo['fecha_limite']);
+        $fecha_actual = new DateTime();
+
+        $sePuedeRevisar = false;
+        $fecha_revision_texto = "Puedes evaluar el articulo a partir del " . obtenerFechaDia($fecha_limite) . " a las " . obtenerFechaHora($fecha_limite);
+        if ($esRevisor && ($fecha_actual->getTimestamp() > $fecha_limite)) {
+            $sePuedeRevisar = true;
+        }
+
         $revisado_icono = getAsset("/svg/revisado.svg");
     }
-
 }
 ?>
 <?php if (empty($articulo)) : ?>
@@ -115,54 +123,65 @@ if (isset($_GET['id_articulo'])) {
                 <button type="button" onClick="window.location.href='/editar/<?=$id_articulo?>'">Editar articulo</button>
             <?php endif ?>
             <?php if ($esRevisor) : ?>
-                <button type="button" id="modalBtn" data-target="crear-form" <?= $yaReviso ? 'disabled' : '' ?>>+ Crear revisión</button>
+                <div>
+                    <button type="button" id="modalBtn" data-target="crear-form" <?= $yaReviso?>>+ Crear revisión</button>
+                </div>
                 <div class="modal" id="crear-form">
                     <div class="modal-content">
-                        <form class="crear-formulario formulario" method="POST">
-                            <h2>Formulario</h2>
-                            <div>
-                                <span class="label">Calidad:</span>
-                                <div class="input-box">
+                        <form class="modal-form crear-formulario formulario" method="POST">
+                            <?php if ($sePuedeRevisar) : ?>
+                                <h1>Formulario</h1>
+                                <div>
+                                    <span class="label">Calidad:</span>
+                                    <div class="input-box">
+                                        <?php for ($i = 1; $i <= 7; $i++): ?>
+                                            <label class="reset-label input-radio-label" for="calidad_<?php echo $i; ?>">
+                                                <?php echo $i; ?>
+                                                <input type="radio" id="calidad_<?php echo $i; ?>" name="calidad" value="<?php echo $i; ?>" <?php if ($i == 7) echo 'checked' ?> >
+                                            </label>
+                                        <?php endfor; ?>
+                                    </div>
+                                </div>
+                                <div>
+                                <span class="label">Originalidad:</span>
+                                    <div class="input-box">
                                     <?php for ($i = 1; $i <= 7; $i++): ?>
-                                        <label class="reset-label input-radio-label" for="calidad_<?php echo $i; ?>">
-                                            <?php echo $i; ?>
-                                            <input type="radio" id="calidad_<?php echo $i; ?>" name="calidad" value="<?php echo $i; ?>" <?php if ($i == 7) echo 'checked' ?> >
-                                        </label>
-                                    <?php endfor; ?>
+                                            <label class="reset-label input-radio-label" for="originalidad_<?php echo $i; ?>">
+                                                <?php echo $i; ?>
+                                                <input type="radio" id="originalidad_<?php echo $i; ?>" name="originalidad" value="<?php echo $i; ?>" <?php if ($i == 7) echo 'checked' ?> >
+                                            </label>
+                                        <?php endfor; ?>
+                                    </div>
                                 </div>
-                            </div>
-                            <div>
-                            <span class="label">Originalidad:</span>
-                                <div class="input-box">
-                                <?php for ($i = 1; $i <= 7; $i++): ?>
-                                        <label class="reset-label input-radio-label" for="originalidad_<?php echo $i; ?>">
-                                            <?php echo $i; ?>
-                                            <input type="radio" id="originalidad_<?php echo $i; ?>" name="originalidad" value="<?php echo $i; ?>" <?php if ($i == 7) echo 'checked' ?> >
-                                        </label>
-                                    <?php endfor; ?>
+                                <div>
+                                <span class="label">Valoración:</span>
+                                    <div class="input-box">
+                                    <?php for ($i = 1; $i <= 7; $i++): ?>
+                                            <label class="reset-label input-radio-label" for="valoracion_<?php echo $i; ?>">
+                                                <?php echo $i; ?>
+                                                <input type="radio" id="valoracion_<?php echo $i; ?>" name="valoracion" value="<?php echo $i; ?>" <?php if ($i == 7) echo 'checked' ?> >
+                                            </label>
+                                        <?php endfor; ?>
+                                    </div>
                                 </div>
-                            </div>
-                            <div>
-                            <span class="label">Valoración:</span>
-                                <div class="input-box">
-                                <?php for ($i = 1; $i <= 7; $i++): ?>
-                                        <label class="reset-label input-radio-label" for="valoracion_<?php echo $i; ?>">
-                                            <?php echo $i; ?>
-                                            <input type="radio" id="valoracion_<?php echo $i; ?>" name="valoracion" value="<?php echo $i; ?>" <?php if ($i == 7) echo 'checked' ?> >
-                                        </label>
-                                    <?php endfor; ?>
+                                <div>
+                                    <label for="argumentos">Argumentos de valoración:</label>
+                                    <textarea id="argumentos" name="argumentos" class="input" style="min-height:100px;" required></textarea>
                                 </div>
-                            </div>
-                            <div>
-                                <label for="argumentos">Argumentos de valoración:</label>
-                                <textarea id="argumentos" name="argumentos" class="input" style="min-height:100px;" required></textarea>
-                            </div>
-                            <div>
-                                <label for="comentarios">Comentarios:</label>
-                                <textarea id="comentarios" name="comentarios" class="input" style="min-height:100px;"></textarea>
-                            </div>
+                                <div>
+                                    <label for="comentarios">Comentarios:</label>
+                                    <textarea id="comentarios" name="comentarios" class="input" style="min-height:100px;"></textarea>
+                                </div>
+                            <?php else : ?>
+                                <h1>No puedes revisar aun</h1>
+                                <div>
+                                    <p><?= $fecha_revision_texto ?></p>
+                                </div>
+                            <?php endif; ?>
                             <div class="btns-container">
-                                <button type="submit">Enviar</button>
+                                <?php if ($sePuedeRevisar) : ?>
+                                    <button type="submit">Enviar</button>
+                                <?php endif; ?>
                                 <button class="btn-rojo" type="button" id="modalBtn" data-target="crear-form">Cancelar</button>
                             </div>
                         </form>

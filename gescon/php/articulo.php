@@ -28,11 +28,11 @@ if (isset($_POST['calidad'])) {
             "tipo" => "ok",
             "mensaje" => "Formulario enviado con exito :)"
         ];
-    } catch (\Throwable $th) {
+    } catch (Exception $e) {
 
         $_SESSION["notificacion"] = [
             "tipo" => "error",
-            "mensaje" => "Ocurrió un error al enviar el formulario :("
+            "mensaje" => "Ocurrió un error al enviar el formulario :(<br>" . $e->getMessage()
         ];
     }
 }

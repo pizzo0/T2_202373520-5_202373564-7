@@ -308,6 +308,24 @@ function obtenerTiempo($fecha) {
     }
 }
 
+function obtenerFechaDia($fecha) {
+    $fmt_dia = new IntlDateFormatter(
+        'es_CL',
+        IntlDateFormatter::FULL,
+        IntlDateFormatter::NONE,
+        'America/Santiago'
+    );
+    return $fmt_dia->format($fecha);
+}
+function obtenerFechaHora($fecha) {
+    $fmt_hora = new IntlDateFormatter(
+        'es_CL',
+        IntlDateFormatter::NONE,
+        IntlDateFormatter::SHORT,
+        'America/Santiago'
+    );
+    return $fmt_hora->format($fecha);
+}
 function init() {
     
     date_default_timezone_set('America/Santiago');
