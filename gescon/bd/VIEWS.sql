@@ -5,6 +5,7 @@ SELECT
     Articulos.resumen,
     Articulos.fecha_envio,
     Articulos.fecha_editado,
+    Articulos.fecha_limite,
     JSON_OBJECT(
         'rut', Usuarios_contacto.rut,
         'nombre', Usuarios_contacto.nombre,

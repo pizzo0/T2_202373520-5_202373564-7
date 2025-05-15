@@ -13,14 +13,22 @@ const crearPreview = async (articulo,hizoRevision = false) => {
     const tr = document.createElement("div");
     tr.className = "articulo-preview-tr";
 
-    const enlace = document.createElement("a");
+    let icono = ''
+    icono =  await fetch('/assets/svg/revisado.svg').then(res => res.text());
+    const iconoRevisado = document.createElement('span');
+    iconoRevisado.innerHTML = articulo.revisado ? icono : '';
+    iconoRevisado.title = "Revisado";
+    iconoRevisado.className = "revisado-svg";
+
+    const enlace = document.createElement('a');
     enlace.href = `/articulo/${articulo.id_articulo}`;
 
-    const icono = document.createElement("span");
-    const resp = await fetch(`/assets/svg/svg_articulo.svg`);
-    icono.innerHTML = await resp.text();
-    enlace.appendChild(icono);
-    enlace.append(` ${articulo.titulo}`);
+    icono = '';
+    icono = await fetch(`/assets/svg/svg_articulo.svg`).then(res => res.text());
+    const iconoArticulo = document.createElement('span');
+    iconoArticulo.innerHTML = icono;
+
+    enlace.append(iconoArticulo,articulo.titulo,iconoRevisado.innerHTML ? iconoRevisado : '');
 
     tr.appendChild(enlace);
 

@@ -108,20 +108,14 @@
     gap: 0.1rem;
 }
 
-.articulo-preview-tr h2 {
-    font-size: calc(var(--font-size)*1.2);
-}
+/* .articulo-preview-tr a {
+    display: inline-flex;
+} */
 .articulo-preview-tr p {
     font-size: calc(var(--font-size)*0.9);
 }
 .articulo-preview-fecha p {
     font-size: 12px;
-}
-
-.articulo-preview a span svg {
-    height: var(--font-size);
-    width: var(--font-size);
-    fill: var(--font-color);
 }
 
 .buscar-filtros-container {

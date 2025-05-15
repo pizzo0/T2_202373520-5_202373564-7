@@ -95,8 +95,8 @@
 }
 
 .nav-option-curr {
-    background-color: #140800;
-    border: 1px solid #ffc49a;
+    background-color: var(--bg-colorful);
+    border: 1px solid var(--font-colorful);
     text-decoration: underline;
 }
 .nav-option-curr:hover {

@@ -63,6 +63,8 @@ if (isset($_GET['id_articulo'])) {
         }
     }
 
+    $revisado_icono = getAsset("/svg/revisado.svg");
+
 }
 ?>
 <?php if (empty($articulo)) : ?>
@@ -70,7 +72,7 @@ if (isset($_GET['id_articulo'])) {
 <?php else : ?>
     <div class="articulo-container">
         <div class="vista-articulo">
-            <h1 class="vista-articulo-titulo"><?= $articulo['titulo'] ?></h1>
+            <h1 class="vista-articulo-titulo"><?= $articulo['revisado'] ? ("<span class='vista-articulo-revisado' title='Revisado'>" . $revisado_icono . "</span>") : '' ?><?= $articulo['titulo'] ?></h1>
             <h2 class="vista-articulo-resumen"><?= $articulo['resumen'] ?></h2>
             <div class="vista-articulo-topicos">
                 <?php

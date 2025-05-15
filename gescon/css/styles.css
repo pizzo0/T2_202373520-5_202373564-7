@@ -6,6 +6,10 @@
   --default-px : 20px;
   --default-border-radius : 8px;
   --pad-px : 12px;
+  --bg-colorful : #04001d;
+  --font-colorful : #b2b2ff;
+  --bg-flag: #160000;
+  --font-flag: #ffb2b2;
 }
 
 * {
@@ -101,7 +105,7 @@ main {
   width: 100%;
   max-width: 1500px;
   margin: 0 auto;
-  overflow: hidden;
+  /* overflow: hidden; */
   flex: 1;
 }
 
@@ -230,12 +234,12 @@ input[type="radio"]:checked {
 }
 
 .rol-1 {
-  background-color: #0e061e !important;
-  border: 1px solid #b598ff !important;
+  background-color: var(--bg-colorful) !important;
+  border: 1px solid var(--font-colorful) !important;
 }
 .rol-2 {
-  background-color: #230707 !important;
-  border: 1px solid #ff9898 !important;
+  background-color: var(--bg-flag) !important;
+  border: 1px solid var(--font-flag) !important;
 }
 .rol-3 {
   background-color: #061e14 !important;
@@ -480,6 +484,18 @@ main:has(.big-bg-text){
   align-items: center;
   border: 1px solid var(--font-color);
   border-radius: var(--default-border-radius);
+}
+
+span:has(svg) {
+  display: inline-flex;
+  vertical-align: sub;
+  margin: 0 0.1rem;
+}
+
+span:has(svg) svg {
+  height: calc(var(--font-size)*1.2);
+  width: calc(var(--font-size)*1.2);
+  fill: var(--font-color);
 }
 
 @media screen and (max-width: 900px) {
