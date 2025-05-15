@@ -3,6 +3,7 @@ const nav = document.getElementById('nav');
 const btnSideNav = document.getElementById('nav-close');
 const navOptions = Array.from(document.querySelectorAll('.nav-option')).slice(0,-1);
 
+const filtroContainer = document.getElementById('filtro-view');
 
 let navActivo = false;
 
@@ -62,6 +63,11 @@ let __abriendoNav = false;
 
 document.body.addEventListener('touchstart', (e) => {
     if (window.innerWidth > 900) return;
+    if (filtroContainer.contains(e.target)) {
+        __abriendoNav = false;
+        return;
+    }
+
     __x_diff = 0;
     __x_inicial = e.touches[0].clientX;
     __abriendoNav = true;

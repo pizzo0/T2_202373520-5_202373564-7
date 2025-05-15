@@ -125,7 +125,7 @@
 
 .selected-topic::after {
     margin-left: calc(var(--default-px)*0.75);
-    content: 'x';
+    content: '×';
 }
 
 #tabla-autores tr {

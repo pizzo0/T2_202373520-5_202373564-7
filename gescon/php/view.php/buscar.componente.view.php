@@ -14,6 +14,7 @@ include "buscar.componente.filtro.view.php"
         <?php include "buscar.componente.busqueda.view.php" ?>
     </div>
     <span id="filtro-num-resultados"></span>
+    <div id="filtro-view"></div>
     <div id="resultados-busqueda">
         <!-- cargan los resultados -->
     </div>

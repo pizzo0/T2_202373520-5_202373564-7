@@ -67,7 +67,7 @@ if ($filtro_extra) $necesita_revisores = isset($_GET['necesita-revisores']) ? ((
             <input type="date" name="fecha_hasta" id="fecha_hasta" <?= $fecha_hasta ?>>
         </div>
         <span>Sobre el articulo:</span>
-        <div class="checkbox-div">
+        <div class="switch-sub-container">
             <label class="checkbox-label" for="revisado">
                 <input type="checkbox" class="checkbox" id="revisado" name="revisado" <?= $revisado ?>>
                 <span class="checkbox-slider"></span>
@@ -75,7 +75,7 @@ if ($filtro_extra) $necesita_revisores = isset($_GET['necesita-revisores']) ? ((
             <label class="reset-label" for="revisado">Esta revisado</label>
         </div>
         <?php if ($filtro_extra) : ?>
-            <div class="checkbox-div">
+            <div class="switch-sub-container">
                 <label class="checkbox-label" for="necesita-revisores">
                     <input type="checkbox" class="checkbox" id="necesita-revisores" name="necesita-revisores" <?= $necesita_revisores ?>>
                     <span class="checkbox-slider"></span>

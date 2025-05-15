@@ -14,6 +14,11 @@ const paginaInfo = document.getElementById('pagina-info');
 const btnAnterior = document.getElementById('btnAnterior');
 const btnSiguiente = document.getElementById('btnSiguiente');
 
+const filtrosView = document.getElementById('filtro-view');
+const ordenarPorSelect = document.getElementById('ordenar_por');
+
+ordenarPorSelect.addEventListener('change', () => form.requestSubmit());
+
 btnAnterior.addEventListener('click', () => {
     if (paginaActual > 0) {
         paginaActual--;
@@ -27,9 +32,6 @@ btnSiguiente.addEventListener('click', () => {
         form.requestSubmit();
     }
 });
-
-const ordenarPorSelect = document.getElementById('ordenar_por');
-ordenarPorSelect.addEventListener('change', () => form.requestSubmit());
 
 form.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -84,8 +86,53 @@ const cargarArticulos = async () => {
         document.getElementById('revisado').checked = true;
     }
 
+    if (!params.has("ordenar_por")) {
+        params.append("ordenar_por","fecha_envio_desc");
+        ordenarPorSelect.value = "fecha_envio_desc";
+    }
+
     const resp = await fetch(`/php/api/filtrar.articulos.php?${params.toString()}`);
     const data = await resp.json();
+
+    const ordenarPorTexto = Array.from(ordenarPorSelect.options).find(opcion => opcion.selected).textContent;
+
+    params.forEach((v,k) => {
+        if (k == "revisado" && v == 0) return;
+
+        let key = k;
+        let val = v;
+
+        if (val == 1) val = "Activo";
+        if (val == 0) val = "Apagado";
+
+        if (key == "ordenar_por") {
+            key = "Ordenar por";
+            val = ordenarPorTexto;
+        }
+        if (key == "id_articulo") key = "ID del Articulo";
+        if (key == "topicos") key = "topico";
+        if (key == "fecha_desde") key = "fecha desde";
+        if (key == "fecha_hasta") key = "fecha_hasta";
+        
+        key = String(key).charAt(0).toUpperCase() + String(key).slice(1);
+
+        const filtroItem = document.createElement('span');
+        filtroItem.className = 'filtro-etiqueta';
+        filtroItem.setAttribute('data-filtro-target',k);
+        filtroItem.textContent = key + ": " + val;
+        console.log(key + ": " + val)
+
+        filtroItem.addEventListener('click', () => {
+            params.delete(k);
+
+            const input = form.querySelector(`[name="${k}"]`);
+            if (input) input.remove();
+
+            form.requestSubmit();
+        });
+
+        filtrosView.appendChild(filtroItem);
+    });
 
     const articulos = data.data;
     totalResultados = data.total;
