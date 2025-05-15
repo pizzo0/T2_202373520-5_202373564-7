@@ -170,6 +170,7 @@
 }
 
 #filtro-view {
+    position: relative;
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
