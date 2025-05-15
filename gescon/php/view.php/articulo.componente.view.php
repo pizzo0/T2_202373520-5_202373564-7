@@ -66,9 +66,12 @@
         <?php endif ?>
         <?php if ($esAutor || $esRevisor || ($user ? $user['id_rol'] === 3 : false)) : ?>
             <div class="modal" id="ver-revisiones">
+                <div class="modal-top">
+                    <h1>Revisiones</h1>
+                    <button class="modal-close-btn" id="modalClose" data-close-target="ver-revisiones">X</button>
+                </div>
                 <div class="modal-content">
                     <div class="revisiones-container">
-                        <h2>Revisiones</h2>
                         <div class="formularios-container">
                             <!-- aqui van los formularios -->
                         </div>
@@ -85,7 +88,7 @@
 
 <div class="nav-articulo-container">
     <div class="nav-articulo">
-        <?php if ($esAutor) : ?>
+        <?php if ($esAutor && $sePuedeEditar) : ?>
             <button type="button" class="nav-articulo-btn" id="editar" onClick="window.location.href='/editar/<?=$id_articulo?>'">         
                 <span class="nav-articulo-icon"><?= getAsset("/svg/editar.svg") ?></span>
             </button>

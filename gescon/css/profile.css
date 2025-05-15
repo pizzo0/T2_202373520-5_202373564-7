@@ -158,6 +158,14 @@
     gap: 1rem;
 }
 
+.mid-btn {
+    width: 100% !important;
+}
+
+.no-wrap {
+    flex-wrap: nowrap;
+}
+
 @media (min-width: 900px) {
     .profile-container {
         display: grid;

@@ -3,7 +3,7 @@
     flex-direction: column;
     margin: 0.5rem;
     margin-top: 2rem;
-    gap: 0.5rem;
+    gap: 2rem;
 }
 .revisado-svg {
     vertical-align: top;
@@ -17,11 +17,11 @@
     width: calc(var(--font-size) * 1);
 }
 .vista-articulo-revisado svg {
-    width: calc(var(--font-size)*2);
-    height: calc(var(--font-size)*2);
+    width: calc(var(--font-size)*2.2);
+    height: calc(var(--font-size)*2.2);
 }
 .vista-articulo-revisado {
-    vertical-align: top;
+    vertical-align: bottom;
     background-color: var(--bg-colorful);
     padding: calc(var(--font-size)/3);
     border: 1px solid var(--font-colorful);
@@ -33,10 +33,9 @@
     font-size: calc(var(--font-size)*3.2);
     letter-spacing: -1px;
     text-transform: uppercase;
-    margin-bottom: 2rem;
 }
 .vista-articulo-resumen {
-    margin-bottom: 0.25rem;
+    /* margin-bottom: 0.25rem; */
     text-transform: uppercase;
 }
 .vista-articulo-autores-revisores {
@@ -51,17 +50,24 @@
     flex-wrap: wrap;
     gap: 0.1rem;
     
-    margin-bottom: 1rem;
+    /* margin-bottom: 1rem; */
 }
 
 .vista-articulo-subtexto {
     font-size: 14px;
     text-transform: uppercase;
 }
-.vista-articulo-fecha {
+
+.vista-articulo-sub {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* .vista-articulo-fecha {
     margin-top: 1rem;
     margin-bottom: 1rem;
-}
+} */
 .vista-articulo-fecha p {
     font-size: 14px;
     text-transform: uppercase;
@@ -177,6 +183,11 @@
     fill: var(--bg-color);
 }
 
+.etiqueta-colorful {
+    border: 1px solid var(--font-colorful) !important;
+    background-color: var(--bg-colorful) !important;
+}
+
 @media (max-width: 900px) {
     .vista-articulo-titulo {
         font-size: calc(var(--font-size)*2.4);
@@ -186,8 +197,12 @@
         padding-top: 1px;
     }
 
-    .vista-articulo-revisado svg {
-        width: calc(var(--font-size)*2.4);
-        height: calc(var(--font-size)*2.4);
+    .vista-articulo-revisado {
+        padding: calc(var(--font-size)/6);
     }
+
+    .vista-articulo-revisado svg {
+    width: calc(var(--font-size)*2);
+    height: calc(var(--font-size)*2);
+}
 }

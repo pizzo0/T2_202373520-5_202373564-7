@@ -92,24 +92,24 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
             $old_pass = $_POST['old_pass'];
             $new_pass = $_POST['pass'];
             $confirm_new_pass = $_POST['pass_confirm'];
-    
-            if (!password_verify($old_pass, $user['password'])) {
+
+            if (!($old_pass === $user['password'])) {
                 $_SESSION["notificacion"] = [
                     "tipo" => "error",
                     "mensaje" => "Tu contraseña anterior es incorrecta."
                 ];
                 return;
             }
-    
+            
             if ($new_pass !== $confirm_new_pass) {
                 $_SESSION["notificacion"] = [
-                    "tipo" => "alerta",
+                    "tipo" => "error",
                     "mensaje" => "Las contraseñas deben coincidir."
                 ];
                 return;
             }
     
-            if (password_verify($new_pass, $user['password'])) {
+            if ($new_pass === $user['password']) {
                 $_SESSION["notificacion"] = [
                     "tipo" => "alerta",
                     "mensaje" => "Contraseña nueva igual a la anterior."
@@ -124,9 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                 WHERE rut = ?
                 ");
     
-                $pass_hash = password_hash($new_pass, PASSWORD_DEFAULT);
-    
-                $stmt->bind_param("ss", $pass_hash, $rut);
+                $stmt->bind_param("ss", $new_pass, $rut);
                 $stmt->execute();
     
                 $_SESSION["notificacion"] = [

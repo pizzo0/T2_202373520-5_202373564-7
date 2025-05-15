@@ -29,7 +29,7 @@ if (isset($_GET['id_articulo'])) {
         
         $aux = [];
         foreach (json_decode($articulo['autores'],true) as $autor) {
-            $aux[] = $autor['nombre'] . ' (' . "<a>" . $autor['email'] . "</a>" . ')';
+            $aux[] = "- " . $autor['nombre'] . ' (' . "<a>" . $autor['email'] . "</a>" . ')';
         }
         $autores = implode(',<br>',$aux);
 
@@ -40,7 +40,7 @@ if (isset($_GET['id_articulo'])) {
             $revisores = json_decode($revisores,true);
             $aux2 = [];
             foreach ($revisores as $revisor) {
-                $aux2[] = $revisor['nombre'] . ' (' . "<a>" . $revisor['email'] . "</a>" . ')';
+                $aux2[] = "- " . $revisor['nombre'] . ' (' . "<a>" . $revisor['email'] . "</a>" . ')';
                 if (!$esRevisor && $user) {
                     $esRevisor = $revisor['rut'] === $user['rut'];
                 }
@@ -73,6 +73,11 @@ if (isset($_GET['id_articulo'])) {
             $sePuedeRevisar = true;
         }
 
+        $sePuedeEditar = false;
+        if ($esAutor && ($fecha_actual->getTimestamp() <= $fecha_limite)) {
+            $sePuedeEditar = true;
+        }
+
         $revisado_icono = getAsset("/svg/revisado.svg");
     }
 }
@@ -82,40 +87,48 @@ if (isset($_GET['id_articulo'])) {
 <?php else : ?>
     <div class="articulo-container">
         <div class="vista-articulo">
-            <h1 class="vista-articulo-titulo"><?= $articulo['revisado'] ? ("<span class='vista-articulo-revisado' title='Revisado'>" . $revisado_icono . "</span>") : '' ?><?= $articulo['titulo'] ?></h1>
-            <h2 class="vista-articulo-resumen"><?= $articulo['resumen'] ?></h2>
-            <div class="vista-articulo-topicos">
-                <?php
-                    if (isset($articulo['topicos']) && !empty($articulo['topicos'])) {
-                        foreach (json_decode($articulo['topicos'],true) as $topico) {
-                            $topico = $topico['nombre'];
-                            echo "<span class='etiqueta'>$topico</span><br>";
+            <div class="vista-articulo-sub">
+                <h1 class="vista-articulo-titulo"><?= $articulo['revisado'] ? ("<span class='vista-articulo-revisado' title='Revisado'>" . $revisado_icono . "</span>") : '' ?><?= $articulo['titulo'] ?></h1>
+
+                <?php if (!is_null($calidad) && !is_null($originalidad) && !is_null($valoracion) && $articulo['revisado']) : ?>
+                    <div class="vista-articulo-evaluacion">
+                        <span class="etiqueta etiqueta-colorful">Calidad: <?= $calidad ?>/7.0</span>
+                        <span class="etiqueta etiqueta-colorful">Originalidad: <?= $originalidad ?>/7.0</span>
+                        <span class="etiqueta etiqueta-colorful">Valoración: <?= $valoracion ?>/7.0</span>
+                    </div>
+                <?php endif ?>
+            </div>
+
+            <div class="vista-articulo-fecha">
+                <p>Publicado: <?= obtenerTiempo($articulo['fecha_envio']) ?>
+                <?php if (!empty($articulo['fecha_editado'])) :?>
+                    - Editado: <?= obtenerTiempo($articulo['fecha_editado']) ?>
+                <?php endif ?>
+                </p>
+            </div>
+
+            <div class="vista-articulo-sub">
+                <h2 class="vista-articulo-resumen"><?= $articulo['resumen'] ?></h2>
+                <div class="vista-articulo-topicos">
+                    <?php
+                        if (isset($articulo['topicos']) && !empty($articulo['topicos'])) {
+                            foreach (json_decode($articulo['topicos'],true) as $topico) {
+                                $topico = $topico['nombre'];
+                                echo "<span class='etiqueta3'>$topico</span><br>";
+                            }
+                        } else {
+                            echo 'No hay revisiones.';
                         }
-                    } else {
-                        echo 'No hay revisiones.';
-                    }
-                ?>
+                    ?>
+                </div>
             </div>
             <div class="vista-articulo-autores-revisores">
                 <p class="vista-articulo-subtexto">Contacto:</p>
-                <p class="vista-articulo-subtexto"><?= $contacto['nombre']?> (<a><?= $contacto['email'] ?></a>)</p>
+                <p class="vista-articulo-subtexto">- <?= $contacto['nombre']?> (<a><?= $contacto['email'] ?></a>)</p>
                 <p class="vista-articulo-subtexto">Autor(es):</p>
                 <p class="vista-articulo-subtexto"><?= $autores ?></p>
                 <p class="vista-articulo-subtexto">Revisor(es):</p>
                 <p class="vista-articulo-subtexto"><?= $revisores ?></p>
-            </div>
-            <?php if (!is_null($calidad) && !is_null($originalidad) && !is_null($valoracion)) : ?>
-                <div class="vista-articulo-evaluacion">
-                    <span class="etiqueta2">Calidad: <?= $calidad ?>/7.0</span>
-                    <span class="etiqueta2">Originalidad: <?= $originalidad ?>/7.0</span>
-                    <span class="etiqueta2">Valoración: <?= $valoracion ?>/7.0</span>
-                </div>
-            <?php endif ?>
-            <div class="vista-articulo-fecha">
-                <p>Publicado: <?= obtenerTiempo($articulo['fecha_envio']) ?></p>
-                <?php if (!empty($articulo['fecha_editado'])) :?>
-                    <p>Editado: <?= obtenerTiempo($articulo['fecha_editado']) ?></p>
-                <?php endif ?>
             </div>
         </div>
     </div>

@@ -1,6 +1,8 @@
 <div class="menu-perfil big-border-radius">
-    <div class="menu-perfil-forms">
+    <div class="modal-top">
         <h1>Opciones</h1>
+    </div>
+    <div class="menu-perfil-forms">
         <form method="post" class="formulario nombre-email-form form-activo">
             <div class="form-div">
                 <h2>Cambiar nombre y/o correo.</h2>
@@ -14,7 +16,11 @@
                         <input type="text" name="correo" id="correo" value="<?= htmlspecialchars($user["email"] ?? "") ?>" required>
                     </div>
                 </div>
-                <button type="submit">Guardar</button>
+                <button type="submit">Guardar cambios</button>
+            </div>
+            <div class="btns-container">
+                <button type="button" clasS="btn-rojo modalBtnEliminarCuenta" id="modalBtn" data-target="eliminar-cuenta">Eliminar cuenta</button>
+                <button type="button" class="btn-rojo" onclick="window.location.href='/logout'" >Cerrar sesion</button>
             </div>
         </form>
         <form method="post" class="formulario pass-form">
@@ -32,19 +38,13 @@
                     <label for="pass_confirm">Confirmar contraseña</label>
                     <input type="password" name="pass_confirm" id="pass_confirm" required>
                 </div>
-                <button type="submit">Guardar</button>
+                <button type="submit" class="mid-btn">Guardar nueva contraseña</button>
             </div>
         </form>
-        <div class="btns-container">
-            <button id="toggle-editar-perfil">Cambiar contraseña</button>
-            <!-- <form method="POST">
-                <input type="hidden" name="eliminar" value="1">
-                <button clasS="btn-rojo" type="submit">Eliminar cuenta</button>
-            </form> -->
-            <button clasS="btn-rojo modalBtnEliminarCuenta" type="submit" id="modalBtn" data-target="eliminar-cuenta">Eliminar cuenta</button>
-            <button class="btn-rojo" onclick="window.location.href='/logout'" >Cerrar sesion</button>
+        <div class="btns-container no-wrap">
+            <button class="mid-btn" id="toggle-editar-perfil">Cambiar contraseña</button>
+            <button class="mid-btn" id="editar-perfil-btn">Salir de opciones</button>
         </div>
-        <button id="editar-perfil-btn">Salir de opciones</button>
     </div>
 </div>
 <div class="menu-overlay"></div>

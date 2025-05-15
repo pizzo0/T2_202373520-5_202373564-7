@@ -54,11 +54,11 @@ cargarArticulosAutor = async (estaRevisado = false) => {
                                 }
                             });
                         });
-                        numeroArticulos.innerHTML = `Tienes ${totalArticulos} articulos publicados ${estaRevisado ? '[Revisados]' : ''}`;
+                        numeroArticulos.innerHTML = `Tienes ${totalArticulos} articulos publicados ${estaRevisado ? '[Evaluados]' : ''}`;
                     });
             } else {
                 container.innerHTML = `<p>Aun no publicas articulos</p>`;
-                numeroArticulos.innerHTML = `Tienes 0 articulos publicados ${estaRevisado ? '[Revisados]' : ''}`;
+                numeroArticulos.innerHTML = `Tienes 0 articulos publicados ${estaRevisado ? '[Evaluados]' : ''}`;
             }
         });
 }

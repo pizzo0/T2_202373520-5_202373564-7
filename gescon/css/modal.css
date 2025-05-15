@@ -13,10 +13,12 @@
     border-radius: calc(var(--default-border-radius)*2);
     z-index: 70;
     display: none;
+    overflow: hidden;
 }
 
 .modal-activo {
     display: flex;
+    flex-direction: column;
 }
 
 .modal-content {
@@ -25,7 +27,7 @@
     height: 100%;
     width: 100%;
     gap: 1rem;
-    margin: 1.5rem;
+    padding: 1.5rem;
     overflow: hidden;
 }
 
@@ -49,6 +51,30 @@
     flex-wrap: wrap;
     width: 100%;
     gap: 1rem;
+}
+
+.modal-top {
+    display: flex;
+    flex-direction: row;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--font-color);
+    align-items: center;
+    justify-content: space-between;
+}
+
+.modal-top h1 {
+    font-size: calc(var(--font-size)*1.2);
+}
+
+.modal-close-btn {
+    border-radius: 999px;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 @media screen and (max-width: 900px) {

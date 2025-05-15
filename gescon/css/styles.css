@@ -478,12 +478,18 @@ main:has(.big-bg-text){
 
 .switch-container {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   padding: 1rem;
   gap: 1rem;
-  align-items: center;
   border: 1px solid var(--font-color);
   border-radius: var(--default-border-radius);
+}
+
+.switch-sub-container {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  align-items: center;
 }
 
 span:has(svg) {
