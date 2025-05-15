@@ -8,8 +8,6 @@ crearRevisionPreview = (formulario,index,email,id_rol) => {
     const previewFormulario = document.createElement('div');
     previewFormulario.className = 'preview-formulario';
 
-    console.log(formulario.revisor.nombre);
-
     const emailRevisor = document.createElement('span');
     emailRevisor.textContent = formulario.revisor.nombre;
     emailRevisor.className = 'etiqueta rol-2'
@@ -97,6 +95,9 @@ crearRevisionPreview = (formulario,index,email,id_rol) => {
                     <p class="input-box">${comentarios}</p>
                 </div>`
                 : ``}
+                <div class="btns-container">
+                    <button type="button" onClick="document.querySelector('[data-overlay-target=consultar-form]').click();" style="width:100%;">Volver</button>
+                </div>
             </div>
         `;
     });
@@ -136,6 +137,18 @@ cargarFormularios = () => {
                     if (i == 0) {
                         formulariosContainer.innerHTML = '<div class="preview-formulario">No hay revisiones por el momento.</div>';
                     }
+
+                    const volverDiv = document.createElement('div');
+                    volverDiv.className = 'btns-container';
+
+                    const volverRevisiones = document.createElement('button');
+                    volverRevisiones.addEventListener('click', () => document.querySelector("[data-overlay-target=ver-revisiones]").click());
+                    volverRevisiones.textContent = 'Volver';
+                    volverRevisiones.style = "width:100%;";
+
+                    volverDiv.appendChild(volverRevisiones);
+
+                    formulariosContainer.appendChild(volverDiv);
                 });
 
         });

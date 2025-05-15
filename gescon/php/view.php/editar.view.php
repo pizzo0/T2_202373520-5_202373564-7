@@ -106,12 +106,9 @@ if ($es_autor) {
     }
 }
 
+$fecha_limite_texto = '';
 if ($pedir_clave && $es_autor) {
-    $fecha_limite_texto = "Tienes hasta el " . obtenerFechaDia($fecha_limite_texto) . " a las " . obtenerFechaHora($fecha_limite) . " para modificar el articulo";
-    $_SESSION['notificacion'] = [
-        'tipo' => 'alerta',
-        'mensaje' => $fecha_limite_texto
-    ];
+    $fecha_limite_texto = "Tienes hasta el " . obtenerFechaDia($fecha_limite) . " a las " . obtenerFechaHora($fecha_limite) . " para modificar el articulo";
 }
 
 ?>
@@ -122,6 +119,7 @@ if ($pedir_clave && $es_autor) {
         <h1>VERIFICACIÓN</h1>
         <form method="post">
             <p>Ingresa la contraseña enviada al autor de contacto para hacer tus modificaciones.</p>
+            <p><?= $fecha_limite_texto ?></p>
             <div class="">
                 <label for="pass">Contraseña</label>
                 <input type="password" name="pass" placeholder="Contraseña del artículo" required>

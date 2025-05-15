@@ -4,5 +4,5 @@
 
 $titulo = "Articulos";
 $filtro_extra = false;
-include "buscar.componente.view.php"
+include "buscar.componente.view.php";
 ?>
