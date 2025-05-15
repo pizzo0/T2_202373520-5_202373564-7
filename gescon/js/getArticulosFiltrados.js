@@ -94,25 +94,29 @@ const cargarArticulos = async () => {
     const resp = await fetch(`/php/api/filtrar.articulos.php?${params.toString()}`);
     const data = await resp.json();
 
-    const ordenarPorTexto = Array.from(ordenarPorSelect.options).find(opcion => opcion.selected).textContent;
+    const topicosSelect = document.getElementById('topicos');
 
     params.forEach((v,k) => {
-        if (k == "revisado" && v == 0) return;
+        if ((k == "revisado" || k == "necesita-revisores") && v == 0) return;
 
         let key = k;
         let val = v;
 
-        if (val == 1) val = "Activo";
-        if (val == 0) val = "Apagado";
+        if (val == 1 && key != "topicos") val = "Activo";
+        if (val == 0 && key != "topicos") val = "Apagado";
 
         if (key == "ordenar_por") {
             key = "Ordenar por";
-            val = ordenarPorTexto;
+            val = ordenarPorSelect.options[ordenarPorSelect.options.selectedIndex].label;
+        }
+        if (key == "topicos") {
+            key = "topico";
+            val = topicosSelect.options[v].label;
         }
         if (key == "id_articulo") key = "ID del Articulo";
-        if (key == "topicos") key = "topico";
         if (key == "fecha_desde") key = "fecha desde";
         if (key == "fecha_hasta") key = "fecha_hasta";
+        if (key == "necesita-revisores") key = "necesita revisores";
         
         key = String(key).charAt(0).toUpperCase() + String(key).slice(1);
 
@@ -120,15 +124,22 @@ const cargarArticulos = async () => {
         filtroItem.className = 'filtro-etiqueta';
         filtroItem.setAttribute('data-filtro-target',k);
         filtroItem.textContent = key + ": " + val;
-        console.log(key + ": " + val)
 
         filtroItem.addEventListener('click', () => {
             params.delete(k);
 
-            const input = form.querySelector(`[name="${k}"]`);
-            if (input) input.remove();
-
-            form.requestSubmit();
+            const input = document.querySelector(`[name="${k}"]`);
+            if (input) {
+                if (input.tagName == "SELECT") {
+                    if(input.options[0]) {
+                        input.value = input.options[0].value;
+                    }
+                } else {
+                    input.value = '';
+                }
+                form.requestSubmit();
+            }
+            
         });
 
         filtrosView.appendChild(filtroItem);
