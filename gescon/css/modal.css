@@ -13,7 +13,6 @@
     border-radius: calc(var(--default-border-radius)*2);
     z-index: 70;
     display: none;
-    overflow: hidden;
 }
 
 .modal-activo {
@@ -28,7 +27,6 @@
     width: 100%;
     gap: 1rem;
     padding: 1.5rem;
-    overflow: hidden;
 }
 
 .modal-overlay {

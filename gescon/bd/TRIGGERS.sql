@@ -208,3 +208,35 @@ BEGIN
     END IF;
 END;//
 DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER remover_especialidad AFTER DELETE ON Articulos_Revisores
+FOR EACH ROW
+BEGIN
+    DELETE FROM Formulario
+    WHERE id_articulo = OLD.id_articulo AND rut_revisor = OLD.rut_revisor;
+END;//
+DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER revisor_no_especialidad AFTER DELETE ON Usuarios_Especialidad
+FOR EACH ROW
+BEGIN
+    DELETE FROM Articulos_Revisores
+    WHERE (rut_revisor, id_articulo) IN (
+        SELECT * FROM (
+            SELECT ar.rut_revisor, ar.id_articulo
+            FROM Articulos_Revisores ar
+            WHERE ar.rut_revisor = OLD.rut_usuario
+            AND NOT EXISTS (
+                SELECT 1
+                FROM Articulos_Topicos at
+                JOIN Usuarios_Especialidad ue
+                ON at.id_topico = ue.id_topico
+                WHERE at.id_articulo = ar.id_articulo
+                AND ue.rut_usuario = OLD.rut_usuario
+              )
+        ) AS temp
+    );
+END;//
+DELIMITER ;
