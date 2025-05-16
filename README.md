@@ -65,7 +65,8 @@ En el perfil, a parte de lo mecionado ya, el `usuario` puede ver todos sus artic
 A parte, si un `miembro de comite` accede a su perfil, este puede ver en otra `tab` los articulos que tiene para revisar. Este tiene a disposicion dos filtros, donde solo uno puede estar activo al mismo tiempo:
 * `Ignorar articulos revisados por ti`, el cual permite ver los articulos que aun NO ha revisado.
 * `Ignorar articulos evaluados`, el cual le permite ver los articulos que aun NO han sido evaluados.
-    - Solo uno puede estar activo, ya que en verdad si filtras por el primero, de por si ya no se muestran los articulos evaluados. El segundo filtro es mas algo extra, por si solo quiere ver los articulos NO evaluados. Es facil quitar esta limitacion de un filtro a la vez, pero no lo haremos :P
+    - Solo uno puede estar activo, ya que al filtrar por el primero, de por si ya no se muestran los articulos evaluados. El segundo filtro es mas algo extra, por si solo quieres ver los articulos NO evaluados.
+    - Es facil quitar esta limitacion de un filtro a la vez, pero no lo haremos :P
 
 #### Publicar
 
