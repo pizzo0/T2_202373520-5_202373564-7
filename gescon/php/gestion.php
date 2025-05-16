@@ -118,25 +118,25 @@ if ($user['id_rol'] === 3 && $_SERVER["REQUEST_METHOD"] === "POST") {
     } elseif (isset($_POST["revisores"])) {
         try {
             $id_articulo = $_POST['id_articulo'];
-            $revisores = $_POST['revisores'];
+            $revisores = explode(',',$_POST['revisores']);
+            $revisores_previos = explode(',',$_POST['revisores-previos']);
 
             $stmt = $database->prepare("
             DELETE FROM Articulos_Revisores
             WHERE id_articulo = ?
+            AND rut_revisor = ?
             ");
-            $stmt->bind_param("i",$id_articulo);
-            $stmt->execute();
+            foreach ($revisores_previos as $revisor) if (!in_array($revisor,$revisores) && !empty($revisor)) {
+                $stmt->bind_param("is",$id_articulo,$revisor);
+                $stmt->execute();
+            }
 
             $stmt = $database->prepare("
             CALL asignar_revisor (?,?);
             ");
-
-            if (!empty($revisores)) {
-                $revisores = explode(",",$revisores);
-                foreach ($revisores as $revisor) {
-                    $stmt->bind_param("is",$id_articulo,$revisor);
-                    $stmt->execute();
-                }
+            foreach ($revisores as $revisor) if (!in_array($revisor,$revisores_previos) && !empty($revisor)) {
+                $stmt->bind_param("is",$id_articulo,$revisor);
+                $stmt->execute();
             }
             $database->commit();
             
@@ -163,12 +163,12 @@ if ($user['id_rol'] === 3 && $_SERVER["REQUEST_METHOD"] === "POST") {
                 AND id_articulo = ?
             ");
 
-            foreach ($articulos_previos as $articulo) if (!in_array($articulo,$articulos)) {
+            foreach ($articulos_previos as $articulo) if (!in_array($articulo,$articulos) && !empty($articulo)) {
                 $stmt->bind_param("si",$rut_revisor,$articulo);
                 $stmt->execute();
             }
             
-            foreach ($articulos as $articulo) if (!in_array($articulo,$articulos_previos)) {
+            foreach ($articulos as $articulo) if (!in_array($articulo,$articulos_previos) && !empty($articulo)) {
                 $stmt = $database->prepare("
                 CALL asignar_revisor (?,?)
                 ");

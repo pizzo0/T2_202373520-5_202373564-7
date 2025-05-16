@@ -104,6 +104,7 @@ const crearPreview = async (articulo) => {
     }
 
     if (i < 3) wrapper.classList.add('articulo-flag');
+    if (!articulo.en_revision && !articulo.revisado) wrapper.classList.add('articulo-flag2');
 
     const etiquetasDiv = document.createElement('div');
     etiquetasDiv.className = 'articulo-preview-etiquetas';
@@ -202,10 +203,15 @@ const crearPreview = async (articulo) => {
         if (articulo.revisores) {
             articulo.revisores.forEach(revisor => {
                 const revisorDiv = document.createElement('div');
-                revisorDiv.className = 'selected-topic'
+                revisorDiv.className = 'selected-topic';
                 revisorDiv.setAttribute('data-rut',revisor.rut);
+                revisorDiv.setAttribute('data-estado', articulo.en_revision);
                 revisorDiv.innerHTML = revisor.nombre;
                 revisoresContainer.appendChild(revisorDiv);
+
+                if (articulo.en_revision) {
+                    revisorDiv.classList.add("etiqueta-rojo");
+                }
                 
                 revisoresSeleccionados.push(revisor.rut);
             });
@@ -223,8 +229,13 @@ const crearPreview = async (articulo) => {
         hiddenRevisoresInput.type = 'hidden';
         hiddenRevisoresInput.id = 'hidden-revisores';
         hiddenRevisoresInput.name = 'revisores';
-
         hiddenRevisoresInput.value = revisoresSeleccionados.join(',');
+
+        const hiddenAux = document.createElement('input');
+        hiddenAux.type = 'hidden';
+        hiddenAux.id = 'hidden-aux';
+        hiddenAux.name = 'revisores-previos';
+        hiddenAux.value = revisoresSeleccionados.join(',');
 
         dropdownBtn.addEventListener('click', () => {
             dropdownMenu.classList.toggle('show');
@@ -235,7 +246,7 @@ const crearPreview = async (articulo) => {
                 const seleccionado = e.target;
                 const rutRevisor = seleccionado.getAttribute('data-rut');
                 const emailRevisor = seleccionado.textContent;
-
+                
                 if (hiddenRevisoresInput.value.split(',').includes(rutRevisor)) return;
 
                 const divRevisor = document.createElement('div');
@@ -264,6 +275,8 @@ const crearPreview = async (articulo) => {
                 const divRevisor = e.target;
                 const rutRevisor = divRevisor.getAttribute('data-rut');
 
+                if (divRevisor.getAttribute('data-estado') == "1") return;
+
                 divRevisor.remove();
 
                 const aux = hiddenRevisoresInput.value.split(',').filter(rut => rut !== rutRevisor);
@@ -273,7 +286,7 @@ const crearPreview = async (articulo) => {
                 if (hiddenValor.length === 0) revisoresContainer.innerHTML = 'No hay revisores asignados.';
             }
         });
-        divRevisores.append(dropdownContainer,revisoresContainer,hiddenRevisoresInput,hiddenIdArticulo);
+        divRevisores.append(dropdownContainer,revisoresContainer,hiddenRevisoresInput,hiddenAux,hiddenIdArticulo);
 
         const btnEnviarAsignacion = document.createElement('button');
         btnEnviarAsignacion.type = 'submit';

@@ -49,6 +49,7 @@ BEGIN
                         SELECT Articulos.id AS id_unico
                         FROM Articulos
                         JOIN Articulos_Topicos ON Articulos.id = Articulos_Topicos.id_articulo
+                        LEFT JOIN Articulos_Revisores ON Articulos_Revisores.id_articulo = Articulos.id
                         WHERE Articulos_Topicos.id_topico IN (
                             SELECT id_topico
                             FROM Usuarios_Especialidad
@@ -65,6 +66,7 @@ BEGIN
                             WHERE rut_autor = Usuarios.rut
                         )
                         GROUP BY Articulos.id
+                        HAVING COUNT(DISTINCT Articulos_Revisores.rut_revisor) < 3
                     ) AS posibles
                 ),
                 'id_rol', Usuarios.id_rol
