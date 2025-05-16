@@ -97,7 +97,11 @@ SELECT
         END
         FROM Formulario
         WHERE Formulario.id_articulo = Articulos.id
-    ) AS revisado
+    ) AS revisado,
+    CASE
+        WHEN Articulos.fecha_limite < NOW() THEN 1
+        ELSE 0
+    END AS en_revision
 
 FROM Articulos
 LEFT JOIN Usuarios AS Usuarios_contacto ON Articulos.rut_contacto = Usuarios_contacto.rut;
