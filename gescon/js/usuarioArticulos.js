@@ -3,21 +3,30 @@ const container = document.getElementsByClassName('profile-articulos-results')[0
 const numeroArticulos = document.getElementById('num-articulos');
 const filtroRevisados = document.getElementById('articulos-revisados');
 
+const guardarFiltro = () => {
+    sessionStorage.setItem('filtroRevisados', filtroRevisados.checked);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+    const revisadoSession = sessionStorage.getItem('filtroRevisados');
+
+    if (revisadoSession) {
+        filtroRevisados.checked = revisadoSession === 'true';
+    } else {
+        filtroRevisados.checked = false;
+    }
+
     revisarFiltro();
 });
 
 filtroRevisados.addEventListener('click', () => {
     revisarFiltro();
+    guardarFiltro();
 });
 
 revisarFiltro = () => {
     totalArticulos = 0;
-    if (filtroRevisados.checked) {
-        cargarArticulosAutor(true);
-    } else {
-        cargarArticulosAutor(false);
-    }
+    cargarArticulosAutor(filtroRevisados.checked ? true : false);
 }
 
 cargarArticulosAutor = async (estaRevisado = false) => {

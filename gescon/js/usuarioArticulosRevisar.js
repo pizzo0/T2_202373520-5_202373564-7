@@ -4,19 +4,36 @@ const numRevisar = document.getElementById('num-articulos-revisar');
 const filtroRevisadosRevisor = document.getElementById('articulos-revisados-revisor');
 const filtroEvaluado = document.getElementById('articulos-ya-evaluados');
 
+const guardarFiltrosRevisor = () => {
+    sessionStorage.setItem('filtroRevisadosRevisor', filtroRevisadosRevisor.checked);
+    sessionStorage.setItem('filtroEvaluado', filtroEvaluado.checked);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
-    filtroEvaluado.checked = true;
+    const revisadoSession = sessionStorage.getItem('filtroRevisadosRevisor');
+    const evaluadoSession = sessionStorage.getItem('filtroEvaluado');
+
+    if (revisadoSession || evaluadoSession) {
+        filtroRevisadosRevisor.checked = revisadoSession === 'true';
+        filtroEvaluado.checked = evaluadoSession === 'true';
+    } else {
+        filtroRevisadosRevisor.checked = false;
+        filtroEvaluado.checked = true;
+    }
+    
     revisarFiltroRevisor();
 });
 
 filtroRevisadosRevisor.addEventListener('click', () => {
     filtroEvaluado.checked = false;
     revisarFiltroRevisor();
+    guardarFiltrosRevisor();
 });
 
 filtroEvaluado.addEventListener('click', () => {
     filtroRevisadosRevisor.checked = false;
     revisarFiltroRevisor();
+    guardarFiltrosRevisor();
 });
 
 revisarFiltroRevisor = () => {

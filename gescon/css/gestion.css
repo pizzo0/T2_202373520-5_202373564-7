@@ -171,7 +171,7 @@
 .articulo-flag > div {
     border-bottom: 1px solid var(--font-flag) !important;
 }
-.articulo-flag > div:first-child {
+.articulo-flag > div:nth-child(2), .articulo-flag > div:first-child {
     background-color: var(--bg-flag) !important;
 }
 .articulo-flag > div:last-child {
@@ -186,7 +186,7 @@
 .articulo-flag2 > div {
     border-bottom: 1px solid var(--font-colorful) ;
 }
-.articulo-flag2 > div:first-child {
+.articulo-flag2 > div:nth-child(2), .articulo-flag > div:first-child {
     background-color: var(--bg-colorful);
 }
 .articulo-flag2 > div:last-child {
