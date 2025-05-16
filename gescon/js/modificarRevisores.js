@@ -57,7 +57,7 @@ function isTopicAlreadySelected(topicId) {
     return hiddenTopics.includes(topicId);
 }
 
-function cargarRevisores() {
+async function cargarRevisores() {
     fetch('/php/api/data.revisores.php')
         .then(response => response.json())
         .then(result => {
@@ -65,7 +65,7 @@ function cargarRevisores() {
             container.innerHTML = '';
 
             if (result.total > 0) {
-                result.data.forEach(revisor => {
+                result.data.forEach(async (revisor) => {
                     const target = 'modificar-revisor-container';
 
                     const revisorPreview = document.createElement('div');
@@ -121,7 +121,7 @@ function cargarRevisores() {
                     const divArticulosAsignados = document.createElement('div');
                     divArticulosAsignados.className = 'revisor-preview-articulos';
                     if (revisor.id_articulos) {
-                        revisor.id_articulos.forEach(id_articulo => {
+                        revisor.id_articulos.forEach((id_articulo) => {
                             const itemArticulo = document.createElement('div');
                             itemArticulo.className = 'etiqueta';
                             itemArticulo.textContent = id_articulo;
@@ -162,7 +162,7 @@ function cargarRevisores() {
                     const asignacionModal = document.getElementById(target);
                     const asignacionOverlay = document.querySelector(`[data-overlay-target=${target}]`);
 
-                    btnAsignarRevisor.addEventListener('click', (e) => {
+                    btnAsignarRevisor.addEventListener('click', async (e) => {
                         e.stopPropagation();
                         
                         const articulos_posibles = revisor.id_articulos_posibles || [];
@@ -203,16 +203,31 @@ function cargarRevisores() {
                         articulosContainer.id = "revisor-articulos-container";
                         const articulosSeleccionados = [];
                         if (revisor.id_articulos) {
-                            revisor.id_articulos.forEach(articulo => {
-                                const articuloDiv = document.createElement('div');
-                                articuloDiv.className = 'selected-topic';
-                                articuloDiv.setAttribute('data-articulo',articulo);
-                                articuloDiv.textContent = articulo;
-                                articulosContainer.appendChild(articuloDiv);
-                                articulosSeleccionados.push(articulo);
-                            });
+                            articulosContainer.innerHTML = '';
+                            for (const articulo of revisor.id_articulos) {
+                                try {
+                                    const res = await fetch(`/php/api/filtrar.articulos.php?id_articulo=${articulo}`);
+                                    const data = await res.json();
+                                    const articulo_data = data.data[0];
+
+                                    const articuloDiv = document.createElement('div');
+                                    articuloDiv.className = 'selected-topic';
+                                    articuloDiv.setAttribute('data-articulo', articulo);
+                                    articuloDiv.setAttribute('data-estado', articulo_data.en_revision);
+                                    articuloDiv.textContent = articulo;
+                                    articulosContainer.appendChild(articuloDiv);
+                                    articulosSeleccionados.push(articulo);
+
+                                    if (articulo_data.en_revision) {
+                                        articuloDiv.classList.add("etiqueta-rojo");
+                                    }
+
+                                } catch (error) {
+                                    console.error(`Error al cargar el articulo ${articulo}:`, error);
+                                }
+                            }
                         } else {
-                            articulosContainer.innerHTML = "No hay articulos asignados."
+                            articulosContainer.innerHTML = "No hay articulos asignados.";
                         }
 
                         const hiddenRutRevisor = document.createElement('input');
@@ -232,11 +247,11 @@ function cargarRevisores() {
                             dropdownMenu.classList.toggle('show');
                         });
 
-                        dropdownContainer.addEventListener('click', (e) => {
+                        dropdownContainer.addEventListener('click', async (e) => {
                             if (e.target.classList.contains('dropdown-item')) {
                                 const seleccionado = e.target;
                                 const articuloSeleccionado = seleccionado.getAttribute('data-articulo');
-
+                                
                                 if (hiddenArticulosInput.value.split(',').includes(articuloSeleccionado)) return;
 
                                 const articuloDiv = document.createElement('div');
@@ -257,9 +272,11 @@ function cargarRevisores() {
                             }
                         });
 
-                        articulosContainer.addEventListener('click', (e) => {
+                        articulosContainer.addEventListener('click', async (e) => {
                             if (e.target.classList.contains('selected-topic')) {
                                 const articuloDiv = e.target;
+
+                                if (articuloDiv.getAttribute('data-estado') == "1") return;
                                 const articuloSeleccionado = articuloDiv.getAttribute('data-articulo');
 
                                 articuloDiv.remove();

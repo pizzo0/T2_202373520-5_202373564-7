@@ -317,6 +317,15 @@ option {
   border-radius: 100px;
 }
 
+.etiqueta-rojo {
+  background-color: var(--bg-flag);
+  border: 1px solid var(--font-flag);
+}
+.etiqueta-rojo::after {
+  display: none;
+  content: "" !important;
+}
+
 #topicos-container-preview {
   display: flex;
   flex-wrap: wrap;
