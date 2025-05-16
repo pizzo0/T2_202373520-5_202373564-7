@@ -14,6 +14,20 @@ overlayRevisorMenu.addEventListener('click', () => {
     toggleBtnsRevisor[0]?.click();
 });
 
+const crearArticuloDiv = (articulo, en_revision) => {
+    const articuloDiv = document.createElement('div');
+    articuloDiv.className = 'selected-topic';
+    articuloDiv.setAttribute('data-articulo', articulo);
+    articuloDiv.setAttribute('data-estado', en_revision);
+    articuloDiv.textContent = articulo;
+
+    if (en_revision) {
+        articuloDiv.classList.add("etiqueta-rojo");
+    }
+
+    return articuloDiv;
+}
+
 const cargarPosiblesArticulos = (dropdownMenu, posiblesArticulos) => {
     let i = 0;
     posiblesArticulos.forEach((articulo) => {
@@ -166,6 +180,7 @@ async function cargarRevisores() {
                         e.stopPropagation();
                         
                         const articulos_posibles = revisor.id_articulos_posibles || [];
+                        articulos_posibles.sort((a,b) => a - b);
 
                         const modalModificarRevisor = document.getElementById(target);
                         modalModificarRevisor.innerHTML = '';
@@ -209,18 +224,10 @@ async function cargarRevisores() {
                                     const res = await fetch(`/php/api/filtrar.articulos.php?id_articulo=${articulo}`);
                                     const data = await res.json();
                                     const articulo_data = data.data[0];
-
-                                    const articuloDiv = document.createElement('div');
-                                    articuloDiv.className = 'selected-topic';
-                                    articuloDiv.setAttribute('data-articulo', articulo);
-                                    articuloDiv.setAttribute('data-estado', articulo_data.en_revision);
-                                    articuloDiv.textContent = articulo;
+                                    
+                                    const articuloDiv = crearArticuloDiv(articulo,articulo_data.en_revision);
                                     articulosContainer.appendChild(articuloDiv);
                                     articulosSeleccionados.push(articulo);
-
-                                    if (articulo_data.en_revision) {
-                                        articuloDiv.classList.add("etiqueta-rojo");
-                                    }
 
                                 } catch (error) {
                                     console.error(`Error al cargar el articulo ${articulo}:`, error);
@@ -243,6 +250,13 @@ async function cargarRevisores() {
 
                         hiddenArticulosInput.value = articulosSeleccionados.join(',');
 
+                        const hiddenAux = document.createElement('input');
+                        hiddenAux.type = 'hidden';
+                        hiddenAux.id = 'hidden-aux';
+                        hiddenAux.name = 'articulos-previos';
+
+                        hiddenAux.value = articulosSeleccionados.join(',');
+
                         dropdownBtn.addEventListener('click', () => {
                             dropdownMenu.classList.toggle('show');
                         });
@@ -254,18 +268,17 @@ async function cargarRevisores() {
                                 
                                 if (hiddenArticulosInput.value.split(',').includes(articuloSeleccionado)) return;
 
-                                const articuloDiv = document.createElement('div');
-                                articuloDiv.className = 'selected-topic';
-                                articuloDiv.textContent = articuloSeleccionado;
-                                articuloDiv.setAttribute('data-articulo', articuloSeleccionado);
-
                                 const hiddenValor = hiddenArticulosInput.value ? hiddenArticulosInput.value.split(',') : [];
                                 if (hiddenValor.length === 0) {
                                     articulosContainer.innerHTML = '';
                                 }
-                                articulosContainer.appendChild(articuloDiv);
 
                                 hiddenValor.push(articuloSeleccionado);
+                                hiddenValor.sort((a,b) => a - b);
+
+                                const articuloDiv = crearArticuloDiv(articuloSeleccionado,0)
+                                articulosContainer.appendChild(articuloDiv);
+
                                 hiddenArticulosInput.value = hiddenValor.join(',');
 
                                 dropdownMenu.classList.remove('show');
@@ -291,7 +304,7 @@ async function cargarRevisores() {
 
                         const divArticulos = document.createElement('div');
                         divArticulos.className = 'input-container input-articulos';
-                        divArticulos.append(dropdownContainer,articulosContainer,hiddenArticulosInput,hiddenRutRevisor);
+                        divArticulos.append(dropdownContainer,articulosContainer,hiddenArticulosInput,hiddenAux,hiddenRutRevisor);
 
                         const btnAsignarArticulos = document.createElement('button');
                         btnAsignarArticulos.type = 'submit';
@@ -424,7 +437,7 @@ async function cargarRevisores() {
                         const topicosSeleccionados = [];
 
                         if (revisor.topicos) {
-                            revisor.topicos.forEach(topico => {
+                            revisor.topicos.forEach((topico) => {
                                 const topicDivAux = document.createElement("div");
                                 topicDivAux.classList.add("selected-topic");
                                 topicDivAux.textContent = topico.nombre;

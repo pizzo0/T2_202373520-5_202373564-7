@@ -153,27 +153,30 @@ if ($user['id_rol'] === 3 && $_SERVER["REQUEST_METHOD"] === "POST") {
         }
     } elseif (isset($_POST["articulos"])) {
         try {
-            $articulos = $_POST["articulos"];
+            $articulos = explode(",",$_POST["articulos"]);
+            $articulos_previos = explode(",",$_POST["articulos-previos"]);
             $rut_revisor = $_POST["rut_revisor"];
 
             $stmt = $database->prepare("
-            DELETE FROM Articulos_Revisores
-            WHERE rut_revisor = ?
-            ");
-            $stmt->bind_param("s",$rut_revisor);
-            $stmt->execute();
-            
-            $stmt = $database->prepare("
-            CALL asignar_revisor (?,?)
+                DELETE FROM Articulos_Revisores
+                WHERE rut_revisor = ?
+                AND id_articulo = ?
             ");
 
-            if (!empty($articulos)) {
-                $articulos = explode(",",$articulos);
-                foreach ($articulos as $id_articulo) {
-                    $stmt->bind_param("is", $id_articulo, $rut_revisor);
-                    $stmt->execute();
-                }
+            foreach ($articulos_previos as $articulo) if (!in_array($articulo,$articulos)) {
+                $stmt->bind_param("si",$rut_revisor,$articulo);
+                $stmt->execute();
             }
+            
+            foreach ($articulos as $articulo) if (!in_array($articulo,$articulos_previos)) {
+                $stmt = $database->prepare("
+                CALL asignar_revisor (?,?)
+                ");
+
+                $stmt->bind_param("is", $articulo, $rut_revisor);
+                $stmt->execute();
+            }
+
             $database->commit();
 
             $_SESSION["notificacion"] = [

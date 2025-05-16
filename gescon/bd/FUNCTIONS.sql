@@ -9,6 +9,18 @@ READS SQL DATA
 BEGIN
     DECLARE res JSON;
 
+    -- si ya hay 3 revisores, no damos nada
+    IF p_id_articulo IS NOT NULL AND p_id_articulo <> '' THEN
+        IF (
+            SELECT COUNT(*)
+            FROM Articulos_Revisores
+            WHERE id_articulo = CAST(p_id_articulo AS UNSIGNED)
+        ) >= 3 THEN
+            RETURN NULL;
+        END IF;
+    END IF;
+
+    -- obtenemos posibles revisores
     IF p_topicos IS NULL OR p_topicos = '' THEN
         SELECT JSON_ARRAYAGG(
             JSON_OBJECT(

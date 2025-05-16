@@ -1,4 +1,4 @@
-const cargarPosiblesRevisores = async (dropdownMenu,topicos = null,id_articulo = null) => {
+const cargarPosiblesRevisores = async (dropdownMenu, topicos = null, id_articulo = null) => {
     let query = `/php/api/data.revisores.php`;
 
     if (topicos) {
@@ -11,32 +11,32 @@ const cargarPosiblesRevisores = async (dropdownMenu,topicos = null,id_articulo =
     }
 
     try {
-        fetch(query)
-            .then((resultado) => resultado.json())
-            .then((data) => {
-                dropdownMenu.innerHTML = '';
+        const resultado = await fetch(query);
+        const data = await resultado.json();
 
-                let i = 0;
-                data.data.forEach((revisor) => {
-                    i++;
-                    const item = document.createElement('div');
-                    item.classList.add('dropdown-item');
-                    item.textContent = revisor.nombre;
-                    item.setAttribute('data-rut', revisor.rut);
-                    dropdownMenu.appendChild(item);
-                });
-                if (i === 0) {
-                    const item = document.createElement('div');
-                    item.textContent = "No hay revisores para asignar";
-                    item.classList.add('dropdown-no-item');
-                    dropdownMenu.appendChild(item);
-                }
+        dropdownMenu.innerHTML = '';
 
-            }).catch((error) => {
-                console.log(error);
-            });
+        if (!data.data || data.data.length === 0) {
+            const item = document.createElement('div');
+            item.textContent = "No hay revisores para asignar";
+            item.classList.add('dropdown-no-item');
+            dropdownMenu.appendChild(item);
+            return false;
+        }
+
+        data.data.forEach((revisor) => {
+            const item = document.createElement('div');
+            item.classList.add('dropdown-item');
+            item.textContent = revisor.nombre;
+            item.setAttribute('data-rut', revisor.rut);
+            dropdownMenu.appendChild(item);
+        });
+
+        return true;
+
     } catch (error) {
         console.error("Error al cargar los revisores:", error);
+        return false;
     }
 }
 
@@ -160,6 +160,7 @@ const crearPreview = async (articulo) => {
 
         const asignarAleatorio = document.createElement('button');
         asignarAleatorio.type = 'submit';
+        asignarAleatorio.className = 'mid-btn'
         asignarAleatorio.textContent = 'Asignar revisor aleatorio'
 
         const hiddenIdArticuloAleatorio = document.createElement('input');
@@ -272,7 +273,6 @@ const crearPreview = async (articulo) => {
                 if (hiddenValor.length === 0) revisoresContainer.innerHTML = 'No hay revisores asignados.';
             }
         });
-
         divRevisores.append(dropdownContainer,revisoresContainer,hiddenRevisoresInput,hiddenIdArticulo);
 
         const btnEnviarAsignacion = document.createElement('button');
