@@ -1,7 +1,7 @@
 <?php
 
 
-$tiempo_expiracion = 5 * 60;
+$tiempo_expiracion = 10 * 60;
 
 $user = getUsuarioData();
 $topicos = getTopicos();
