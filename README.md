@@ -27,15 +27,6 @@ El proceso de `/signup` pide:
 
 El proceso de `/login` se hace simplemente con el `correo` y la `contraseña`.
 
-### CRUD Usuarios
-
-Los usuarios pueden:
-* (C) Crear articulo desde `/publicar`.
-* (R) Ver su perfil desde `/pefil` (visualizar sus datos).
-* (U) Actualizar cosas como `nombre`, `correo` y `contraseña`. Esto se hace desde `/perfil`.
-* (D) Pueden cerrar sesion o eliminar su cuenta. Tambien se hace desde `/perfil`, en las `opciones`.
-    - Si es jefe de comite, no se le permitira eliminar su cuenta.
-
 ### Pagina principal
 
 #### Buscar y busqueda avanzada
@@ -62,7 +53,14 @@ En `/buscar` tambien se puede hacer una `busqueda avanzada`. Se dispone de 9 fil
 
 #### Perfil
 
-En el perfil, a parte de lo mecionado ya anteriormente, el `usuario` puede ver todos sus articulos (articulos donde es autor), tanto evaluados como no evaluados. Este tiene a disposicion un filtro para ver solo los articulos evaluados o todos.
+Los usuarios pueden:
+* (C) Crear articulo desde `/publicar`.
+* (R) Ver su perfil desde `/pefil` (visualizar sus datos).
+* (U) Actualizar cosas como `nombre`, `correo` y `contraseña`. Esto se hace desde `/perfil`.
+* (D) Pueden cerrar sesion o eliminar su cuenta. Tambien se hace desde `/perfil`, en las `opciones`.
+    - Si es jefe de comite, no se le permitira eliminar su cuenta.
+
+En el perfil, a parte de lo mecionado ya, el `usuario` puede ver todos sus articulos (articulos donde es autor), tanto evaluados como no evaluados. Este tiene a disposicion un filtro para ver solo los articulos evaluados o todos.
 
 A parte, si un `miembro de comite` accede a su perfil, este puede ver en otra `tab` los articulos que tiene para revisar. Este tiene a disposicion dos filtros, donde solo uno puede estar activo al mismo tiempo:
 * `Ignorar articulos revisados por ti`, el cual permite ver los articulos que aun NO ha revisado.
