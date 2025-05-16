@@ -210,6 +210,41 @@ END;//
 DELIMITER ;
 
 DELIMITER //
+CREATE TRIGGER eliminar_miembro_de_comite BEFORE DELETE ON Usuarios
+FOR EACH ROW
+BEGIN
+    IF EXISTS (
+        SELECT 1 FROM Articulos_Revisores
+        WHERE rut_revisor = OLD.rut
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'No puedes eliminar un miembro de comite con articulos asignados';
+    END IF;
+END;//
+DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER desasignar_miembro_de_comite BEFORE DELETE ON Articulos_Revisores
+FOR EACH ROW
+BEGIN
+    IF EXISTS (
+        SELECT 1 FROM Articulos_Data, JSON_TABLE(
+            revisores, "$[*]"
+            COLUMNS (
+                rut VARCHAR(12) PATH "$.rut"
+            )
+        ) AS revisor
+        WHERE Articulos_Data.id_articulo = OLD.id_articulo
+        AND revisor.rut COLLATE utf8mb4_unicode_ci = OLD.rut_revisor COLLATE utf8mb4_unicode_ci
+        AND Articulos_Data.fecha_limite < NOW()
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'No se puede eliminar un miembro de de comite luego de la fecha limite (en estado de revision)';
+    END IF;
+END;//
+DELIMITER ;
+
+DELIMITER //
 CREATE TRIGGER remover_especialidad AFTER DELETE ON Articulos_Revisores
 FOR EACH ROW
 BEGIN

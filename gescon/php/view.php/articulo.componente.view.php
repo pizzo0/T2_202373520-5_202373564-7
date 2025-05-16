@@ -90,23 +90,53 @@
     <div class="nav-articulo">
         <?php if ($esAutor && $sePuedeEditar) : ?>
             <button type="button" class="nav-articulo-btn" id="editar" onClick="window.location.href='/editar/<?=$id_articulo?>'">         
-                <span class="nav-articulo-icon"><?= getAsset("/svg/editar.svg") ?></span>
+                <div class="nav-articulo-btn-content">
+                    <span class="nav-articulo-icon"><?= getAsset("/svg/editar.svg") ?></span>
+                    <span class="nav-option-name">Editar</span>
+                </div>
             </button>
         <?php endif; ?>
         <?php if ($esRevisor || $esAutor || ($user ? $user['id_rol'] === 3 : false)) : ?>
             <button type="button" class="nav-articulo-btn" id="modalBtn" data-target="ver-revisiones">
-                <span class="nav-articulo-icon"><?= getAsset("/svg/revisiones.svg") ?></span>
+                <div class="nav-articulo-btn-content">
+                    <span class="nav-articulo-icon"><?= getAsset("/svg/revisiones.svg") ?></span>
+                    <span class="nav-option-name">Revisiones</span>
+                </div>
             </button>
         <?php endif; ?>
         <?php if ($esRevisor) : ?>
             <button type="button" class="nav-articulo-btn" id="modalBtn" data-target="crear-form" <?= $yaReviso?>>
-                <span class="nav-articulo-icon"><?= getAsset("/svg/formulario.svg") ?></span>
+                <div class="nav-articulo-btn-content">
+                    <span class="nav-articulo-icon"><?= getAsset("/svg/formulario.svg") ?></span>
+                    <span class="nav-option-name">Hacer revision</span>
+                </div>
             </button>
         <?php endif; ?>
-        <button type="button" class="nav-articulo-btn" id="ir-perfil" onClick="window.location.href='/perfil'">
-            <span class="nav-articulo-icon"><?= getAsset("/svg/user.svg") ?></span>
-        </button>
+        <!-- <button type="button" class="nav-articulo-btn" id="ir-perfil" onClick="window.location.href='/perfil'">
+            <div class="nav-articulo-btn-content">
+                <span class="nav-articulo-icon"><?= getAsset("/svg/user.svg") ?></span>
+                <span class="nav-option-name">Perfil</span>
+            </div>
+        </button> -->
     </div>
 </div>
+
+<script>
+    document.querySelectorAll('.nav-articulo-btn').forEach(b => {
+        const cb = b.querySelector('.nav-articulo-btn-content');
+
+        b.addEventListener('mouseenter',() => {
+            const fitContentBtn = cb.scrollWidth + parseFloat(getComputedStyle(b).paddingLeft) * 2;
+
+            b.style.width = fitContentBtn + "px";
+            b.classList.add('nav-articulo-btn-expandido');
+        });
+
+        b.addEventListener('mouseleave', () => {
+            b.style.width = `65px`;
+            b.classList.remove('nav-articulo-btn-expandido');
+        });
+    });
+</script>
 
 <script src=<?php getJs("modal");?>></script>

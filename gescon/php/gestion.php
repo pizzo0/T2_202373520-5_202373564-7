@@ -148,7 +148,7 @@ if ($user['id_rol'] === 3 && $_SERVER["REQUEST_METHOD"] === "POST") {
             $database->rollback();
             $_SESSION["notificacion"] = [
                 "tipo" => "error",
-                "mensaje" => "Error al asignar.<br>" . $e->getMessage()
+                "mensaje" => "Error al modificar revisores.<br>" . $e->getMessage()
             ];
         }
     } elseif (isset($_POST["articulos"])) {
@@ -184,17 +184,23 @@ if ($user['id_rol'] === 3 && $_SERVER["REQUEST_METHOD"] === "POST") {
             $database->rollback();
             $_SESSION["notificacion"] = [
                 "tipo" => "error",
-                "mensaje" => "Error al asignar."
+                "mensaje" => "Error al modificar revisores.<br>" . $e->getMessage()
             ];
         }
     } else if (isset($_POST['eliminar'])) {
         $rut = $_POST['eliminar'];
-        eliminarUsuario($rut);
-
-        $_SESSION["notificacion"] = [
-            "tipo" => "ok",
-            "mensaje" => "Revisor fue eliminado con exito."
-        ];
+        try {
+            eliminarUsuario($rut);
+            $_SESSION["notificacion"] = [
+                "tipo" => "ok",
+                "mensaje" => "Miembro de comite eliminado con exito."
+            ];
+        } catch (Exception $e) {
+            $_SESSION["notificacion"] = [
+                "tipo" => "error",
+                "mensaje" => "No se pudo eliminar el miembro de comite:<br>" . $e->getMessage()
+            ];
+        }
     } else if (isset($_POST['id_articulo_revisor_aleatorio'])) {
         $id_articulo = $_POST['id_articulo_revisor_aleatorio'];
         $revisores_asignados = [];

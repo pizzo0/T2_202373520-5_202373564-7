@@ -63,7 +63,7 @@ let __abriendoNav = false;
 
 document.body.addEventListener('touchstart', (e) => {
     if (window.innerWidth > 900) return;
-    if (filtroContainer.contains(e.target)) {
+    if (filtroContainer) if (filtroContainer.contains(e.target)) {
         __abriendoNav = false;
         return;
     }
