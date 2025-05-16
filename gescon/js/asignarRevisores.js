@@ -46,30 +46,44 @@ const crearPreview = async (articulo) => {
     wrapper.id = 'modalWrapper';
     wrapper.setAttribute('data-target','asignar-articulo');
 
-    const topSection = document.createElement('div');
-    topSection.className = 'articulo-preview-tr';
+    const contacto = document.createElement("div");
+    contacto.className = "articulo-preview-contacto";
 
-    const link = document.createElement('a');
-    link.href = `/articulo/${articulo.id_articulo}`;
+    const spanContacto = document.createElement("span");
+    spanContacto.textContent = "Contacto - " + articulo.contacto.nombre;
 
-    link.addEventListener('click', (e) => e.stopPropagation());
+    contacto.appendChild(spanContacto);
 
-    const iconSpan = document.createElement('span');
+    const tr = document.createElement('div');
+    tr.className = 'articulo-preview-tr';
 
-    const response = await fetch(`/assets/svg/svg_articulo.svg`);
-    const svg_articulo = await response.text();
-    iconSpan.innerHTML = svg_articulo;
+    let icono = ''
+    icono =  await fetch('/assets/svg/revisado.svg').then(res => res.text());
+    const iconoRevisado = document.createElement('span');
+    iconoRevisado.innerHTML = articulo.revisado ? icono : '';
+    iconoRevisado.title = "Revisado";
+    iconoRevisado.className = "revisado-svg";
 
-    link.appendChild(iconSpan);
-    link.append(`[${articulo.id_articulo}] ${articulo.titulo}`);
-    topSection.appendChild(link);
+    const enlace = document.createElement('a');
+    enlace.href = `/articulo/${articulo.id_articulo}`;
+
+    enlace.addEventListener('click', (e) => e.stopPropagation());
+
+    icono = '';
+    icono = await fetch(`/assets/svg/svg_articulo.svg`).then(res => res.text());
+    const iconoArticulo = document.createElement('span');
+    iconoArticulo.innerHTML = icono;
+
+    enlace.append(iconoArticulo,`[${articulo.id_articulo}] ${articulo.titulo}`,iconoRevisado.innerHTML ? iconoRevisado : '');
+
+    tr.appendChild(enlace);
 
     const resumenP = document.createElement('p');
     resumenP.textContent = articulo.resumen;
-    topSection.appendChild(resumenP);
+    tr.appendChild(resumenP);
 
-    const autoresDiv = document.createElement('div');
-    autoresDiv.className = 'articulo-preview-autores';
+    const autores = document.createElement('div');
+    autores.className = 'articulo-preview-autores';
 
     if (articulo.autores) {
         articulo.autores.forEach(autor => {
@@ -77,13 +91,13 @@ const crearPreview = async (articulo) => {
             autorPreview.className = 'etiqueta rol-1';
             autorPreview.textContent = autor.nombre;
 
-            autoresDiv.appendChild(autorPreview);
+            autores.appendChild(autorPreview);
         });
     }
 
 
-    const revisoresDiv = document.createElement('div');
-    revisoresDiv.className = 'articulo-preview-revisores';
+    const revisores = document.createElement('div');
+    revisores.className = 'articulo-preview-revisores';
     
     let i = 0;
     if (articulo.revisores) {
@@ -93,43 +107,40 @@ const crearPreview = async (articulo) => {
             revisorPreview.className = 'etiqueta rol-2';
             revisorPreview.textContent = revisor.nombre;
 
-            revisoresDiv.appendChild(revisorPreview);
+            revisores.appendChild(revisorPreview);
         });
     }
 
     if (i == 0) {
         const noRevisorPreview = document.createElement('span');
         noRevisorPreview.textContent = 'No hay revisores asignados.';
-        revisoresDiv.appendChild(noRevisorPreview);
+        revisores.appendChild(noRevisorPreview);
     }
 
     if (i < 3) wrapper.classList.add('articulo-flag');
     if (!articulo.en_revision && !articulo.revisado) wrapper.classList.add('articulo-flag2');
 
-    const etiquetasDiv = document.createElement('div');
-    etiquetasDiv.className = 'articulo-preview-etiquetas';
+    const etiquetas = document.createElement('div');
+    etiquetas.className = 'articulo-preview-etiquetas';
 
     if (Array.isArray(articulo.topicos)) {
         articulo.topicos.forEach(topico => {
             const etiquetaSpan = document.createElement('span');
             etiquetaSpan.className = 'etiqueta';
             etiquetaSpan.textContent = topico.nombre;
-            etiquetasDiv.appendChild(etiquetaSpan);
+            etiquetas.appendChild(etiquetaSpan);
         });
     }
 
-    const fechaDiv = document.createElement('div');
-    fechaDiv.className = 'articulo-preview-fecha';
+    const fecha = document.createElement('div');
+    fecha.className = 'articulo-preview-fecha';
 
     const fechaP = document.createElement('p');
     fechaP.textContent = `Publicación - ${obtenerTiempo(articulo.fecha_envio)}`;
-    fechaDiv.appendChild(fechaP);
+    fecha.appendChild(fechaP);
 
-    wrapper.appendChild(topSection);
-    wrapper.appendChild(etiquetasDiv);
-    wrapper.appendChild(autoresDiv);
-    wrapper.appendChild(revisoresDiv);
-    wrapper.appendChild(fechaDiv);
+
+    wrapper.append(contacto,tr,etiquetas,autores,revisores,fecha)
 
     const target = 'asignar-articulo';
     const asignacionModal = document.getElementById(target);
