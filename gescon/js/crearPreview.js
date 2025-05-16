@@ -64,6 +64,8 @@ const crearPreview = async (articulo,hizoRevision = false) => {
     pFecha.textContent = `Publicación - ${obtenerTiempo(articulo.fecha_envio)}`;
     fecha.appendChild(pFecha);
 
+    if (!articulo.en_revision && !articulo.revisado) wrapper.classList.add('articulo-flag2');
+
     wrapper.append(contacto,tr,etiquetas,autores,fecha)
 
     wrapper.addEventListener("click", () => enlace.click());
