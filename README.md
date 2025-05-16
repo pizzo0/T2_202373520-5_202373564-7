@@ -163,6 +163,7 @@ De lo anterior, hay algunas cosas a tener en cuenta:
 * Para cada articulo se da una lista con los posibles `miembros de comite` que se pueden asignar al articulo teniendo en cuenta lo anterior.
 * El `jefe de comite` puede hacer que la base de datos haga la asignacion `automaticamente` si este quiere. Al hacerlo, se intentara encontrar los TRES `miembros de comite` para asignarlos al articulo, considerando las restricciones.
     - Es posible que la asignacion automatica no asigne nada o simplemente no asigne los TRES `miembros de comite` si es que no hay mas posibles `miembros de comite` para el articulo.
+* Al pasar de la fecha limite, solo se podra `asignar miembros de comite` (si no existen los TRES). No se podra eliminar (`desasignar`) los que ya estan asignados.
 
 Con todo lo anterior, el `jefe de comite` puede asignar, reasignar y eliminar `miembros de comite` a los articulos como el quiera :)
 
