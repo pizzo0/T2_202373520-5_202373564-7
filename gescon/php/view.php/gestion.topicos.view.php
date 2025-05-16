@@ -3,9 +3,11 @@
     <div class="topicos-container"> <!-- topicos --> </div>
 </div>
 <div class="modal" id="crear-topico-container">
+    <div class="modal-top">
+        <h1>Crea un topico nuevo</h1>
+    </div>
     <div class="modal-content">
         <form class="crear-topico-form formulario" method="POST">
-            <p>Crea un topico nuevo</p>
             <div>
                 <label for="topico">Topico</label>
                 <input type="text" id="topico" name="topico" required>

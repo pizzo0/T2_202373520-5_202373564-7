@@ -64,17 +64,6 @@
     font-size: calc(var(--font-size)*1.2);
 }
 
-.modal-close-btn {
-    border-radius: 999px;
-    width: 40px;
-    height: 40px;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 @media screen and (max-width: 900px) {
     .modal {
         width: 90%;

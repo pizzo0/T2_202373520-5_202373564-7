@@ -6,3 +6,4 @@ $titulo = "Articulos";
 $filtro_extra = false;
 include "buscar.componente.view.php";
 ?>
+<script src=<?php getJs("modal");?>></script>

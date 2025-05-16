@@ -110,24 +110,6 @@
     border-radius: 100px;
 }
 
-.btns-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    flex-direction: row;
-    justify-content: space-between;
-}
-
-.btn-rojo {
-    background-color: #160000 !important;
-    border: 1px solid #ffb2b2 !important;
-}
-
-.btn-rojo:hover {
-    background-color: #ffb2b2 !important;
-    border: 1px solid #ffb2b2 !important;
-}
-
 .profile-content-container {
     display: flex;
     flex-direction: column;

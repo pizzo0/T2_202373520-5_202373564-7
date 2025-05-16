@@ -182,6 +182,9 @@ async function cargarRevisores() {
                         const articulos_posibles = revisor.id_articulos_posibles || [];
                         articulos_posibles.sort((a,b) => a - b);
 
+                        const modalTop = document.createElement('div');
+                        modalTop.className = 'modal-top';
+
                         const modalModificarRevisor = document.getElementById(target);
                         modalModificarRevisor.innerHTML = '';
 
@@ -190,6 +193,7 @@ async function cargarRevisores() {
 
                         const h1 = document.createElement('h1');
                         h1.textContent = 'Asignar articulos a revisor';
+                        modalTop.appendChild(h1);
 
                         const form = document.createElement('form');
                         form.className = 'formulario modal-form';
@@ -326,9 +330,9 @@ async function cargarRevisores() {
 
                         form.append(divArticulos,btnsContainer);
 
-                        modalRevisorContent.append(h1,form);
+                        modalRevisorContent.appendChild(form);
 
-                        modalModificarRevisor.appendChild(modalRevisorContent);
+                        modalModificarRevisor.append(modalTop,modalRevisorContent);
 
                         const overlay = document.querySelector(`[data-overlay-target=${target}]`);
 
@@ -359,6 +363,15 @@ async function cargarRevisores() {
 
                         modalModificarRevisor.innerHTML = '';
 
+                        const modalTop = document.createElement('div');
+                        modalTop.className = 'modal-top';
+
+                        const h1 = document.createElement('h1');
+                        h1.textContent = "Modificar revisor";
+                        modalTop.append(h1);
+
+                        modalTop.appendChild(h1);
+
                         const modalRevisorContent = document.createElement('div');
                         modalRevisorContent.className = 'modal-content';
 
@@ -366,10 +379,6 @@ async function cargarRevisores() {
                         form.className = 'formulario modal-form';
                         form.id = 'form-modificar-revisor';
                         form.method = 'POST';
-
-                        const h1 = document.createElement('h1');
-                        h1.textContent = "Modificar revisor";
-                        modalRevisorContent.append(h1);
 
                         const divRut = document.createElement('div');
                         divRut.className = 'input-container';
@@ -537,7 +546,7 @@ async function cargarRevisores() {
 
                         form.append(divInputs, divBtnsRevisor);
                         modalRevisorContent.appendChild(form);
-                        modalModificarRevisor.appendChild(modalRevisorContent);
+                        modalModificarRevisor.append(modalTop, modalRevisorContent);
 
                         const formularios = document.querySelectorAll('.formulario');
 

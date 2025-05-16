@@ -175,6 +175,8 @@
     flex-direction: row;
     flex-wrap: nowrap;
     gap: 0.25rem;
+    width: 100%;
+    max-width: fit-content;
     overflow-x: auto;
     -ms-overflow-style:none;
     scrollbar-width: none;

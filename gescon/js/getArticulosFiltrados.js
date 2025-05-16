@@ -2,6 +2,7 @@ const params = new URLSearchParams(window.location.search);
 let paginaActual = params.has('offset') ? parseInt(params.get('offset')) : 0;
 const resultadosPorPagina = 20;
 let totalResultados = 0;
+let cambioDePagina = false;
 
 const container = document.querySelector('.filtro-container');
 const resContainer = document.getElementById('resultados-busqueda');
@@ -17,11 +18,19 @@ const btnSiguiente = document.getElementById('btnSiguiente');
 const filtrosView = document.getElementById('filtro-view');
 const ordenarPorSelect = document.getElementById('ordenar_por');
 
+filtrosView.addEventListener('wheel', e => {
+    if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+        e.preventDefault();
+        filtrosView.scrollLeft += e.deltaY;
+    }
+},{passive:false});
+
 ordenarPorSelect.addEventListener('change', () => form.requestSubmit());
 
 btnAnterior.addEventListener('click', () => {
     if (paginaActual > 0) {
         paginaActual--;
+        cambioDePagina = true;
         form.requestSubmit();
     }
 });
@@ -29,6 +38,7 @@ btnAnterior.addEventListener('click', () => {
 btnSiguiente.addEventListener('click', () => {
     if ((paginaActual + 1) * resultadosPorPagina < totalResultados) {
         paginaActual++;
+        cambioDePagina = true;
         form.requestSubmit();
     }
 });
@@ -52,7 +62,9 @@ form.addEventListener('submit', (e) => {
         nuevoParams.append(k, v);
     }
 
-    if (paginaActual !== 0) nuevoParams.append("offset",paginaActual);
+    if (paginaActual !== 0 && cambioDePagina) {
+        nuevoParams.append("offset",paginaActual);
+    }
 
     const nuevoHref = `${location.pathname}?${nuevoParams.toString()}`;
     window.location.href = nuevoHref;
@@ -111,7 +123,8 @@ const cargarArticulos = async () => {
         }
         if (key == "topicos") {
             key = "topico";
-            val = topicosSelect.options[v].label;
+            opcion = Array.from(topicosSelect.options).find(opt => opt.value === v);
+            val = opcion?.label;
         }
         if (key == "id_articulo") key = "ID del Articulo";
         if (key == "fecha_desde") key = "fecha desde";
