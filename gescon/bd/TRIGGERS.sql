@@ -218,7 +218,7 @@ BEGIN
         WHERE rut_revisor = OLD.rut
     ) THEN
         SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'No puedes eliminar un miembro de comite con articulos asignados';
+        SET MESSAGE_TEXT = 'No puedes eliminar los miembro de comite con articulos asignados';
     END IF;
 END;//
 DELIMITER ;
@@ -239,7 +239,7 @@ BEGIN
         AND Articulos_Data.fecha_limite < NOW()
     ) THEN
         SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'No se puede eliminar un miembro de de comite luego de la fecha limite (en estado de revision)';
+        SET MESSAGE_TEXT = 'No se puede eliminar o modificar los miembros de de comite asignados luego de la fecha limite (en estado de revision)';
     END IF;
 END;//
 DELIMITER ;

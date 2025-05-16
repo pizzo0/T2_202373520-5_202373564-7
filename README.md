@@ -4,8 +4,6 @@
 
 Aplicación web con `PHP` y `MySQL`
 
-Si estas leyendo esto directamente desde el `README.md`, puedes leerlo mas facil desde el [repositorio](https://github.com/pizzo0/T2_202373520-5_202373564-7) en github.
-
 ## Descripción y supuestos
 
 ### Login y Signup
