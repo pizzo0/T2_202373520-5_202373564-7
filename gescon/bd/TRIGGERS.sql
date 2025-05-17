@@ -32,9 +32,9 @@ BEGIN
         SET NEW.rut = CONCAT(LEFT(NEW.rut, LENGTH(NEW.rut) - 1), 'K');
     END IF;
 
-    IF NOT NEW.rut REGEXP '^[1-9][0-9]?\\.[0-9]{3}\\.[0-9]{3}-[0-9K]$' THEN
+    IF NOT NEW.rut REGEXP '^[0-9][0-9]?\\.[0-9]{3}\\.[0-9]{3}-[0-9K]$' THEN
         SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Formato del RUT invalido (XX.XXX.XXX-X).';
+        SET MESSAGE_TEXT = 'Formato del RUT invalido.';
     END IF;
 
     IF NOT NEW.email REGEXP '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$' THEN
@@ -47,30 +47,30 @@ BEGIN
         SET MESSAGE_TEXT = 'La contraseña no debe contener espacios.';
     END IF;
 
-    IF CHAR_LENGTH(NEW.password) < 8 THEN
+    IF CHAR_LENGTH(NEW.password) < 6 THEN
         SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Contraseña muy corta. Debe tener 8 caracteres o mas.';
+        SET MESSAGE_TEXT = 'Contraseña muy corta. Debe tener 6 caracteres o mas.';
     END IF;
 
-    IF NOT NEW.password REGEXP '[A-Z]' THEN
+    IF NOT NEW.password COLLATE utf8mb4_bin REGEXP '[A-Z]' THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Contraseña debe tener al menos una letra mayuscula.';
     END IF;
     
-    IF NOT NEW.password REGEXP '[a-z]' THEN
+    IF NOT NEW.password COLLATE utf8mb4_bin REGEXP '[a-z]' THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Contraseña debe tener al menos una letra minuscula.';
     END IF;
     
-    IF NOT NEW.password REGEXP '[0-9]' THEN
+    IF NOT NEW.password COLLATE utf8mb4_bin REGEXP '[0-9]' THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Contraseña debe tener al menos un numero.';
     END IF;
     
-    IF NOT NEW.password REGEXP '[^a-zA-Z0-9]' THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Contraseña debe tener al menos un caracter especial.';
-    END IF;
+    -- IF NOT NEW.password REGEXP '[^a-zA-Z0-9]' THEN
+    --     SIGNAL SQLSTATE '45000'
+    --     SET MESSAGE_TEXT = 'Contraseña debe tener al menos un caracter especial.';
+    -- END IF;
 END;//
 DELIMITER ;
 

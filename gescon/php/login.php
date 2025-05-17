@@ -32,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (!isset($error)) {
         $_SESSION["notificacion"] = [
             "tipo" => "error",
-            "mensaje" => "Hubo un error al iniciar sesion."
+            "mensaje" => "Hubo un error al iniciar sesion.<br>Correo o contraseña incorrectos."
         ];
         $error = "Correo o contraseña incorrectos.";
     }
