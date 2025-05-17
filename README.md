@@ -199,11 +199,34 @@ Con todo lo anterior, el `jefe de comite` puede asignar, reasignar y eliminar `m
 ## Requerimientos
 
 * [Docker](https://www.docker.com/)
+* [Python](https://www.python.org/)
+    - Se utilizo la version [3.13.0](https://www.python.org/downloads/release/python-3130/)
 
 ## Como utilizar
 
-Con una terminal en la carpeta principal de la pagina, donde se encuentran los archivos `Dockerfile` y `docker-compose.yml`, ejecutar el comando:
+Abrir una terminal en la carpeta donde se encuentran los archivos `GENERAR-DATA.py`, `requirements.txt`, `Dockerfile` y `docker-compose.yml`.
 
+Primero debemos generar la data de la base de datos. Para esto, necesitamos python, donde usaremos el modulo `faker` para crear informacion aleatoria. Puedes instalar el modulo mas rapido ejecutando desde la terminal el comando:
+```bash
+pip instal -r requirements.txt
+```
+
+Una vez instalado, podemos ejecutar el script de python que nos creara los datos de nuestra base de datos. Ejecutar el comando:
+```bash
+python GENERAR-DATA.py
+```
+o
+```bash
+python3 GENERAR-DATA.py
+```
+
+Esto nos creara un archivo `6_DATA.sql` en `/gescon/bd`. Este tendra la data que tendra nuestra base de datos para probarla.
+
+Cosas a tener en cuentra:
+* Todos los usuarios dentran de contraseña: `USer00`
+* Todos los articulos tendran de contraseña: `1`
+
+Una vez hecho esto, podemos crear nuestros contenedores con `docker`. Ejecutamos el comando:
 ```bash
 docker-compose up --build -d
 ```
@@ -219,13 +242,11 @@ Esto hara lo siguiente:
 * Tendras una nueva carpeta llamada `mysql-data`, en donde esta todo lo que almacena la base de datos.
 
 Cuando termines de utilizar la pagina web, puedes cerrar los contenedores ejecutando el comando:
-
 ```bash
 docker-compose down
 ```
 
 Notar que en el futuro, si quieres volver a iniciar los contenedores (una vez ya hayas construido los mismos), puedes iniciarlos con el comando:
-
 ```bash
 docker-compose up -d
 ```
@@ -234,6 +255,7 @@ Para eliminar los datos cuando ya creaste la base de datos, puedes ejecutar el c
 ```bash
 docker-compose down -v
 ```
+Para asegurarnos de que la base de datos se borre correctamente, es recomendable eliminar tambien `/mysql-data`.
 
 > [!WARNING]
 > Si en algun paso ocurre un error, lo mas probable es que tienes `Docker Desktop` cerrado. Abrelo para evitar errores.
