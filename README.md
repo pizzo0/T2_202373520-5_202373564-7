@@ -216,8 +216,7 @@ Esto hara lo siguiente:
     - Pagina web en [localhost:8081](localhost:8081)
     - phpmyadmin en [localhost:8080](localhost:8080)
 * Si iniciaste los contenedores sin `-d`, puedes cerrar los contenedores usando `ctrl + C`.
-
-Ademas, tendras una nueva carpeta llamada `mysql-data`, en donde esta todo lo que almacena la base de datos.
+* Tendras una nueva carpeta llamada `mysql-data`, en donde esta todo lo que almacena la base de datos.
 
 Cuando termines de utilizar la pagina web, puedes cerrar los contenedores ejecutando el comando:
 

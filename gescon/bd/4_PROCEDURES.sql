@@ -47,7 +47,7 @@ DELIMITER ;
 DELIMITER //
 CREATE PROCEDURE asignar_revisor_random(
 	IN p_id_articulo INT,
-    OUT p_nombre_asignado VARCHAR(12)
+    OUT p_nombre_asignado TEXT
 )
 BEGIN
     DECLARE v_rut_revisor VARCHAR(12);
