@@ -15,6 +15,12 @@ crearRevisionPreview = (formulario,index,email,id_rol) => {
     const divAcciones = document.createElement('div');
     divAcciones.className = 'btns-container';
 
+    const editarBtn = document.createElement('button');
+    editarBtn.type = 'button';
+    editarBtn.id = 'modalBtn';
+    editarBtn.setAttribute('data-target','editar-form');
+    editarBtn.textContent = 'Editar';
+
     const consultarBtn = document.createElement('button');
     consultarBtn.type = 'button';
     consultarBtn.id = 'modalBtn';
@@ -26,6 +32,94 @@ crearRevisionPreview = (formulario,index,email,id_rol) => {
     eliminarFormularioBtn.id = 'eliminarFormulario';
     eliminarFormularioBtn.className = 'btn-rojo';
     eliminarFormularioBtn.textContent = 'Eliminar';
+
+    editarBtn.addEventListener('click', () => {
+        document.querySelector('[data-target=ver-revisiones]').click()
+
+        const target = editarBtn.getAttribute('data-target');
+        const modal = document.getElementById(target);
+        const overlay = document.querySelector(`[data-overlay-target=${target}]`);
+        const bClose = document.querySelectorAll(`[data-close-target=${target}]`);
+
+        if (!overlay.dataset.listenerAdded) {
+            overlay.addEventListener('click', () => {
+                modal.classList.toggle('modal-activo');
+                overlay.classList.toggle('menu-overlay-activo');
+                document.body.classList.toggle('no-scroll');
+            });
+            overlay.dataset.listenerAdded = 'true';
+        }
+        modal.classList.toggle('modal-activo');
+        overlay.classList.toggle('menu-overlay-activo');
+        document.body.classList.toggle('no-scroll');
+
+        bClose.forEach(c => {
+            c.addEventListener('click', () => {
+                modal.classList.remove('modal-activo');
+                overlay.classList.remove('menu-overlay-activo');
+                document.body.classList.remove('no-scroll');
+            });
+        });
+
+        const form = modal.querySelector('.editar-formulario');
+        form.querySelector(`input[name="id_formulario"]`).value = formulario.id_formulario;
+        form.querySelector(`input[name="rut_revisor"]`).value = formulario.revisor.rut;
+        form.querySelector(`input[name="calidad"][value="${calidad}"]`).checked = true;
+        form.querySelector(`input[name="originalidad"][value="${originalidad}"]`).checked = true;
+        form.querySelector(`input[name="valoracion"][value="${valoracion}"]`).checked = true;
+        form.querySelector('#argumentos').value = argumentos;
+        form.querySelector('#comentarios').value = comentarios;
+    });
+
+    consultarBtn.addEventListener('click', () => {
+        document.querySelector('[data-target=ver-revisiones]').click()
+
+        const target = consultarBtn.getAttribute('data-target');
+        const modal = document.getElementById(target);
+        const overlay = document.querySelector(`[data-overlay-target=${target}]`);
+        const bClose = document.querySelectorAll(`[data-close-target=${target}]`);
+
+        if (!overlay.dataset.listenerAdded) {
+            overlay.addEventListener('click', () => {
+                modal.classList.toggle('modal-activo');
+                overlay.classList.toggle('menu-overlay-activo');
+                document.body.classList.toggle('no-scroll');
+            });
+            overlay.dataset.listenerAdded = 'true';
+        }
+        modal.classList.toggle('modal-activo');
+        overlay.classList.toggle('menu-overlay-activo');
+        document.body.classList.toggle('no-scroll');
+
+        bClose.forEach(c => {
+            c.addEventListener('click', () => {
+                modal.classList.remove('modal-activo');
+                overlay.classList.remove('menu-overlay-activo');
+                document.body.classList.remove('no-scroll');
+            });
+        });
+
+        modal.querySelector('h1').textContent = `[${(index + 1)}] Revision`;
+        
+        const modalConsulta = modal.querySelector('.modal-content');
+        modalConsulta.innerHTML = `
+            <div class="vista-articulo-evaluacion">
+                <span class="etiqueta2">Calidad: ${calidad}/7</span>
+                <span class="etiqueta2">Originalidad: ${originalidad}/7</span>
+                <span class="etiqueta2">Valoración: ${valoracion}/7</span>
+            </div>
+            <div>
+                <span class="label">Argumentos de Valoración:</span>
+                <p class="input-box">${argumentos}</p>
+            </div>
+            ${comentarios ?
+            `<div>
+                <span class="label">Comentarios:</span>
+                <p class="input-box">${comentarios}</p>
+            </div>`
+            : ``}
+        `;
+    });
 
     eliminarFormularioBtn.addEventListener('click', () => {
         if (!confirm("¿Quieres eliminar el formulario?")) {
@@ -58,47 +152,9 @@ crearRevisionPreview = (formulario,index,email,id_rol) => {
         });
     });
 
-    const modalConsulta = document.getElementById('consultar-form');
-
-    consultarBtn.addEventListener('click', () => {
-        const target = consultarBtn.getAttribute('data-target');
-        const modal = document.getElementById(target);
-        const overlay = document.querySelector(`[data-overlay-target=${target}]`);
-
-        if (!overlay.dataset.listenerAdded) {
-            overlay.addEventListener('click', () => {
-                modal.classList.toggle('modal-activo');
-                overlay.classList.toggle('menu-overlay-activo');
-                document.body.classList.toggle('no-scroll');
-            });
-            overlay.dataset.listenerAdded = 'true';
-        }
-        modal.classList.toggle('modal-activo');
-        overlay.classList.toggle('menu-overlay-activo');
-        document.body.classList.toggle('no-scroll');
-        
-        modalConsulta.innerHTML = `
-            <div class="revision-view modal-content">
-                <h1>[${(index + 1)}] Formulario de Evaluación</h1>
-                <div class="vista-articulo-evaluacion">
-                    <span class="etiqueta2">Calidad: ${calidad}/7</span>
-                    <span class="etiqueta2">Originalidad: ${originalidad}/7</span>
-                    <span class="etiqueta2">Valoración: ${valoracion}/7</span>
-                </div>
-                <div>
-                    <span class="label">Argumentos de Valoración:</span>
-                    <p class="input-box">${argumentos}</p>
-                </div>
-                ${comentarios ?
-                `<div>
-                    <span class="label">Comentarios:</span>
-                    <p class="input-box">${comentarios}</p>
-                </div>`
-                : ``}
-            </div>
-        `;
-    });
-
+    if (email === formulario.revisor.email) {
+        divAcciones.appendChild(editarBtn);
+    }
     divAcciones.appendChild(consultarBtn);
     if (email === formulario.revisor.email ||  id_rol === 3) {
         divAcciones.appendChild(eliminarFormularioBtn);

@@ -82,7 +82,7 @@ $ordenar_por = isset($_GET['ordenar_por']) ? $_GET['ordenar_por'] : '';
         <?php if (!$en_busqueda_principal) : ?>
             <div class="articulo-preview articulo-flag">
                 <div class="articulo-preview-tr">
-                    <p>Un articulo tendra este estilo cuando le falten revisores.</p>
+                    <p>Un articulo tendra este estilo cuando le falten revisores. Este estilo se superpondra a los demas.</p>
                 </div>
             </div>
         <?php endif; ?>

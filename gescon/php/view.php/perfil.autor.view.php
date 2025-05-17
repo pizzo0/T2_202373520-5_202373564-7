@@ -7,7 +7,7 @@
                     <input type="checkbox" class="checkbox" id="articulos-revisados" name="articulos-revisados">
                     <span class="checkbox-slider"></span>
                 </label>
-                <label class="reset-label" for="articulos-revisados">Ignorar articulos no evaluados</label>
+                <label class="reset-label" for="articulos-revisados">Solo mis articulos evaluados</label>
             </div>
         </div>
         <div class="profile-articulos-results">

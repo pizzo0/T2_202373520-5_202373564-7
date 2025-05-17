@@ -7,14 +7,14 @@
                     <input type="checkbox" class="checkbox" id="articulos-revisados-revisor" name="articulos-revisados-revisor">
                     <span class="checkbox-slider"></span>
                 </label>
-                <label class="reset-label" for="articulos-revisados-revisor">Ignorar articulos revisados por ti</label>
+                <label class="reset-label" for="articulos-revisados-revisor">Solo articulos no revisados por mi</label>
             </div>
             <div class="switch-sub-container">
                 <label class="checkbox-label" for="articulos-ya-evaluados">
                     <input type="checkbox" class="checkbox" id="articulos-ya-evaluados" name="articulos-ya-evaluados">
                     <span class="checkbox-slider"></span>
                 </label>
-                <label class="reset-label" for="articulos-ya-evaluados">Ignorar articulos evaluados</label>
+                <label class="reset-label" for="articulos-ya-evaluados">No mostrar articulos evaluados</label>
             </div>
         </div>
         <div class="profile-revisiones-container">

@@ -127,7 +127,7 @@
     height: fit-content;
 }
 
-.nav-articulo {
+.nav-flotante {
     display: flex;
     background-color: var(--bg-color);
     border: 1px solid var(--font-color);
@@ -135,7 +135,7 @@
     border-radius: 999px;
     gap: 0.25rem;
 }
-.nav-articulo-container {
+.nav-flotante-container {
     position: absolute;
     bottom: 0;
     right: 0;
@@ -144,16 +144,16 @@
     justify-content: center;
     margin: 3rem calc(var(--pad-px) * 1.5);;
 }
-.nav-articulo > :first-child {
+.nav-flotante > :first-child {
     border-start-start-radius: 32.5px;
     border-end-start-radius: 32.5px;
 }
-.nav-articulo > :last-child {
+.nav-flotante > :last-child {
     border-start-end-radius: 32.5px;
     border-end-end-radius: 32.5px;
 }
 
-.nav-articulo-btn {
+.nav-flotante-btn {
     display: flex;
     border: 1px solid var(--font-color);
     cursor: pointer;
@@ -174,27 +174,29 @@
 
     transition: width 0.15s ease;
 }
-.nav-articulo-btn-content {
+.nav-flotante-btn-content {
     height: 20px;
     width: fit-content;
     display: flex;
     flex-direction: row;
-    gap: 30px;
     align-items: center;
-
-    transition: gap 0.15s ease;
-}
-.nav-articulo-btn-expandido .nav-articulo-btn-content {
     gap: 22.5px;
 }
-.nav-articulo-btn:hover span {
+.nav-flotante-icon {
+    margin: 0;
+}
+.nav-flotante-btn-expandido {
+    background-color: var(--bg-colorful);
+    border: 1px solid var(--font-colorful);
+}
+.nav-flotante-btn:hover span {
     color: var(--bg-color);
 }
-.nav-articulo-btn svg {
+.nav-flotante-btn svg {
     width: calc(var(--font-size)*1.4);
     height: calc(var(--font-size)*1.4);
 }
-.nav-articulo-btn:hover svg {
+.nav-flotante-btn:hover svg {
     fill: var(--bg-color);
 }
 
