@@ -22,6 +22,8 @@ def generar_rut():
     return f'{random.randint(8,21)}.{random.randint(100,999)}.{random.randint(100,999)}-{"K" if dv == 10 else dv}'
 
 with open("gescon/bd/6_DATA.sql", "w", encoding="utf-8") as f:
+    f.write("SET NAMES 'utf8mb4';\n")
+    
     autores = []
     revisores = []
     topicos = []
