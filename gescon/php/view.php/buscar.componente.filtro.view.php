@@ -65,6 +65,19 @@ if ($filtro_extra) $necesita_revisores = isset($_GET['necesita-revisores']) ? ((
             <input type="date" name="fecha_desde" id="fecha_desde" <?= $fecha_desde ?>>
             <label for="fecha_hasta">Hasta:</label>
             <input type="date" name="fecha_hasta" id="fecha_hasta" <?= $fecha_hasta ?>>
+            <script>
+                const inputDates = document.querySelectorAll('[type=date]');
+
+                inputDates.forEach(i => {
+                    i.addEventListener('click', () => {
+                        if (i.showPicker) {
+                        i.showPicker();
+                        } else {
+                        i.focus();
+                        }
+                    });
+                });
+            </script>
         </div>
         <span>Sobre el articulo:</span>
         <div class="switch-sub-container">

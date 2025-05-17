@@ -1,7 +1,10 @@
 let totalArticulos = 0;
-const container = document.getElementsByClassName('profile-articulos-results')[0];
+const container = document.querySelector('.profile-articulos-results');
 const numeroArticulos = document.getElementById('num-articulos');
 const filtroRevisados = document.getElementById('articulos-revisados');
+const tabArticulos = document.querySelector('[data-target=tabArticulos]');
+
+let articulosCargados = false;
 
 const guardarFiltro = () => {
     sessionStorage.setItem('filtroRevisados', filtroRevisados.checked);
@@ -15,21 +18,30 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         filtroRevisados.checked = false;
     }
+});
 
+tabArticulos.addEventListener('click', () => {
     revisarFiltro();
 });
 
 filtroRevisados.addEventListener('click', () => {
+    articulosCargados = false;
     revisarFiltro();
     guardarFiltro();
 });
 
 revisarFiltro = () => {
+    if (articulosCargados) {
+        return;
+    }
+    container.innerHTML = '';
     totalArticulos = 0;
+    reiniciarCarga();
     cargarArticulosAutor(filtroRevisados.checked ? true : false);
 }
 
 cargarArticulosAutor = async (estaRevisado = false) => {
+    articulosCargados = true;
     fetch('/php/api/actual.usuario.articulos.php')
         .then((response) => response.json())
         .then((data) => {
@@ -69,5 +81,6 @@ cargarArticulosAutor = async (estaRevisado = false) => {
                 container.innerHTML = `<p>Aun no publicas articulos</p>`;
                 numeroArticulos.innerHTML = `Tienes 0 articulos publicados ${estaRevisado ? '[Evaluados]' : ''}`;
             }
+            progreso = 100;
         });
 }

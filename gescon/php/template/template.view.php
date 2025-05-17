@@ -34,9 +34,13 @@ $svg_home = getAsset("/svg/home.svg");
                 }, 5);
             </script>
         </header>
-        <main>
-            <?php getContenido(); ?>
-        </main>
+        <script src=<?php getJs("mostrarNav");?>></script>
+        <div class="main">
+            <?php include "template.componente.cargando.php" ?>
+            <main>
+                <?php getContenido(); ?>
+            </main>
+        </div>
     </div>
     <?php if (isset($_SESSION["notificacion"])): ?>
         <div class="notificacion noti-<?= $_SESSION["notificacion"]["tipo"] ?>">
@@ -56,10 +60,6 @@ $svg_home = getAsset("/svg/home.svg");
     <script src=<?php getJs("obtenerTiempo");?>></script>
     <script src=<?php getJs("inputNoRellenado");?>></script>
     <script src=<?php getJs("notificacion");?>></script>
-    <script src=<?php getJs("mostrarNav");?>></script>
-    <script>
-        console.log(`<?php echo getPagina() ;?>`)
-    </script>
 </body>
 </html>
 <?php

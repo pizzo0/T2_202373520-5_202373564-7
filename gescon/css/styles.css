@@ -80,10 +80,32 @@ h1 {
 
 .index-content {
     margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.index-buscar-container {
+    overflow: hidden;
+    display: flex;
+    width: 80%;
+}
+
+.index-buscar-container .r-button {
+    height: 50px;
+    width: 50px;
+}
+
+.index-buscar-container .l-input {
+    height: 50px;
 }
 
 .main-h1 {
-    font-size: calc(var(--font-size)*10);
+    font-size: calc(var(--font-size)*8);
     letter-spacing: -4px;
 }
 
@@ -100,7 +122,7 @@ main {
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: calc(var(--default-px)*0.5);
+    gap: var(--default-px);
     padding: calc(var(--pad-px)*3);
     width: 100%;
     max-width: 1500px;
@@ -109,7 +131,16 @@ main {
     flex: 1;
 }
 
-main:has(.menu), main:has(.menu_publicar) {
+.main {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 0 auto;
+    flex: 1;
+}
+
+main:has(.menu), main:has(.menu_publicar), .main:has(.menu_publicar), .main:has(.menu_publicar) {
     margin: auto;
 }
 
@@ -244,6 +275,18 @@ input[type="radio"] {
 
 input[type="radio"]:checked {
     background-color: var(--font-color);
+}
+
+input {
+    pointer-events: auto;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  display: none;
+}
+
+input[type="date"]::-moz-calendar-picker-indicator {
+  display: none;
 }
 
 .etiqueta {
@@ -496,22 +539,6 @@ main:has(.big-bg-text){
     height: 100%;
 }
 
-.index-buscar-container {
-    bottom: 0;
-    right: 0;
-    position: absolute;
-    overflow: hidden;
-    padding: 0 5rem 5rem 5rem;
-}
-
-.index-buscar-container .r-button {
-    height: 50px;
-    width: 50px;
-}
-
-.index-buscar-container .l-input {
-    height: 50px;
-}
 
 .switch-container {
     display: flex;
@@ -569,6 +596,10 @@ span:has(svg) svg {
 
     main {
         padding: calc(var(--pad-px)*1.5);
+    }
+
+    .index-buscar-container {
+        width: 90%;
     }
 }
 

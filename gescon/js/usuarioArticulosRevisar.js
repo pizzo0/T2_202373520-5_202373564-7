@@ -3,6 +3,9 @@ const containerRevisar = document.querySelector('.profile-revisiones-container')
 const numRevisar = document.getElementById('num-articulos-revisar');
 const filtroRevisadosRevisor = document.getElementById('articulos-revisados-revisor');
 const filtroEvaluado = document.getElementById('articulos-ya-evaluados');
+const tabRevisar = document.querySelector('[data-target=tabRevisiones]')
+
+let articulosRevisorCargados = false;
 
 const guardarFiltrosRevisor = () => {
     sessionStorage.setItem('filtroRevisadosRevisor', filtroRevisadosRevisor.checked);
@@ -20,32 +23,44 @@ document.addEventListener('DOMContentLoaded', () => {
         filtroRevisadosRevisor.checked = false;
         filtroEvaluado.checked = true;
     }
-    
+});
+
+tabRevisar.addEventListener('click', () => {
     revisarFiltroRevisor();
 });
 
 filtroRevisadosRevisor.addEventListener('click', () => {
     filtroEvaluado.checked = false;
+    articulosRevisorCargados = false;
     revisarFiltroRevisor();
     guardarFiltrosRevisor();
 });
 
 filtroEvaluado.addEventListener('click', () => {
     filtroRevisadosRevisor.checked = false;
+    articulosRevisorCargados = false;
     revisarFiltroRevisor();
     guardarFiltrosRevisor();
 });
 
 revisarFiltroRevisor = () => {
+    if (articulosRevisorCargados) {
+        return;
+    }
+
     totalArticulosRevisor = 0;
 
     const ignorarRevisados = filtroRevisadosRevisor.checked ? true : false;
     const ignorarEvaluados = filtroEvaluado.checked ? true : false;
 
+    containerRevisar.innerHTML = '';
+
+    reiniciarCarga();
     cargarArticulosRevisor(ignorarRevisados,ignorarEvaluados);
 }
 
 cargarArticulosRevisor = async (noEstaRevisado = false, estaEvaluado = false) => {
+    articulosRevisorCargados = true;
     fetch('/php/api/actual.usuario.articulos.revisar.php')
         .then((response) => response.json())
         .then((data) => {
@@ -101,5 +116,6 @@ cargarArticulosRevisor = async (noEstaRevisado = false, estaEvaluado = false) =>
                 containerRevisar.innerHTML = `<p>No tienes articulos asignados</p>`;
                 numRevisar.innerHTML = `Tienes 0 articulos para revisar ${noEstaRevisado ? '[Por revisar]' : ''} ${estaEvaluado ? '[No evaluados]' : ''}`;
             }
+            progreso = 100;
         });
 };

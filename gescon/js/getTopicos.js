@@ -1,9 +1,11 @@
 const topicosContainer = document.querySelector('.topicos-container');
 
 document.addEventListener("DOMContentLoaded", () => {
+    iniciarCarga(); // inicia barra de carga
     fetch("/php/api/topicos.php")
         .then((response) => response.json())
         .then((data) => {
+            progreso = 50;
 
             data.sort((a, b) => a.nombre.localeCompare(b.nombre));
 
@@ -46,5 +48,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 topicosContainer.appendChild(topicoDiv);
             });
-        })
+            progreso = 100;
+        });
 });

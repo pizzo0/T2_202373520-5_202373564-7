@@ -1,0 +1,14 @@
+.loading-container {
+    display: none;
+    width: 100%;
+    height: 5px;
+    background-color: var(--bg-colorful);
+    transition: height 0.15s ease;
+}
+
+.loading-bar {
+    display: flex;
+    background-color: var(--font-colorful);
+    width: 0;
+    transition: width 0.15s ease;
+}

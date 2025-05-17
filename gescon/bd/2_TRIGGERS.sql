@@ -52,17 +52,17 @@ BEGIN
         SET MESSAGE_TEXT = 'Contraseña muy corta. Debe tener 6 caracteres o mas.';
     END IF;
 
-    IF NOT NEW.password COLLATE utf8mb4_bin REGEXP '[A-Z]' THEN
+    IF NOT NEW.password REGEXP '[A-Z]' THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Contraseña debe tener al menos una letra mayuscula.';
     END IF;
     
-    IF NOT NEW.password COLLATE utf8mb4_bin REGEXP '[a-z]' THEN
+    IF NOT NEW.password REGEXP '[a-z]' THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Contraseña debe tener al menos una letra minuscula.';
     END IF;
     
-    IF NOT NEW.password COLLATE utf8mb4_bin REGEXP '[0-9]' THEN
+    IF NOT NEW.password REGEXP '[0-9]' THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Contraseña debe tener al menos un numero.';
     END IF;
@@ -235,7 +235,7 @@ BEGIN
             )
         ) AS revisor
         WHERE Articulos_Data.id_articulo = OLD.id_articulo
-        AND revisor.rut COLLATE utf8mb4_unicode_ci = OLD.rut_revisor COLLATE utf8mb4_unicode_ci
+        AND revisor.rut = OLD.rut_revisor
         AND Articulos_Data.fecha_limite < NOW()
     ) THEN
         SIGNAL SQLSTATE '45000'

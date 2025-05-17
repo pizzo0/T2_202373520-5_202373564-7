@@ -72,9 +72,11 @@ function isTopicAlreadySelected(topicId) {
 }
 
 async function cargarRevisores() {
+    iniciarCarga(); // inicia barra de carga
     fetch('/php/api/data.revisores.php')
         .then(response => response.json())
         .then(result => {
+            progreso = 50;
             const container = document.querySelector('.revisores-container');
             container.innerHTML = '';
 
@@ -616,6 +618,7 @@ async function cargarRevisores() {
             } else {
                 container.textContent = 'No hay revisores para mostrar.';
             }
+            progreso = 100;
         })
         .catch(error => {
             console.error('Error al cargar revisores:', error);

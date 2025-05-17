@@ -167,34 +167,34 @@
     </div>
 <?php endif ?>
 
-<div class="nav-flotante-container">
-    <div class="nav-flotante">
-        <?php if ($esAutor && $sePuedeEditar) : ?>
-            <button type="button" class="nav-flotante-btn" id="editar" onClick="window.location.href='/editar/<?=$id_articulo?>'">         
-                <div class="nav-flotante-btn-content">
-                    <span class="nav-flotante-icon"><?= getAsset("/svg/editar.svg") ?></span>
-                    <span class="nav-option-name">Editar</span>
-                </div>
-            </button>
-        <?php endif; ?>
-        <?php if ($esRevisor || $esAutor || ($user ? $user['id_rol'] === 3 : false)) : ?>
+<?php if ($esAutor || $esRevisor || ($user ? $user['id_rol'] === 3 : false)) : ?>
+    <div class="nav-flotante-container">
+        <div class="nav-flotante">
+            <?php if ($esAutor && $sePuedeEditar) : ?>
+                <button type="button" class="nav-flotante-btn" id="editar" onClick="window.location.href='/editar/<?=$id_articulo?>'">         
+                    <div class="nav-flotante-btn-content">
+                        <span class="nav-flotante-icon"><?= getAsset("/svg/editar.svg") ?></span>
+                        <span class="nav-option-name">Editar</span>
+                    </div>
+                </button>
+            <?php endif; ?>
             <button type="button" class="nav-flotante-btn" id="modalBtn" data-target="ver-revisiones">
                 <div class="nav-flotante-btn-content">
                     <span class="nav-flotante-icon"><?= getAsset("/svg/revisiones.svg") ?></span>
                     <span class="nav-option-name">Revisiones</span>
                 </div>
             </button>
-        <?php endif; ?>
-        <?php if ($esRevisor) : ?>
-            <button type="button" class="nav-flotante-btn" id="modalBtn" data-target="crear-form" <?= $yaReviso?>>
-                <div class="nav-flotante-btn-content">
-                    <span class="nav-flotante-icon"><?= getAsset("/svg/formulario.svg") ?></span>
-                    <span class="nav-option-name">Hacer revision</span>
-                </div>
-            </button>
-        <?php endif; ?>
+            <?php if ($esRevisor) : ?>
+                <button type="button" class="nav-flotante-btn" id="modalBtn" data-target="crear-form" <?= $yaReviso?>>
+                    <div class="nav-flotante-btn-content">
+                        <span class="nav-flotante-icon"><?= getAsset("/svg/formulario.svg") ?></span>
+                        <span class="nav-option-name">Hacer revision</span>
+                    </div>
+                </button>
+            <?php endif; ?>
+        </div>
     </div>
-</div>
+<?php endif ?>
 
 <script src=<?php getJs("navFlotante");?>></script>
 <script src=<?php getJs("modal");?>></script>

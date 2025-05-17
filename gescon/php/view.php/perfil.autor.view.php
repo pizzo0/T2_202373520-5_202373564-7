@@ -1,6 +1,5 @@
 <div class="tab" id="tabArticulos">
     <div class="profile-articulos-container">
-        <p id="num-articulos"></p>
         <div class="switch-container">
             <div class="switch-sub-container">
                 <label class="checkbox-label" for="articulos-revisados">
@@ -10,6 +9,7 @@
                 <label class="reset-label" for="articulos-revisados">Solo mis articulos evaluados</label>
             </div>
         </div>
+        <p id="num-articulos"></p>
         <div class="profile-articulos-results">
             <!-- articulos del usuario -->
         </div>

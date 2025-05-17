@@ -11,6 +11,7 @@ const form = document.getElementById('filtro-form');
 const overlay = document.getElementById('filtro-overlay');
 
 const numResultados = document.querySelectorAll('#filtro-num-resultados');
+const paginasNav = document.querySelector('.paginas-nav');
 const paginaInfo = document.getElementById('pagina-info');
 const btnAnterior = document.getElementById('btnAnterior');
 const btnSiguiente = document.getElementById('btnSiguiente');
@@ -92,6 +93,7 @@ const toggleFC = () => {
 };
 
 const cargarArticulos = async () => {
+    iniciarCarga(); // inicia barra de carga
     // se filtran los revisados automaticamente si estamos en /buscar :v
     if (!params.has("revisado") && (location.pathname === '/buscar')) {
         params.append("revisado", 1);
@@ -103,19 +105,16 @@ const cargarArticulos = async () => {
         ordenarPorSelect.value = "fecha_envio_desc";
     }
 
-    const resp = await fetch(`/php/api/filtrar.articulos.php?${params.toString()}`);
-    const data = await resp.json();
-
     const topicosSelect = document.getElementById('topicos');
 
-    params.forEach((v,k) => {
+    params.forEach(async (v,k) => {
         if ((k == "revisado" || k == "necesita-revisores") && v == 0) return;
 
         let key = k;
         let val = v;
 
-        if (val == 1 && key != "topicos") val = "Activo";
-        if (val == 0 && key != "topicos") val = "Apagado";
+        if (val == 1 && (key === "revisado" || key === "necesita-revisores")) val = "Activo";
+        if (val == 0 && (key === "revisado" || key === "necesita-revisores")) val = "Apagado";
 
         if (key == "ordenar_por") {
             key = "Ordenar por";
@@ -157,6 +156,11 @@ const cargarArticulos = async () => {
 
         filtrosView.appendChild(filtroItem);
     });
+    
+    const resp = await fetch(`/php/api/filtrar.articulos.php?${params.toString()}`);
+    const data = await resp.json();
+
+    progreso = progreso >= 50 ? progreso : 50; // barra de carga xd
 
     const articulos = data.data;
     totalResultados = data.total;
@@ -177,9 +181,11 @@ const cargarArticulos = async () => {
 
         aux.appendChild(noArticulos);
     }
+    progreso = 100; // termina la carga
 
     const totalPaginas =  Math.max(1,Math.ceil(totalResultados/resultadosPorPagina));
     paginaInfo.textContent = `Pagina ${paginaActual + 1} de ${totalPaginas}`;
+    paginasNav.style.display = "flex";
     resContainer.replaceWith(aux);
 }
 

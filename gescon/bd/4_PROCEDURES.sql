@@ -432,19 +432,19 @@ BEGIN
             CONCAT(' AND id_articulo = ', p_id_articulo)),
 
         IF(p_contacto IS NULL OR p_contacto = '', '', 
-            CONCAT(' AND JSON_UNQUOTE(JSON_EXTRACT(contacto, "$.nombre")) COLLATE utf8mb4_general_ci LIKE ''%', p_contacto, '%''')),
+            CONCAT(' AND JSON_UNQUOTE(JSON_EXTRACT(contacto, "$.nombre")) LIKE ''%', p_contacto, '%''')),
 
         IF(p_autor IS NULL OR p_autor = '', '', 
-            CONCAT(' AND EXISTS (SELECT 1 FROM JSON_TABLE(autores, "$[*]" COLUMNS (nombre VARCHAR(255) PATH "$.nombre")) AS autor WHERE autor.nombre COLLATE utf8mb4_general_ci LIKE ''%', p_autor, '%'' )')),
+            CONCAT(' AND EXISTS (SELECT 1 FROM JSON_TABLE(autores, "$[*]" COLUMNS (nombre VARCHAR(255) PATH "$.nombre")) AS autor WHERE autor.nombre LIKE ''%', p_autor, '%'' )')),
 
         IF(p_revisor IS NULL OR p_revisor = '', '', 
-            CONCAT(' AND EXISTS (SELECT 1 FROM JSON_TABLE(revisores, "$[*]" COLUMNS (nombre VARCHAR(255) PATH "$.nombre")) AS revisor WHERE revisor.nombre COLLATE utf8mb4_general_ci LIKE ''%', p_revisor, '%'' )')),
+            CONCAT(' AND EXISTS (SELECT 1 FROM JSON_TABLE(revisores, "$[*]" COLUMNS (nombre VARCHAR(255) PATH "$.nombre")) AS revisor WHERE revisor.nombre LIKE ''%', p_revisor, '%'' )')),
 
         IF(p_id_topico IS NULL OR p_id_topico = 0, '', 
             CONCAT(' AND EXISTS (SELECT 1 FROM JSON_TABLE(topicos, "$[*]" COLUMNS (id INT PATH "$.id")) AS topico WHERE topico.id = ', p_id_topico, ')')),
 
         IF(p_titulo IS NULL OR p_titulo = '', '', 
-            CONCAT(' AND titulo COLLATE utf8mb4_general_ci LIKE ''%', p_titulo, '%''')),
+            CONCAT(' AND titulo LIKE ''%', p_titulo, '%''')),
 
         IF(p_revisado IS NULL, '',
             CONCAT(' AND revisado = ', p_revisado)),

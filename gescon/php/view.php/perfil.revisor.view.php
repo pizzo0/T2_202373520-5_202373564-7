@@ -1,6 +1,5 @@
 <div class="tab" id="tabRevisiones">
     <div class="profile-articulos-container">
-        <p id="num-articulos-revisar"></p>
         <div class="switch-container">
             <div class="switch-sub-container">
                 <label class="checkbox-label" for="articulos-revisados-revisor">
@@ -17,6 +16,7 @@
                 <label class="reset-label" for="articulos-ya-evaluados">No mostrar articulos evaluados</label>
             </div>
         </div>
+        <p id="num-articulos-revisar"></p>
         <div class="profile-revisiones-container">
             <!-- articulos que puede revisar -->
         </div>

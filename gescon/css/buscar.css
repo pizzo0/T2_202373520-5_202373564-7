@@ -57,6 +57,7 @@
     display: grid;
     grid-template-columns: 1fr;
     gap: 1rem;
+    margin-bottom: 8rem;
 }
 
 .articulo-preview {
@@ -162,7 +163,7 @@
 }
 
 .paginas-nav {
-    display: flex;
+    display: none;
     flex-direction: row;
     gap: 0.5rem;
     flex-wrap: wrap;

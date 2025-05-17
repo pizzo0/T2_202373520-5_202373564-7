@@ -127,6 +127,15 @@
     height: fit-content;
 }
 
+.nav-flotante-container {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    margin: 3rem 0;;
+}
 .nav-flotante {
     display: flex;
     background-color: var(--bg-color);
@@ -134,15 +143,6 @@
     padding: 0.25rem;
     border-radius: 999px;
     gap: 0.25rem;
-}
-.nav-flotante-container {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    margin: 3rem calc(var(--pad-px) * 1.5);;
 }
 .nav-flotante > :first-child {
     border-start-start-radius: 32.5px;

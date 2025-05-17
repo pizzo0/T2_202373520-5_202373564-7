@@ -8,6 +8,7 @@ function getDatabase() {
         database:"gescon",
         port:3306
     );
+    $database->set_charset("utf8mb4");
     
     if ($database->connect_error) {
         die("Error: ". $database->connect_error);
