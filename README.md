@@ -259,6 +259,7 @@ Para asegurarnos de que la base de datos se borre correctamente, es recomendable
 
 > [!WARNING]
 > Si en algun paso ocurre un error, lo mas probable es que tienes `Docker Desktop` cerrado. Abrelo para evitar errores.
+> NOTAR TAMBIEN, que al iniciar los contenedores desde cero, puede que algunas partes de la pagina den "Fatal error". Es normal, hay que esperar a que la base de datos termine de asignar todos los datos que se crearon. Esto no suele tardar mucho de todas formas.
 
 ## Integrantes
 * Alejandro Cáceres [202373520-5] (P.200)
