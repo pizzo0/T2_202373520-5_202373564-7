@@ -23,7 +23,7 @@ El proceso de `/signup` pide:
     - Una letra mayuscula.
     - Una letra minuscula.
     - Un numero.
-    - Largo de 8 caracteres.
+    - Largo de 6 caracteres minimo.
 
 El proceso de `/login` se hace simplemente con el `correo` y la `contraseña`.
 
@@ -196,8 +196,6 @@ Con todo lo anterior, el `jefe de comite` puede asignar, reasignar y eliminar `m
     - Y eso nada mas xd.
 * El modelo conceptual y normalización esta en `normalización.pdf`.
 * Los archivos pedidos estan en la carpeta `gescon`.
-
-Basicamente todo lo solicitado esta en `/gestion`, a excepcion de la normalización (`normalización.pdf`) y este `README.md`.
 
 ## Requerimientos
 
