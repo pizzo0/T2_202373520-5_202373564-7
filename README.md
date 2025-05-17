@@ -1,7 +1,5 @@
 # GESCON
 
-`README en proceso casi lista :p`
-
 Aplicación web con `PHP` y `MySQL`
 
 ## Descripción y supuestos
@@ -205,35 +203,37 @@ Con todo lo anterior, el `jefe de comite` puede asignar, reasignar y eliminar `m
 
 Con una terminal en la carpeta principal de la pagina, donde se encuentran los archivos `Dockerfile` y `docker-compose.yml`, ejecutar el comando:
 
-```
-docker-compose build
-```
-
-Esto creara los contenedores en Docker (Esto puede tardar un poco). Una vez con los contenedores listos, ejecutar el comando:
-
-```
-docker-compose up -d
+```bash
+docker-compose up -build -d
 ```
 
-El `-d` es para poder seguir utilizando la terminal sin ver el `log` de los contenedores. Si quieres verlo, simplemente no coloques `-d`.
-
-Esto iniciara los contenedores de la pagina web en php (`www`), la base de datos con mySql (`db`) y el administrador de la base de datos (`phpmyadmin`).
-
-Ahora tendras los siguientes accesos:
-* Pagina web en [localhost:8081](localhost:8081)
-* phpmyadmin en [localhost:8080](localhost:8080)
+Esto hara lo siguiente:
+* Creara los contenedores en Docker (Esto puede tardar un poco).
+* Inicia los contenedores sin mostrar el `log` (en segundo plano). Si quieres verlo, simplemente no coloques `-d`.
+* Esto iniciara los servidores de la pagina web en php (`www`), la base de datos con mySql (`db`) y el administrador de la base de datos (`phpmyadmin`).
+* Ahora tendras los siguientes accesos:
+    - Pagina web en [localhost:8081](localhost:8081)
+    - phpmyadmin en [localhost:8080](localhost:8080)
+* Si iniciaste los contenedores sin `-d`, puedes cerrar los contenedores usando `ctrl + C`.
 
 Ademas, tendras una nueva carpeta llamada `mysql-data`, en donde esta todo lo que almacena la base de datos.
 
 Cuando termines de utilizar la pagina web, puedes cerrar los contenedores ejecutando el comando:
 
-```
+```bash
 docker-compose down
 ```
 
-Si iniciaste los contenedores sin `-d`, puedes cerrar los contenedores usando `ctrl + C`.
+Notar que en el futuro, si quieres volver a iniciar los contenedores (una vez ya hayas construido los mismos), puedes iniciarlos con el comando:
 
-Luego, cuando quieras volver a usar la pagina (si la cerraste), solo debes ejecutar el segundo comando (`docker-compose up -d`).
+```bash
+docker-compose up -d
+```
+
+Para eliminar los datos cuando ya creaste la base de datos, puedes ejecutar el comando:
+```bash
+docker-compose down -v
+```
 
 > [!WARNING]
 > Si en algun paso ocurre un error, lo mas probable es que tienes `Docker Desktop` cerrado. Abrelo para evitar errores.
