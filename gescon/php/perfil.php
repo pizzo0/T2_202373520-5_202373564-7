@@ -141,6 +141,10 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         }
     
         if (isset($_POST['confirmar-eliminar'])) {
+            if ($user['id_rol'] == 3) {
+                throw new Exception("Como jefe de comite, no puedes eliminar tu cuenta.");
+            }
+
             $confirmar_eliminar = $_POST['confirmar-eliminar'];
             try {
                 $stmt = $database->prepare("
@@ -176,10 +180,11 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                 ];
             }
         }
-    } catch (\Throwable $th) {
+    } catch (Exception $e) {
+        $error = isset($stmt->error) ? $stmt->error : $e->getMessage();
         $_SESSION["notificacion"] = [
             "tipo" => "error",
-            "mensaje" => $stmt->error
+            "mensaje" => $error
         ];
         
     }

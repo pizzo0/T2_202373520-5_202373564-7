@@ -132,6 +132,6 @@ if (isset($_GET['id_articulo'])) {
             </div>
         </div>
     </div>
-
+    
     <?php include "articulo.componente.view.php"; ?>
 <?php endif ?>

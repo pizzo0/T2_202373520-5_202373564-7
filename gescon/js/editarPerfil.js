@@ -52,7 +52,7 @@ const cambiarPass = () => {
 toggleFormBtn.addEventListener('click', cambiarPass);
 
 const btnEliminarCuenta = document.querySelector('.modalBtnEliminarCuenta');
-btnEliminarCuenta.addEventListener('click', () => btns[0].click());
+if (btnEliminarCuenta) btnEliminarCuenta.addEventListener('click', () => btns[0].click());
 
 const btnCancelarEliminarCuenta = document.querySelector('#cerrar-eliminar-cuenta');
-btnCancelarEliminarCuenta.addEventListener('click', () => btnEliminarCuenta.click());
+if (btnCancelarEliminarCuenta) btnCancelarEliminarCuenta.addEventListener('click', () => btnEliminarCuenta.click());

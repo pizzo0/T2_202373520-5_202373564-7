@@ -26,6 +26,10 @@ CREATE TABLE Usuarios (
     FOREIGN KEY (id_rol) REFERENCES Roles(id)
 );
 
+-- ADMIN (jefe de comite) por defecto
+INSERT INTO Usuarios (rut,nombre,email,password,id_rol)
+VALUE ('1.000.000-0','Admin','admin@gescon.com','Admin0','3');
+
 CREATE TABLE Topicos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(30) NOT NULL UNIQUE

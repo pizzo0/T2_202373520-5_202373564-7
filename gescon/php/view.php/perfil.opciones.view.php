@@ -19,7 +19,9 @@
                 <button type="submit">Guardar cambios</button>
             </div>
             <div class="btns-container">
-                <button type="button" clasS="btn-rojo modalBtnEliminarCuenta" id="modalBtn" data-target="eliminar-cuenta">Eliminar cuenta</button>
+                <?php if ($user['id_rol'] != 3) : ?>
+                    <button type="button" clasS="btn-rojo modalBtnEliminarCuenta" id="modalBtn" data-target="eliminar-cuenta">Eliminar cuenta</button>
+                <?php endif; ?>
                 <button type="button" class="btn-rojo" onclick="window.location.href='/logout'" >Cerrar sesion</button>
             </div>
         </form>
@@ -49,20 +51,24 @@
 </div>
 <div class="menu-overlay"></div>
 
-<div class="modal-overlay" data-overlay-target="eliminar-cuenta"></div>
-<div class="modal" id="eliminar-cuenta">
-    <div class="modal-content">
-        <h1>Elimniar cuenta</h1>
-        <p>Para eliminar tu cuenta definitivamente, ingresa tu contraseña:</p>
-        <form method="POST" class="formulario form-gap">
-            <div class="input-container">
-                <label for="confirmar-eliminar">Contraseña</label>
-                <input type="password" name="confirmar-eliminar" id="confirmar-eliminar" required>
-            </div>
-            <div class="btns-container">
-                <button type="submit" class="btn-rojo">Eliminar cuenta</button>
-                <button type="button" id="cerrar-eliminar-cuenta">Cancelar</button>
-            </div>
-        </form>
+<?php if ($user['id_rol'] != 3) : ?>           
+    <div class="modal-overlay" data-overlay-target="eliminar-cuenta"></div>
+    <div class="modal" id="eliminar-cuenta">
+        <div class="modal-top">
+            <h1>Eliminar cuenta</h1>
+        </div>
+        <div class="modal-content">
+            <p>Para eliminar tu cuenta definitivamente, ingresa tu contraseña:</p>
+            <form method="POST" class="formulario form-gap">
+                <div class="input-container">
+                    <label for="confirmar-eliminar">Contraseña</label>
+                    <input type="password" name="confirmar-eliminar" id="confirmar-eliminar" required>
+                </div>
+                <div class="btns-container">
+                    <button type="submit" class="btn-rojo">Eliminar cuenta</button>
+                    <button type="button" id="cerrar-eliminar-cuenta">Cancelar</button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
+<?php endif; ?>
