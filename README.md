@@ -1,16 +1,20 @@
 # GESCON
 
-Aplicación web con `PHP` y `MySQL`
+App web con `PHP` y `MySQL`
 
 ## Descripción y supuestos
 
+De aqui en adelante, cuando nos refiramos a `usuarios`, nos referiremos a `autores`, `revisores` y `jefe de comite`. Tambien, cuando digamos `miembro(s) de comite` o solo `miembro(s)`, nos referiremos a `revisores` y `jefe de comite`.
+
 ### Login y Signup
 
-De aqui en adelante, cuando nos refiramos a `usuarios`, nos referiremos a `autores`, `revisores` y el `jefe de comite`. Tambien, cuando digamos `miembros de comite` o solo `miembro`, nos referiremos a `revisores` y `jefe de comite`.
+Para la parte de inicio de sesion y registro. Desde `/login` pueden iniciar sesión todos (`autores`, `revisores` y el `jefe de comite`) y para registrarse, se hace desde `/signup`.
 
-Para la parte de inicio de sesion y registro. Desde `/login` pueden iniciar sesión todos (autores, revisores y el jefe de comite) y para registrarse, se hace desde `/signup`.
+La base de datos siempre tendra un `jefe de comite` por defecto. Se puede iniciar sesion con esta cuenta con:
+* `correo` : admin@gescon.com
+* `contraseña` : Admin0
 
-hicimos que de forma comun, solo puedas registrarte como usuario.
+hicimos que de forma comun, solo puedas registrarte como `autor`.
 El jefe de comite (que se crea uno por defecto para nuestra base de datos) es el que puede crear los revisores desde `/gestion`. De todas formas, el registro en `/gesion` es practicamente igual que en `/signup`, solo que automaticamente se le asigna el rol de Revisor al usuario creado.
 
 El proceso de `/signup` pide:
@@ -219,12 +223,11 @@ o
 ```bash
 python3 GENERAR-DATA.py
 ```
-
-Esto nos creara un archivo `6_DATA.sql` en `/gescon/bd`. Este tendra la data que tendra nuestra base de datos para probarla.
+Esto nos creara un archivo `6_DATA.sql` en `/gescon/bd`. Este tendra la informacion que tendra nuestra base de datos para probarla.
 
 Cosas a tener en cuentra:
-* Todos los usuarios dentran de contraseña: `USer00`
-* Todos los articulos tendran de contraseña: `1`
+* Todos los `usuarios` dentran de `contraseña`: `USer00`
+* Todos los `articulos` tendran de `contraseña`: `1`
 
 Una vez hecho esto, podemos crear nuestros contenedores con `docker`. Ejecutamos el comando:
 ```bash
