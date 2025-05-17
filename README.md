@@ -168,12 +168,13 @@ Con todo lo anterior, el `jefe de comite` puede asignar, reasignar y eliminar `m
 ### Archivos
 
 * Los archivos `.sql` de la base de datos estan en `gescon/bd`.
-    - `TABLES.sql` tiene todas las tablas necesarias.
-    - `TRIGGERS.sql` tiene los triggers de las tablas.
-    - `FUNCTIONS.sql` tiene las funciones de la base de datos.
+    - `0_INIT.sql` solo inicializa el uso de la base de datos `gescon`.
+    - `1_TABLES.sql` tiene todas las tablas necesarias.
+    - `2_TRIGGERS.sql` tiene los triggers de las tablas.
+    - `3_FUNCTIONS.sql` tiene las funciones de la base de datos.
         - En este caso solo hay uno.
-    - `PROCEDURES.sql` tiene los procedimientos almacenados.
-    - `VIEWS.sql` tiene los views.
+    - `4_PROCEDURES.sql` tiene los procedimientos almacenados.
+    - `5_VIEWS.sql` tiene los views.
         - En este caso solo hay uno.
 * Los archivos `.php` estan todos en `gescon/php`, a excepcion de `index.php`, el cual es necesario que este fuera para que la pagina funcione correctamente. Ademas, estan las siguientes subcarpetas dentro:
     - `/api` tiene las apis necesarias para interactuar con javascript.
@@ -204,7 +205,7 @@ Con todo lo anterior, el `jefe de comite` puede asignar, reasignar y eliminar `m
 Con una terminal en la carpeta principal de la pagina, donde se encuentran los archivos `Dockerfile` y `docker-compose.yml`, ejecutar el comando:
 
 ```bash
-docker-compose up -build -d
+docker-compose up --build -d
 ```
 
 Esto hara lo siguiente:
