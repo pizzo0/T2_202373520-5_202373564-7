@@ -12,11 +12,11 @@ const guardarFiltrosRevisor = () => {
     sessionStorage.setItem('filtroEvaluado', filtroEvaluado.checked);
 }
 
-const revisadoSession = sessionStorage.getItem('filtroRevisadosRevisor');
+const revisadoRevisorSession = sessionStorage.getItem('filtroRevisadosRevisor');
 const evaluadoSession = sessionStorage.getItem('filtroEvaluado');
 
-if (revisadoSession || evaluadoSession) {
-    filtroRevisadosRevisor.checked = revisadoSession === 'true';
+if (revisadoRevisorSession || evaluadoSession) {
+    filtroRevisadosRevisor.checked = revisadoRevisorSession === 'true';
     filtroEvaluado.checked = evaluadoSession === 'true';
 } else {
     filtroRevisadosRevisor.checked = false;
