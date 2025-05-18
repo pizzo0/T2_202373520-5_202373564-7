@@ -397,6 +397,7 @@ BEGIN
 END;//
 DELIMITER ;
 
+-- DROP PROCEDURE filtrar_articulos_data;
 DELIMITER //
 CREATE PROCEDURE filtrar_articulos_data (
     IN p_id_articulo INT,
@@ -426,42 +427,89 @@ BEGIN
         ELSE 'fecha_envio DESC'
     END;
 
-    SET @filtros = CONCAT(
-        ' FROM Articulos_Data WHERE 1=1 ',
+    SET @base_sql = '
+        FROM Articulos
+        JOIN Usuarios ON Articulos.rut_contacto = Usuarios.rut
+        LEFT JOIN Articulos_Autores ON Articulos.id = Articulos_Autores.id_articulo
+        LEFT JOIN Usuarios AS AutorUsuario ON Articulos_Autores.rut_autor = AutorUsuario.rut
+        LEFT JOIN Articulos_Revisores ON Articulos.id = Articulos_Revisores.id_articulo
+        LEFT JOIN Usuarios AS RevisorUsuario ON Articulos_Revisores.rut_revisor = RevisorUsuario.rut
+        LEFT JOIN Articulos_Topicos ON Articulos.id = Articulos_Topicos.id_articulo
+        WHERE 1=1
+    ';
 
-        IF(p_id_articulo IS NULL, '', CONCAT(' AND id_articulo = ', p_id_articulo)),
+    SET @cond = '';
 
-        IF(p_contacto IS NULL OR p_contacto = '', '', 
-            CONCAT(' AND JSON_UNQUOTE(JSON_EXTRACT(contacto, "$.nombre")) COLLATE utf8mb4_general_ci LIKE ''%', REPLACE(p_contacto, "'", "''"), '%''')),
+    IF p_id_articulo IS NOT NULL THEN
+        SET @cond = CONCAT(@cond, ' AND Articulos.id = ', p_id_articulo);
+    END IF;
 
-        IF(p_autor IS NULL OR p_autor = '', '', 
-            CONCAT(' AND EXISTS (SELECT 1 FROM JSON_TABLE(autores, "$[*]" COLUMNS (nombre VARCHAR(255) PATH "$.nombre")) AS autor WHERE autor.nombre COLLATE utf8mb4_general_ci LIKE ''%', REPLACE(p_autor, "'", "''"), '%'' )')),
+    IF p_contacto IS NOT NULL AND p_contacto != '' THEN
+        SET @cond = CONCAT(@cond, ' AND Usuarios.nombre COLLATE utf8mb4_0900_ai_ci LIKE ''%', REPLACE(p_contacto, '''', ''''''), '%''');
+    END IF;
 
-        IF(p_revisor IS NULL OR p_revisor = '', '', 
-            CONCAT(' AND EXISTS (SELECT 1 FROM JSON_TABLE(revisores, "$[*]" COLUMNS (nombre VARCHAR(255) PATH "$.nombre")) AS revisor WHERE revisor.nombre COLLATE utf8mb4_general_ci LIKE ''%', REPLACE(p_revisor, "'", "''"), '%'' )')),
+    IF p_autor IS NOT NULL AND p_autor != '' THEN
+        SET @cond = CONCAT(@cond, ' AND AutorUsuario.nombre COLLATE utf8mb4_0900_ai_ci LIKE ''%', REPLACE(p_autor, '''', ''''''), '%''');
+    END IF;
 
-        IF(p_id_topico IS NULL OR p_id_topico = 0, '', 
-            CONCAT(' AND JSON_CONTAINS(topicos, ''{"id":', p_id_topico, '}'' , ''$'')')),
+    IF p_revisor IS NOT NULL AND p_revisor != '' THEN
+        SET @cond = CONCAT(@cond, ' AND RevisorUsuario.nombre COLLATE utf8mb4_0900_ai_ci LIKE ''%', REPLACE(p_revisor, '''', ''''''), '%''');
+    END IF;
 
-        IF(p_titulo IS NULL OR p_titulo = '', '', 
-            CONCAT(' AND titulo COLLATE utf8mb4_general_ci LIKE ''%', REPLACE(p_titulo, "'", "''"), '%''')),
+    IF p_id_topico IS NOT NULL AND p_id_topico != 0 THEN
+        SET @cond = CONCAT(@cond, ' AND Articulos_Topicos.id_topico = ', p_id_topico);
+    END IF;
 
-        IF(p_revisado IS NULL, '', CONCAT(' AND revisado = ', p_revisado)),
+    IF p_titulo IS NOT NULL AND p_titulo != '' THEN
+        SET @cond = CONCAT(@cond, ' AND Articulos.titulo COLLATE utf8mb4_0900_ai_ci LIKE ''%', REPLACE(p_titulo, '''', ''''''), '%''');
+    END IF;
 
-        IF(p_necesita_revisores IS NULL, '', CONCAT(' AND necesita_revisores = ', p_necesita_revisores)),
+    IF p_revisado IS NOT NULL THEN
+        SET @cond = CONCAT(@cond,
+            IF(p_revisado = 1,
+                ' AND (
+                    SELECT COUNT(*) FROM Formulario
+                    WHERE Formulario.id_articulo = Articulos.id
+                ) >= 3',
+                ' AND (
+                    SELECT COUNT(*) FROM Formulario
+                    WHERE Formulario.id_articulo = Articulos.id
+                ) < 3'
+            )
+        );
+    END IF;
 
-        IF(fecha_inicio IS NOT NULL AND fecha_fin IS NOT NULL,
-           CONCAT(' AND fecha_envio BETWEEN ''', fecha_inicio, ''' AND ''', fecha_fin, ''' '),
-           '')
+    IF p_necesita_revisores IS NOT NULL THEN
+        SET @cond = CONCAT(@cond,
+            IF(p_necesita_revisores = 1,
+                ' AND (
+                    SELECT COUNT(*) FROM Articulos_Revisores
+                    WHERE Articulos_Revisores.id_articulo = Articulos.id
+                ) < 3',
+                ' AND (
+                    SELECT COUNT(*) FROM Articulos_Revisores
+                    WHERE Articulos_Revisores.id_articulo = Articulos.id
+                ) >= 3'
+            )
+        );
+    END IF;
+
+    IF fecha_inicio IS NOT NULL AND fecha_fin IS NOT NULL THEN
+        SET @cond = CONCAT(@cond, ' AND Articulos.fecha_envio BETWEEN ''', fecha_inicio, ''' AND ''', fecha_fin, '''');
+    END IF;
+
+    SET @sql_count = CONCAT(
+        'SELECT COUNT(DISTINCT Articulos.id) AS total ',
+        @base_sql,
+        @cond
     );
 
-    SET @sql_count = CONCAT('SELECT COUNT(*) AS total', @filtros);
-
     SET @sql = CONCAT(
-        'SELECT *', @filtros,
-        ' ORDER BY ', orden_sql,
-        ' LIMIT ', limite,
-        ' OFFSET ', offset_val
+        'SELECT * FROM Articulos_Data WHERE Articulos_Data.id_articulo IN (SELECT DISTINCT Articulos.id ',
+        @base_sql,
+        @cond,
+        ') ORDER BY ', orden_sql,
+        ' LIMIT ', limite, ' OFFSET ', offset_val
     );
 
     PREPARE stmt_count FROM @sql_count;
@@ -471,5 +519,5 @@ BEGIN
     PREPARE stmt FROM @sql;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
-END//
+END;//
 DELIMITER ;

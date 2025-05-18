@@ -40,7 +40,7 @@ SELECT
             WHEN COUNT(*) < 3 THEN 1
             ELSE 0
         END
-        FROM Articulos_revisores
+        FROM Articulos_Revisores
         WHERE Articulos_Revisores.id_articulo = Articulos.id
     ) AS necesita_revisores,
     (
