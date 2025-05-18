@@ -109,6 +109,7 @@ const cargarArticulos = async () => {
 
     params.forEach(async (v,k) => {
         if ((k == "revisado" || k == "necesita-revisores") && v == 0) return;
+        if (k == 'offset') return;
 
         let key = k;
         let val = v;

@@ -12,18 +12,16 @@ const guardarFiltrosRevisor = () => {
     sessionStorage.setItem('filtroEvaluado', filtroEvaluado.checked);
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    const revisadoSession = sessionStorage.getItem('filtroRevisadosRevisor');
-    const evaluadoSession = sessionStorage.getItem('filtroEvaluado');
+const revisadoSession = sessionStorage.getItem('filtroRevisadosRevisor');
+const evaluadoSession = sessionStorage.getItem('filtroEvaluado');
 
-    if (revisadoSession || evaluadoSession) {
-        filtroRevisadosRevisor.checked = revisadoSession === 'true';
-        filtroEvaluado.checked = evaluadoSession === 'true';
-    } else {
-        filtroRevisadosRevisor.checked = false;
-        filtroEvaluado.checked = true;
-    }
-});
+if (revisadoSession || evaluadoSession) {
+    filtroRevisadosRevisor.checked = revisadoSession === 'true';
+    filtroEvaluado.checked = evaluadoSession === 'true';
+} else {
+    filtroRevisadosRevisor.checked = false;
+    filtroEvaluado.checked = true;
+}
 
 tabRevisar.addEventListener('click', () => {
     revisarFiltroRevisor();

@@ -12,13 +12,13 @@ $contacto = $_GET['contacto'] ?? '';
 $autor = $_GET['autor'] ?? '';
 $fecha_desde = !empty($_GET['fecha_desde']) ? $_GET['fecha_desde'] : '1900-01-01 00:00:00';
 $fecha_hasta = !empty($_GET['fecha_hasta']) ? $_GET['fecha_hasta'] : date('Y-m-d H:i:s');
-$topico = isset($_GET['topicos']) ? (int)$_GET['topicos'] : 0;
+$topico = isset($_GET['topicos']) ? (int)$_GET['topicos'] : null;
 $revisor = $_GET['revisor'] ?? '';
-$necesita_revisores = (isset($_GET['necesita-revisores']) && (int)$_GET['necesita-revisores'] === 1) ? 1 : 0;
+$necesita_revisores = (isset($_GET['necesita-revisores']) && (int)$_GET['necesita-revisores'] === 1) ? 1 : null;
 $ordenar_por = $_GET['ordenar_por'] ?? 'fecha_envio_desc';
 $limit = 20;
 $offset = (isset($_GET['offset']) ? (int)$_GET['offset'] : 0) * $limit;
-$revisado = (isset($_GET['revisado']) && (int)$_GET['revisado'] === 1) ? 1 : 0;
+$revisado = (isset($_GET['revisado']) && (int)$_GET['revisado'] === 1) ? 1 : null;
 
 $database = getDatabase();
 

@@ -52,6 +52,17 @@
     display: block !important;
 }
 
+.desde-hasta-inputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.input-container-gap {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
 
 #resultados-busqueda {
     display: grid;

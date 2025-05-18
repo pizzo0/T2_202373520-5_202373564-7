@@ -60,14 +60,18 @@ if ($filtro_extra) $necesita_revisores = isset($_GET['necesita-revisores']) ? ((
         </div>
         <div>
             <span>Fecha de publicación:</span>
-            <br>
-            <label for="fecha_desde">Desde:</label>
-            <input type="date" name="fecha_desde" id="fecha_desde" <?= $fecha_desde ?>>
-            <label for="fecha_hasta">Hasta:</label>
-            <input type="date" name="fecha_hasta" id="fecha_hasta" <?= $fecha_hasta ?>>
+            <div class="desde-hasta-inputs">
+                <div>
+                    <label for="fecha_desde">Desde:</label>
+                    <input type="date" name="fecha_desde" id="fecha_desde" <?= $fecha_desde ?>>
+                </div>
+                <div>
+                    <label for="fecha_hasta">Hasta:</label>
+                    <input type="date" name="fecha_hasta" id="fecha_hasta" <?= $fecha_hasta ?>>
+                </div>
+            </div>
             <script>
                 const inputDates = document.querySelectorAll('[type=date]');
-
                 inputDates.forEach(i => {
                     i.addEventListener('click', () => {
                         if (i.showPicker) {
@@ -79,23 +83,25 @@ if ($filtro_extra) $necesita_revisores = isset($_GET['necesita-revisores']) ? ((
                 });
             </script>
         </div>
-        <span>Sobre el articulo:</span>
-        <div class="switch-sub-container">
-            <label class="checkbox-label" for="revisado">
-                <input type="checkbox" class="checkbox" id="revisado" name="revisado" <?= $revisado ?>>
-                <span class="checkbox-slider"></span>
-            </label>
-            <label class="reset-label" for="revisado">Esta revisado</label>
-        </div>
-        <?php if ($filtro_extra) : ?>
+        <div class="input-container-gap">
+            <span>Sobre el articulo:</span>
             <div class="switch-sub-container">
-                <label class="checkbox-label" for="necesita-revisores">
-                    <input type="checkbox" class="checkbox" id="necesita-revisores" name="necesita-revisores" <?= $necesita_revisores ?>>
+                <label class="checkbox-label" for="revisado">
+                    <input type="checkbox" class="checkbox" id="revisado" name="revisado" <?= $revisado ?>>
                     <span class="checkbox-slider"></span>
                 </label>
-                <label class="reset-label" for="necesita-revisores">Necesita revisores</label>
+                <label class="reset-label" for="revisado">Esta revisado</label>
             </div>
-        <?php endif ?>
+            <?php if ($filtro_extra) : ?>
+                <div class="switch-sub-container">
+                    <label class="checkbox-label" for="necesita-revisores">
+                        <input type="checkbox" class="checkbox" id="necesita-revisores" name="necesita-revisores" <?= $necesita_revisores ?>>
+                        <span class="checkbox-slider"></span>
+                    </label>
+                    <label class="reset-label" for="necesita-revisores">Necesita revisores</label>
+                </div>
+            <?php endif ?>
+        </div>
         <br>
         <div class="btns-container">
             <button type="submit" onclick="toggleFC()">Filtrar</button>

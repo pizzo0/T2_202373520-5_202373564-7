@@ -10,15 +10,13 @@ const guardarFiltro = () => {
     sessionStorage.setItem('filtroRevisados', filtroRevisados.checked);
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    const revisadoSession = sessionStorage.getItem('filtroRevisados');
+const revisadoSession = sessionStorage.getItem('filtroRevisados');
 
-    if (revisadoSession) {
-        filtroRevisados.checked = revisadoSession === 'true';
-    } else {
-        filtroRevisados.checked = false;
-    }
-});
+if (revisadoSession) {
+    filtroRevisados.checked = revisadoSession === 'true';
+} else {
+    filtroRevisados.checked = false;
+}
 
 tabArticulos.addEventListener('click', () => {
     revisarFiltro();
