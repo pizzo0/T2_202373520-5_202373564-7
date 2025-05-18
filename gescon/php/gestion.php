@@ -84,23 +84,31 @@ if ($user['id_rol'] === 3 && $_SERVER["REQUEST_METHOD"] === "POST") {
             ");
             $stmt->bind_param("sss", $nombre_modificar, $correo_modificar, $rut_modificar);
             $stmt->execute();
-    
-            $stmt = $database->prepare("
-            DELETE FROM Usuarios_Especialidad
-            WHERE rut_usuario = ?
-            ");
-            $stmt->bind_param("s",$rut_modificar);
-            $stmt->execute();
-    
+
+            $topicos_previos = explode(",", $_POST["topicos_previos"]);
             $topicos = explode(",", $_POST["topicos"]);
+
             $stmt = $database->prepare("
-            INSERT INTO Usuarios_Especialidad (rut_usuario,id_topico)
-            VALUES (?,?)
+                DELETE FROM Usuarios_Especialidad
+                WHERE rut_usuario = ?
+                AND id_topico = ?
             ");
-            foreach($topicos as $especialidad) {
-                $especialidad = (int)$especialidad;
-                $stmt->bind_param("si",$rut_modificar,$especialidad);
-                $stmt->execute();
+            foreach ($topicos_previos as $topico) {
+                if (!in_array($topico, $topicos) && !empty($topico)) {
+                    $stmt->bind_param("si", $rut_modificar, $topico);
+                    $stmt->execute();
+                }
+            }
+
+            $stmt = $database->prepare("
+                INSERT INTO Usuarios_Especialidad (rut_usuario, id_topico)
+                VALUES (?, ?)
+            ");
+            foreach ($topicos as $topico) {
+                if (!in_array($topico, $topicos_previos) && !empty($topico)) {
+                    $stmt->bind_param("si", $rut_modificar, $topico);
+                    $stmt->execute();
+                }
             }
             $database->commit();
 
@@ -112,7 +120,7 @@ if ($user['id_rol'] === 3 && $_SERVER["REQUEST_METHOD"] === "POST") {
             $database->rollback();
             $_SESSION["notificacion"] = [
                 "tipo" => "error",
-                "mensaje" => "Ocurrio un error al modificar al revisor... $e"
+                "mensaje" => "Ocurrio un error al modificar al revisor...<br>" . $e->getMessage()
             ];
         }
     } elseif (isset($_POST["revisores"])) {

@@ -20,10 +20,6 @@ services:
       MYSQL_PASSWORD: 123456
       MYSQL_ROOT_PASSWORD: admin
       TZ: America/Santiago
-    command: [
-      "--character-set-server=utf8mb4",
-      "--collation-server=utf8mb4_0900_as_cs"
-    ]
     volumes:
       - ./gescon/bd:/docker-entrypoint-initdb.d
       - ./mysql-data:/var/lib/mysql

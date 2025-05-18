@@ -13,7 +13,7 @@ $ordenar_por = isset($_GET['ordenar_por']) ? $_GET['ordenar_por'] : '';
     <button type="submit" class="r-button" form="filtro-form"><?= $svg_buscar ?></button>
 </div>
 <div class="main-buscar-filtros-container">
-    <button type="button" id="btn-filtrar" onclick="toggleFC()"><span><?= $svg_filtro ?></span> Filtrar resultados</button>
+    <?php include "componente.filtro.btn.php" ?>
     <div class="ordenar-container" id="select">
         <label for="ordenar_por">Ordenar por:</label>
         <select class="select-input" style="max-width:130px;" name="ordenar_por" id="ordenar_por" form="filtro-form">

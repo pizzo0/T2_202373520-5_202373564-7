@@ -30,7 +30,8 @@
 }
 
 #filtro-form {
-    display: grid;
+    display: flex;
+    flex-direction: column;
     gap: 1rem;
 }
 
@@ -238,11 +239,6 @@
     .filtro-container-activo {
         transform:
             translateX(0px);
-    }
-
-    #filtro-form {
-        display: grid;
-        gap: 1rem;
     }
 
     #resultados-busqueda {

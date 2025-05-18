@@ -1,7 +1,19 @@
-<div class="tab tab-activo">
-    <button id="toggle_crear_revisor">+ Crear revisor</button>
+<div class="buscar-container">
+    <div class="main-buscar-filtros-container">
+        <button id="toggle_crear_revisor">+ Crear revisor</button>
+        <?php
+        $btn_texto = "Filtrar revisores";
+        include "componente.filtro.btn.php";
+        ?>
+    </div>
+    <div id="filtro-view"></div>
     <div class="revisores-container"> <!-- revisores --> </div>
 </div>
+
+<?php
+$filtros_componente = "gestion.revisores.componente.filtros.php";
+include "componente.filtro.php"
+?>
 
 <div class="modal" id="modificar-revisor-container"></div>
 <div class="modal-overlay" data-overlay-target="modificar-revisor-container"></div>

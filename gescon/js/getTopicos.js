@@ -2,7 +2,15 @@ const topicosContainer = document.querySelector('.topicos-container');
 
 document.addEventListener("DOMContentLoaded", () => {
     iniciarCarga(); // inicia barra de carga
-    fetch("/php/api/topicos.php")
+
+    let topicosParams = '';
+    if (location.pathname == "/gestion/topicos") {
+        topicosParams = new URLSearchParams(window.location.search);
+        topicosParams = topicosParams.toString();
+    }
+
+
+    fetch(`/php/api/topicos.php?${topicosParams}`)
         .then((response) => response.json())
         .then((data) => {
             progreso = 50;

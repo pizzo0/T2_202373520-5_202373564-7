@@ -1,11 +1,9 @@
 <?php
 
 
-$svg_filtro = getAsset("/svg/filtro.svg");
 $svg_ordenar = getAsset("/svg/ordenar.svg");
 $svg_buscar = getAsset("/svg/buscar.svg");
 $titulo = isset($titulo) ? $titulo : "Articulos";
-include "buscar.componente.filtro.view.php" 
 ?>
 
 <div class="buscar-container">
@@ -19,6 +17,12 @@ include "buscar.componente.filtro.view.php"
         <!-- cargan los resultados -->
     </div>
 </div>
+
+<?php
+$filtros_componente = "buscar.componente.filtros.view.php";
+include "componente.filtro.php";
+?>
+
 <script>
     document.querySelector('input[name="titulo"]').addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {

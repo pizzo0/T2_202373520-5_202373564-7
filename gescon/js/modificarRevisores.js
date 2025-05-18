@@ -57,7 +57,7 @@ const cargarTopicos = async (dropdownMenu) => {
         data.forEach((topico) => {
             const item = document.createElement("div");
             item.classList.add("dropdown-item");
-            item.textContent = topico.nombre;
+            item.textContent = ("[" + topico.id + "] " + topico.nombre) || 'Desconocido';
             item.setAttribute("data-id", topico.id);
             dropdownMenu.appendChild(item);
         });
@@ -73,7 +73,8 @@ function isTopicAlreadySelected(topicId) {
 
 async function cargarRevisores() {
     iniciarCarga(); // inicia barra de carga
-    fetch('/php/api/data.revisores.php')
+    cargarFiltros();
+    fetch(`/php/api/data.revisores.php?${params.toString()}`)
         .then(response => response.json())
         .then(result => {
             progreso = 50;
@@ -125,7 +126,7 @@ async function cargarRevisores() {
                             const span = document.createElement('span');
                             span.className = 'etiqueta';
                             span.setAttribute('data-id', topico.id_topico);
-                            span.textContent = topico.nombre || 'Desconocido';
+                            span.textContent = ("[" + topico.id_topico + "] " + topico.nombre) || 'Desconocido';
                             divEspecialidades.appendChild(span);
                         });
                     } else {
@@ -171,7 +172,7 @@ async function cargarRevisores() {
 
                     const btnAsignarRevisor = document.createElement('button');
                     btnAsignarRevisor.type = 'button';
-                    btnAsignarRevisor.textContent = 'Asignar articulos';
+                    btnAsignarRevisor.textContent = '+ Asignar articulos';
                     btnAsignarRevisor.id = "modalBtn";
                     btnAsignarRevisor.setAttribute('data-target', target);
 
@@ -189,6 +190,21 @@ async function cargarRevisores() {
 
                         const modalModificarRevisor = document.getElementById(target);
                         modalModificarRevisor.innerHTML = '';
+
+                        const overlay = document.querySelector(`[data-overlay-target=${target}]`);
+
+                        if (!overlay.dataset.listenerAdded) {
+                            overlay.addEventListener('click', () => {
+                                modalModificarRevisor.classList.toggle('modal-activo');
+                                overlay.classList.toggle('menu-overlay-activo');
+                                document.body.classList.toggle('no-scroll');
+                            });
+                            overlay.dataset.listenerAdded = 'true';
+                        }
+
+                        modalModificarRevisor.classList.toggle('modal-activo');
+                        overlay.classList.toggle('menu-overlay-activo');
+                        document.body.classList.toggle('no-scroll');
 
                         const modalRevisorContent = document.createElement('div');
                         modalRevisorContent.className = 'modal-content';
@@ -223,24 +239,17 @@ async function cargarRevisores() {
                         const articulosContainer = document.createElement('div');
                         articulosContainer.id = "revisor-articulos-container";
                         const articulosSeleccionados = [];
-                        if (revisor.id_articulos) {
+                        if (revisor.id_articulos_info) {
                             articulosContainer.innerHTML = '';
-                            for (const articulo of revisor.id_articulos) {
-                                try {
-                                    const res = await fetch(`/php/api/filtrar.articulos.php?id_articulo=${articulo}`);
-                                    const data = await res.json();
-                                    const articulo_data = data.data[0];
-                                    
-                                    const articuloDiv = crearArticuloDiv(articulo,articulo_data.en_revision);
-                                    articulosContainer.appendChild(articuloDiv);
-                                    articulosSeleccionados.push(articulo);
-
-                                } catch (error) {
-                                    console.error(`Error al cargar el articulo ${articulo}:`, error);
-                                }
-                            }
+                            revisor.id_articulos_info.forEach(articulo_info => {
+                                id_articulo_info = articulo_info.id_articulo;
+                                en_revision_info = articulo_info.en_revision;
+                                const articuloDiv = crearArticuloDiv(id_articulo_info, en_revision_info);
+                                articulosContainer.appendChild(articuloDiv);
+                                articulosSeleccionados.push(id_articulo_info);
+                            });
                         } else {
-                            articulosContainer.innerHTML = "No hay articulos asignados.";
+                            articulosContainer.innerHTML = "No hay artículos asignados.";
                         }
 
                         const hiddenRutRevisor = document.createElement('input');
@@ -333,23 +342,8 @@ async function cargarRevisores() {
                         form.append(divArticulos,btnsContainer);
 
                         modalRevisorContent.appendChild(form);
-
+                        modalModificarRevisor.innerHTML = '';
                         modalModificarRevisor.append(modalTop,modalRevisorContent);
-
-                        const overlay = document.querySelector(`[data-overlay-target=${target}]`);
-
-                        if (!overlay.dataset.listenerAdded) {
-                            overlay.addEventListener('click', () => {
-                                modalModificarRevisor.classList.toggle('modal-activo');
-                                overlay.classList.toggle('menu-overlay-activo');
-                                document.body.classList.toggle('no-scroll');
-                            });
-                            overlay.dataset.listenerAdded = 'true';
-                        }
-
-                        modalModificarRevisor.classList.toggle('modal-activo');
-                        overlay.classList.toggle('menu-overlay-activo');
-                        document.body.classList.toggle('no-scroll');
                     });
 
                     divAcciones.append(btnAsignarRevisor,formEliminar);
@@ -451,7 +445,7 @@ async function cargarRevisores() {
                             revisor.topicos.forEach((topico) => {
                                 const topicDivAux = document.createElement("div");
                                 topicDivAux.classList.add("selected-topic");
-                                topicDivAux.textContent = topico.nombre;
+                                topicDivAux.textContent = ("[" + topico.id_topico + "] " + topico.nombre) || 'Desconocido';;
                                 topicDivAux.setAttribute("data-id", topico.id_topico);
                                 especialidadesContainer.appendChild(topicDivAux);
     
@@ -466,7 +460,13 @@ async function cargarRevisores() {
 
                         hiddenInput.value = topicosSeleccionados.join(",");
 
-                        divEspecialidades.append(dropdownContainer, especialidadesContainer, hiddenInput);
+                        const hiddenTopicosPrevios = document.createElement('input');
+                        hiddenTopicosPrevios.type = 'hidden';
+                        hiddenTopicosPrevios.id = 'hidden-topics-previos';
+                        hiddenTopicosPrevios.name = 'topicos_previos';
+                        hiddenTopicosPrevios.value = topicosSeleccionados.join(",");
+
+                        divEspecialidades.append(dropdownContainer, especialidadesContainer, hiddenInput, hiddenTopicosPrevios);
 
                         dropdownBtn.addEventListener("click", () => {
                             dropdownMenu.classList.toggle("show");
@@ -548,6 +548,7 @@ async function cargarRevisores() {
 
                         form.append(divInputs, divBtnsRevisor);
                         modalRevisorContent.appendChild(form);
+                        modalModificarRevisor.innerHTML = '';
                         modalModificarRevisor.append(modalTop, modalRevisorContent);
 
                         const formularios = document.querySelectorAll('.formulario');

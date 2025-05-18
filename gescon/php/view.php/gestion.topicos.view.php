@@ -1,7 +1,20 @@
-<div class="tab tab-activo">
-    <button id="modalBtn" data-target="crear-topico-container">+ Crear topico/especialidad</button>
+<div class="buscar-container">
+    <div class="main-buscar-filtros-container">
+        <button id="modalBtn" data-target="crear-topico-container">+ Crear topico/especialidad</button>
+        <?php
+        $btn_texto = "Filtrar topicos";
+        include "componente.filtro.btn.php";
+        ?>
+    </div>
+    <div id="filtro-view"></div>
     <div class="topicos-container"> <!-- topicos --> </div>
 </div>
+
+<?php
+$filtros_componente = "gestion.topicos.componente.filtros.php";
+include "componente.filtro.php"
+?>
+
 <div class="modal" id="crear-topico-container">
     <div class="modal-top">
         <h1>Crea un topico nuevo</h1>

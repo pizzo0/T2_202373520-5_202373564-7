@@ -113,7 +113,7 @@ BEGIN
 
     IF NOT NEW.rut REGEXP '^[1-9][0-9]?\\.[0-9]{3}\\.[0-9]{3}-[0-9K]$' THEN
         SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Formato del RUT invalido (XX.XXX.XXX-X).';
+        SET MESSAGE_TEXT = 'Formato del RUT invalido.';
     END IF;
 
     IF NOT NEW.email REGEXP '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$' THEN
@@ -126,9 +126,9 @@ BEGIN
         SET MESSAGE_TEXT = 'La contraseña no debe contener espacios.';
     END IF;
 
-    IF CHAR_LENGTH(NEW.password) < 8 THEN
+    IF CHAR_LENGTH(NEW.password) < 6 THEN
         SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Contraseña muy corta. Debe tener 8 caracteres o mas.';
+        SET MESSAGE_TEXT = 'Contraseña muy corta. Debe tener 6 caracteres o mas.';
     END IF;
 
     IF NOT NEW.password REGEXP '[A-Z]' THEN
@@ -144,11 +144,6 @@ BEGIN
     IF NOT NEW.password REGEXP '[0-9]' THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Contraseña debe tener al menos un numero.';
-    END IF;
-    
-    IF NOT NEW.password REGEXP '[^a-zA-Z0-9]' THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Contraseña debe tener al menos un caracter especial.';
     END IF;
 END;//
 DELIMITER ;
@@ -207,6 +202,18 @@ BEGIN
     ) THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Revisor no asignado al articulo.';
+    END IF;
+END;//
+DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER no_eliminar_jefe
+BEFORE DELETE ON Usuarios
+FOR EACH ROW
+BEGIN
+    IF OLD.id_rol >= 3 THEN
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = 'No es posible eliminar al jefe de comite';
     END IF;
 END;//
 DELIMITER ;
