@@ -1,3 +1,5 @@
+SET NAMES 'utf8mb4';
+
 DELIMITER //
 CREATE TRIGGER verificar_insert_usuario BEFORE INSERT ON Usuarios
 FOR EACH ROW
