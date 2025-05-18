@@ -229,6 +229,7 @@ Esto nos creara un archivo `6_DATA.sql` en `/gescon/bd`. Este tendra la informac
 Cosas a tener en cuentra:
 * Todos los `usuarios` dentran de `contraseña`: `USer00`
 * Todos los `articulos` tendran de `contraseña`: `1`
+* No se van a crear mas `jefes de comite` a partir de este script, solo existira el que se crea por defecto.
 
 Una vez hecho esto, podemos crear nuestros contenedores con `docker`. Ejecutamos el comando:
 ```bash
