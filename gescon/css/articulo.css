@@ -189,6 +189,10 @@
     background-color: var(--bg-colorful);
     border: 1px solid var(--font-colorful);
 }
+.nav-flotante-btn-expandido:hover {
+    background-color: var(--font-color);
+    border: 1px solid var(--font-color);
+}
 .nav-flotante-btn:hover span {
     color: var(--bg-color);
 }

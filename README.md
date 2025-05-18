@@ -4,18 +4,18 @@ App web con `PHP` y `MySQL`
 
 ## Descripción y supuestos
 
-De aqui en adelante, cuando nos refiramos a `usuarios`, nos referiremos a `autores`, `revisores` y `jefe de comite`. Tambien, cuando digamos `miembro(s) de comite` o solo `miembro(s)`, nos referiremos a `revisores` y `jefe de comite`.
+De aqui en adelante, cuando digamos `usuarios` nos referimos a `autores`, `revisores` y `jefe de comite`. Tambien, cuando digamos `miembro(s) de comite` o solo `miembro(s)`, nos referiremos a `revisores` y `jefe de comite`.
 
 ### Login y Signup
 
-Para la parte de inicio de sesion y registro. Desde `/login` pueden iniciar sesión todos (`autores`, `revisores` y el `jefe de comite`) y para registrarse, se hace desde `/signup`.
+Desde `/login` pueden iniciar sesión los `usuarios` y para registrarse, se hace desde `/signup`.
 
-La base de datos siempre tendra un `jefe de comite` por defecto. Se puede iniciar sesion con esta cuenta con:
+La base de datos siempre tendra un `jefe de comite` por defecto. Se puede iniciar sesion a esta cuenta con:
 * `correo` : admin@gescon.com
 * `contraseña` : Admin0
 
 hicimos que de forma comun, solo puedas registrarte como `autor`.
-El jefe de comite (que se crea uno por defecto para nuestra base de datos) es el que puede crear los revisores desde `/gestion`. De todas formas, el registro en `/gesion` es practicamente igual que en `/signup`, solo que automaticamente se le asigna el rol de Revisor al usuario creado.
+El `jefe de comite` es el que puede crear los `revisores` desde `/gestion`. El registro en `/gesion` es practicamente igual que en `/signup`, solo que automaticamente se le asigna el rol de Revisor al usuario creado.
 
 El proceso de `/signup` pide:
 * `Rut`: Este es el PK y es UNICO para cada usuario.
@@ -33,13 +33,13 @@ El proceso de `/login` se hace simplemente con el `correo` y la `contraseña`.
 
 #### Buscar y busqueda avanzada
 
-En este caso, definimos que un articulo estara en estado `revisado` o `evaluado` cuando este ya tiene una revision o formulario hecho por 3 revisores.
+En este caso, definimos que un articulo estara en estado `revisado` o `evaluado` cuando este tenga 3 formularios/revisiones hechas.
 
 La pagina tiene una barra de busqueda en `/` (`index`/`inicio`) y `/buscar`. La primera (`/`) te redirige a `/buscar`. Todos los usuarios pueden hacer esto.
 
 Esta barra de busqueda filtra a partir del titulo de los articulos.
 
-En `/buscar` puedes ver todos los articulos de la pagina, tanto los `evaluados` como los `no evaluados`. Aqui se muestra el titulo, resumen, topicos y autores de cada articulo. Por defecto, esta muestra los `evaluados`, pero el usuario puede quitar este filtro si quiere.
+En `/buscar` puedes ver todos los articulos de la pagina, tanto los `evaluados` como los `no evaluados`. Aqui se muestra el titulo, resumen, topicos y autores de cada articulo. Por defecto, esta muestra los `evaluados`, pero el `usuario` puede quitar este filtro si quiere.
 
 Los articulos `evaluados` se muestran con un icono de "verificado".
 
@@ -62,11 +62,11 @@ Los usuarios pueden:
 * (D) Pueden cerrar sesion o eliminar su cuenta. Tambien se hace desde `/perfil`, en las `opciones`.
     - Si es jefe de comite, no se le permitira eliminar su cuenta.
 
-En el perfil, a parte de lo mecionado ya, el `usuario` puede ver todos sus articulos (articulos donde es autor), tanto evaluados como no evaluados. Este tiene a disposicion un filtro para ver solo los articulos evaluados o todos.
+En el perfil, a parte de lo mecionado ya, el `usuario` puede ver todos sus articulos (articulos donde es autor), tanto evaluados como no evaluados. Este tiene a disposicion un filtro `Solo mis articulos evaluados` para ver solo los articulos evaluados o todos.
 
 A parte, si un `miembro de comite` accede a su perfil, este puede ver en otra `tab` los articulos que tiene para revisar. Este tiene a disposicion dos filtros, donde solo uno puede estar activo al mismo tiempo:
-* `Ignorar articulos revisados por ti`, el cual permite ver los articulos que aun NO ha revisado.
-* `Ignorar articulos evaluados`, el cual le permite ver los articulos que aun NO han sido evaluados.
+* `Solo articulo no revisados por mi`, el cual permite ver los articulos que aun NO ha revisado.
+* `No mostrar articulos evaluados`, el cual le permite ver los articulos que aun NO han sido evaluados.
     - Solo uno puede estar activo, ya que al filtrar por el primero, de por si ya no se muestran los articulos evaluados. El segundo filtro es mas algo extra, por si solo quieres ver los articulos NO evaluados.
     - Es facil quitar esta limitacion de un filtro a la vez, pero no lo haremos :P
 
@@ -192,6 +192,7 @@ Con todo lo anterior, el `jefe de comite` puede asignar, reasignar y eliminar `m
             - La excepcion a esto es `template.view.php`, que esta en `/template`.
         - `X.Y.view.php` si el `view.php` tiene algo mas a parte del nombre (`X`), entonces es un componente del mismo. Estos componentes pueden ser utilizados en otros (`Z.view.php`), pero principalmente son para el nombre que tienen (`X`).
         - Los demas, si tienen algun punto en el nombre (a parte del para el formato `.php`), es solo para que se vea mas bonito en verdad xD.
+        - Tambien hay algunos `componentes.X.php`, que son componentes para los demas php en general. Iban a haber mas, pero nos dio paja :v.
 * Los archivos `.js` estan todos en `gescon/js`. Estos pueden llegar a interactuar con las apis de la pagina mencionadas antes.
 * Los archivos `.css` estan todos en `gescon/css`.
 * Los assets estan todos en `gescon/assets`. Dentro encontramos:
@@ -204,7 +205,7 @@ Con todo lo anterior, el `jefe de comite` puede asignar, reasignar y eliminar `m
 
 * [Docker](https://www.docker.com/)
 * [Python](https://www.python.org/)
-    - Se utilizo la version [3.13.0](https://www.python.org/downloads/release/python-3130/)
+    - Version utilizada para las pruebas: [3.13.0](https://www.python.org/downloads/release/python-3130/)
 
 ## Como utilizar
 
@@ -244,25 +245,32 @@ Esto hara lo siguiente:
 * Si iniciaste los contenedores sin `-d`, puedes cerrar los contenedores usando `ctrl + C`.
 * Tendras una nueva carpeta llamada `mysql-data`, en donde esta todo lo que almacena la base de datos.
 
+Tambien puedes usar el comando:
+```bash
+docker-compose build
+```
+Pero con este simplemente construiras los containers, no los iniciaras.
+
 Cuando termines de utilizar la pagina web, puedes cerrar los contenedores ejecutando el comando:
 ```bash
 docker-compose down
 ```
 
-Notar que en el futuro, si quieres volver a iniciar los contenedores (una vez ya hayas construido los mismos), puedes iniciarlos con el comando:
+Notar que en el futuro, si quieres volver a iniciar los contenedores (una vez ya hayas construido los mismos, o si usaste `docker-compose build` y quieres iniciar los contenedores), puedes iniciarlos con el comando:
 ```bash
 docker-compose up -d
 ```
+Aqui tambien puedes ignorar el `-d` si quieres.
 
 Para eliminar los datos cuando ya creaste la base de datos, puedes ejecutar el comando:
 ```bash
 docker-compose down -v
 ```
-Para asegurarnos de que la base de datos se borre correctamente, es recomendable eliminar tambien `/mysql-data`.
+Para asegurarnos de que la base de datos se borre correctamente, es recomendable eliminar tambien `/mysql-data`. OJO, debes ejecutar el comando antes de hacer esto.
 
 > [!WARNING]
 > Si en algun paso ocurre un error, lo mas probable es que tienes `Docker Desktop` cerrado. Abrelo para evitar errores.
-> NOTAR TAMBIEN, que al iniciar los contenedores desde cero, puede que algunas partes de la pagina den "Fatal error". Es normal, hay que esperar a que la base de datos termine de asignar todos los datos que se crearon. Esto no suele tardar mucho de todas formas.
+> NOTAR TAMBIEN, que al iniciar los contenedores desde cero, puede que algunas partes de la pagina den "Fatal error". Es normal, hay que esperar a que la base de datos termine de asignar todos los datos que se crearon. Esto no suele tardar mucho de todas formas. Si quieres ver bien esto, puedes simplemente no colocar `-d` al construir los containers y asi podras ver todo el proceso.
 
 ## Integrantes
 * Alejandro Cáceres [202373520-5] (P.200)
