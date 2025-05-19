@@ -164,10 +164,28 @@
             </div>
             <div class="modal-overlay" data-overlay-target="editar-form"></div>
         <?php endif ?>
+        <?php if ($user['id_rol'] == 3) : ?>
+            <div class="modal" id="eliminar-articulo">
+                <div class="modal-top">
+                    <h1>Borrar articulo</h1>
+                </div>
+                <div class="modal-content">
+                    <p>¿Seguro que quieres borrar el articulo [<?= $id_articulo ?>]?</p>
+                    <div class="btns-container">
+                        <form method="post">
+                            <input type="hidden" id="hidden_eliminar_articulo" name="eliminar_articulo" value=<?= "'" . $id_articulo . "'" ?>>
+                            <button type="submit" class="btn-rojo">Borrar articulo</button>
+                        </form>
+                        <button type="button" id="modalClose" data-close-target="eliminar-articulo">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-overlay" data-overlay-target="eliminar-articulo"></div>
+        <?php endif ?>
     </div>
 <?php endif ?>
 
-<?php if ($esAutor || $esRevisor || ($user ? $user['id_rol'] === 3 : false)) : ?>
+<?php if ($esAutor || $esRevisor || ($user ? $user['id_rol'] == 3 : false)) : ?>
     <div class="nav-flotante-container">
         <div class="nav-flotante">
             <?php if ($esAutor && $sePuedeEditar) : ?>
@@ -185,10 +203,18 @@
                 </div>
             </button>
             <?php if ($esRevisor) : ?>
-                <button type="button" class="nav-flotante-btn" id="modalBtn" data-target="crear-form" <?= $yaReviso?>>
+                <button type="button" class="nav-flotante-btn" id="modalBtn" data-target="crear-form" <?=  $yaReviso ? 'disabled' : '' ?>>
                     <div class="nav-flotante-btn-content">
                         <span class="nav-flotante-icon"><?= getAsset("/svg/formulario.svg") ?></span>
                         <span class="nav-option-name">Hacer revision</span>
+                    </div>
+                </button>
+            <?php endif; ?>
+            <?php if ($user['id_rol'] == 3) : ?>
+                <button type="button" class="nav-flotante-btn" id="modalBtn" data-target="eliminar-articulo">
+                    <div class="nav-flotante-btn-content">
+                        <span class="nav-flotante-icon"><?= getAsset("/svg/borrar.svg") ?></span>
+                        <span class="nav-option-name">Borrar articulo</span>
                     </div>
                 </button>
             <?php endif; ?>

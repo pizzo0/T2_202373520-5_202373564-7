@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         if (res.ok) {
                             topicoDiv.remove();
                         } else {
-                            alert("Error al eliminar el topico.");
+                            alert("Error al eliminar el topico: " + res.error);
                         }
                     })
                     .catch((e) => {

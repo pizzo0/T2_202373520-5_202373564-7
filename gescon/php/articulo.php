@@ -77,4 +77,36 @@ if (isset($_POST['id_formulario'])) {
             "mensaje" => "Ocurrió un error al enviar el formulario :(<br>" . $e->getMessage()
         ];
     }
+} else if (isset($_POST['eliminar_articulo'])) {
+    try {
+        $user = getUsuarioData();
+
+        if ($user['id_rol'] != 3) {
+            throw new Exception("No tienes permisos para eliminar articulos.");
+        }
+
+        $database = getDatabase();
+
+        $stmt = $database->prepare("
+            DELETE FROM Articulos
+            WHERE id = ?
+        ");
+
+        $id_articulo = $_POST['eliminar_articulo'];
+
+        $stmt->bind_param("i",$id_articulo);
+        $stmt->execute();
+
+        $_SESSION["notificacion"] = [
+            "tipo" => "ok",
+            "mensaje" => "Articulo eliminado con exito :)"
+        ];
+        header("Location: /");
+        exit;
+    } catch (Exception $e) {
+        $_SESSION["notificacion"] = [
+            "tipo" => "error",
+            "mensaje" => "Ocurrió un error al eliminar el articulo :(<br>" . $e->getMessage()
+        ];
+    }
 }

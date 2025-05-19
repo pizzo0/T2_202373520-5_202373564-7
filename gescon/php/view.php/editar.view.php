@@ -191,12 +191,12 @@ if ($pedir_clave && $es_autor) {
                 <div id="topicos-container-preview">
                     <!-- mostrar los tópicos seleccionados -->
                     <?php
-                    $topicosSeleccionados = json_decode($articulo['topicos'],true);
+                    $topicosSeleccionados = !is_null($articulo['topicos']) ? json_decode($articulo['topicos'],associative: true) : null;
                     $idsTopicosSeleccionados = [];
 
                     $database = getDatabase();
 
-                    foreach ($topicosSeleccionados as $topico) {
+                    if (!is_null($topicosSeleccionados)) foreach ($topicosSeleccionados as $topico) {
                         $topicoNombre = $topico['nombre'];
                         if ($topico) {
                             $id = $topico['id'];

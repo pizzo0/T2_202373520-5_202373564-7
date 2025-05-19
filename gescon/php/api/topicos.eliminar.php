@@ -15,18 +15,21 @@ if (!isset($input['id'])) {
 
 $id = intval($input['id']);
 
-$database = getDatabase();
+try {
+    $database = getDatabase();
+    $stmt = $database->prepare("
+    DELETE FROM Topicos WHERE id = ?
+    ");
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
 
-$stmt = $database->prepare("
-DELETE FROM Topicos WHERE id = ?
-");
-$stmt->bind_param("i", $id);
-$stmt->execute();
-
-if ($database->affected_rows > 0) {
-    echo json_encode(['ok' => true]);
-} else {
-    echo json_encode(['ok' => false, 'error' => "NO SE PUDO ELIMINAR EL TOPICO."]);
+    if ($database->affected_rows > 0) {
+        echo json_encode(['ok' => true]);
+    } else {
+        echo json_encode(['ok' => false, 'error' => "NO SE PUDO ELIMINAR EL TOPICO."]);
+    }
+} catch (Exception $e) {
+    echo json_encode(['ok' => false, 'error' => $e->getMessage()]);
 }
 
 $stmt->close();

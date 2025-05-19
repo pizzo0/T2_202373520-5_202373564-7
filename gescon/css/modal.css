@@ -13,6 +13,7 @@
     border-radius: calc(var(--default-border-radius)*2);
     z-index: 70;
     display: none;
+    max-height: 100vh;
 }
 
 .modal-activo {
@@ -27,6 +28,7 @@
     width: 100%;
     gap: 1rem;
     padding: 1.5rem;
+    overflow-y: auto;
 }
 
 .modal-overlay {

@@ -332,6 +332,7 @@ async function cargarRevisores() {
                         btnCancelarAsig.addEventListener('click', () => {
                             asignacionModal.classList.toggle('modal-activo');
                             asignacionOverlay.classList.toggle('menu-overlay-activo');
+                            document.body.classList.toggle('no-scroll');
                         });
 
                         const btnsContainer = document.createElement('div');
@@ -534,6 +535,7 @@ async function cargarRevisores() {
                         btnCancelar.addEventListener('click', () => {
                             const modalElement = document.getElementById(target);
                             const overlayElement = document.querySelector(`[data-overlay-target=${target}]`);
+                            document.body.classList.toggle('no-scroll');
                             modalElement.classList.toggle('modal-activo');
                             overlayElement.classList.toggle('menu-overlay-activo');
                         });

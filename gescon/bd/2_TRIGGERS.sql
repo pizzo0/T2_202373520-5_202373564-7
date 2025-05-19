@@ -54,12 +54,12 @@ BEGIN
         SET MESSAGE_TEXT = 'Contraseña muy corta. Debe tener 6 caracteres o mas.';
     END IF;
 
-    IF NOT NEW.password REGEXP '[A-Z]' THEN
+    IF NOT NEW.password COLLATE utf8mb4_bin REGEXP '[A-Z]' THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Contraseña debe tener al menos una letra mayuscula.';
     END IF;
     
-    IF NOT NEW.password REGEXP '[a-z]' THEN
+    IF NOT NEW.password COLLATE utf8mb4_bin REGEXP '[a-z]' THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Contraseña debe tener al menos una letra minuscula.';
     END IF;
@@ -131,12 +131,12 @@ BEGIN
         SET MESSAGE_TEXT = 'Contraseña muy corta. Debe tener 6 caracteres o mas.';
     END IF;
 
-    IF NOT NEW.password REGEXP '[A-Z]' THEN
+    IF NOT NEW.password COLLATE utf8mb4_bin REGEXP '[A-Z]' THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Contraseña debe tener al menos una letra mayuscula.';
     END IF;
     
-    IF NOT NEW.password REGEXP '[a-z]' THEN
+    IF NOT NEW.password COLLATE utf8mb4_bin REGEXP '[a-z]' THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Contraseña debe tener al menos una letra minuscula.';
     END IF;
@@ -282,5 +282,84 @@ BEGIN
               )
         ) AS temp
     );
+END;//
+DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER borrar_topico BEFORE DELETE ON Topicos
+FOR EACH ROW
+BEGIN
+    DECLARE v_id_articulo INT;
+    DECLARE done INT DEFAULT FALSE;
+
+    DECLARE curr CURSOR FOR
+        SELECT id_articulo
+        FROM Articulos_Topicos
+        WHERE id_topico = OLD.id;
+
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+    IF EXISTS (
+        SELECT 1
+        FROM Articulos_Topicos atp
+        JOIN Articulos a ON atp.id_articulo = a.id
+        WHERE atp.id_topico = OLD.id
+          AND a.fecha_limite < NOW()
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'No se puede eliminar un topico si existen articulos en revision con este topico';
+    END IF;
+
+    OPEN curr;
+
+    read_loop: LOOP
+        FETCH curr INTO v_id_articulo;
+        IF done THEN
+            LEAVE read_loop;
+        END IF;
+
+        IF (SELECT COUNT(*) FROM Articulos_Topicos WHERE id_articulo = v_id_articulo) = 1 THEN
+            DELETE FROM Articulos WHERE id = v_id_articulo;
+        END IF;
+    END LOOP;
+    CLOSE curr;
+END;//
+DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER revisor_sin_topicos_comun
+AFTER DELETE ON Articulos_Topicos
+FOR EACH ROW
+BEGIN
+    DECLARE v_rut_revisor VARCHAR(12);
+    DECLARE done INT DEFAULT FALSE;
+
+    DECLARE curr CURSOR FOR
+        SELECT rut_revisor FROM Articulos_Revisores
+        WHERE id_articulo = OLD.id_articulo;
+
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+    OPEN curr;
+
+    read_loop: LOOP
+        FETCH curr INTO v_rut_revisor;
+        IF done THEN
+            LEAVE read_loop;
+        END IF;
+
+        IF NOT EXISTS (
+            SELECT 1
+            FROM Articulos_Topicos at2
+            JOIN Usuarios_Especialidad ue ON at2.id_topico = ue.id_topico
+            WHERE at2.id_articulo = OLD.id_articulo
+              AND ue.rut_usuario = v_rut_revisor
+        ) THEN
+            DELETE FROM Articulos_Revisores
+            WHERE id_articulo = OLD.id_articulo
+              AND rut_revisor = v_rut_revisor;
+        END IF;
+    END LOOP;
+    CLOSE curr;
 END;//
 DELIMITER ;

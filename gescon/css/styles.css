@@ -438,7 +438,9 @@ option {
     position: relative;
     display: inline-block;
     width: 48px;
+    min-width: 48px;
     height: 24px;
+    min-height: 24px;
 }
 
 .checkbox-slider {
