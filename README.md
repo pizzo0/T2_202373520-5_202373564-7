@@ -213,7 +213,7 @@ Abrir una terminal en la carpeta donde se encuentran los archivos `GENERAR-DATA.
 
 Primero debemos generar la data de la base de datos. Para esto, necesitamos python, donde usaremos el modulo `faker` para crear informacion aleatoria. Puedes instalar el modulo mas rapido ejecutando desde la terminal el comando:
 ```bash
-pip instal -r requirements.txt
+pip install -r requirements.txt
 ```
 
 Una vez instalado, podemos ejecutar el script de python que nos creara los datos de nuestra base de datos. Ejecutar el comando:
